@@ -18,21 +18,18 @@ type props = {
 };
 
 const Btns = styled(motion.button)`
+  width: 25px;
+  height: 25px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  align-self: flex-end;
-  gap: 2px;
   user-select: none;
   cursor: pointer;
-  width: 52px;
+
   span {
-    font-size: 14px;
-    line-height: 1;
-  }
-  &:hover {
-    color: ${color.hover};
+    width: 100%;
+    height: 100%;
   }
 `;
 

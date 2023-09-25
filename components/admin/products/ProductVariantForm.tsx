@@ -119,6 +119,7 @@ const ButtonDevider = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 40px;
+  padding: 20px 0;
 `;
 
 export default ProductVariant;

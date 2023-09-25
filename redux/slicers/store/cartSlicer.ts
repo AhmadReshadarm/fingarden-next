@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getErrorMassage, handleError, handlePending } from 'common/helpers';
 import { TCartState } from 'redux/types';
-import { Basket, BasketDTO, BasketService, ProductVariant } from 'swagger/services';
+import {
+  Basket,
+  BasketDTO,
+  BasketService,
+  ProductVariant,
+} from 'swagger/services';
 
 export const fetchCart = createAsyncThunk<
   Basket,
@@ -12,6 +17,21 @@ export const fetchCart = createAsyncThunk<
   async function (payload, { rejectWithValue }): Promise<any> {
     try {
       return await BasketService.findBasketById({ basketId: payload });
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
+
+export const clearCart = createAsyncThunk<
+  Basket,
+  string,
+  { rejectValue: string }
+>(
+  'cart/clearCart',
+  async function (payload, { rejectWithValue }): Promise<any> {
+    try {
+      return await BasketService.clearBasket({ basketId: payload });
     } catch (error: any) {
       return rejectWithValue(getErrorMassage(error.response.status));
     }
@@ -63,7 +83,7 @@ const cartSlicer = createSlice({
     },
     clearVariant(state) {
       state.variant = initialState.variant;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,7 +100,7 @@ const cartSlicer = createSlice({
       .addCase(createCart.fulfilled, (state, action) => {
         state.cart = {
           ...action.payload,
-          orderProducts: []
+          orderProducts: [],
         };
         localStorage.setItem('basketId', action.payload.id!);
         state.loading = false;
@@ -90,11 +110,17 @@ const cartSlicer = createSlice({
       //updateCart
       .addCase(updateCart.pending, (state: { countLoading: boolean }) => {
         state.countLoading = true;
-        console.log('pending')
+        console.log('pending');
       })
       .addCase(updateCart.fulfilled, (state, action) => {
         state.cart = action.payload;
         localStorage.setItem('basketId', action.payload.id!);
+        state.loading = false;
+        console.log('fulfilled');
+      }) // clearCart
+      .addCase(clearCart.pending, handlePending)
+      .addCase(clearCart.fulfilled, (state, action) => {
+        state.cart = action.payload;
         state.loading = false;
         console.log('fulfilled');
       })

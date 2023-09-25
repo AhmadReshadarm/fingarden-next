@@ -54,7 +54,14 @@ const SignIn: React.FC<Props> = ({
       variants={variants.authorizeSlideX}
       animate={authType == 'signin' ? 'center' : 'enter'}
     >
-      <FormWrapper>
+      <FormWrapper
+        onSubmit={handleSignIn({
+          email,
+          password,
+          dispatch,
+          onAfterAuthorized,
+        })}
+      >
         <h4>Введите свой логин и пароль, чтобы войти</h4>
         <AuthInputsWrapper>
           <label htmlFor="signin-mail">
@@ -197,9 +204,10 @@ const SignIn: React.FC<Props> = ({
             </span>
           </ConfidentialityWrapper>
         </AuthInputsWrapper>
+        <button type={'submit'} style={{ display: 'none' }}></button>
       </FormWrapper>
       <Link href="/profile/pswreset">
-        <a>забыл пароль?</a>
+        <span>забыл пароль?</span>
       </Link>
       <BtnsWrapper>
         <AuthBtns
@@ -211,13 +219,18 @@ const SignIn: React.FC<Props> = ({
           variants={variants.fadInSlideUp}
           bgcolor={
             isEmpty(email) || isEmpty(password) || !isEmail(email)
-              ? color.textSecondary
+              ? color.btnSecondery
               : color.btnPrimary
           }
           disabled={
             isEmpty(email) || isEmpty(password) || !isEmail(email)
               ? true
               : false
+          }
+          textColor={
+            isEmpty(email) || isEmpty(password) || !isEmail(email)
+              ? color.btnPrimary
+              : color.textPrimary
           }
           onClick={handleSignIn({
             email,
@@ -235,7 +248,8 @@ const SignIn: React.FC<Props> = ({
           whileHover={{ boxShadow: `0px 0px 4px 2px ${color.boxShadowBtn}` }}
           whileTap={{ boxShadow: `0px 0px 0px 0px ${color.boxShadowBtn}` }}
           variants={variants.fadInSlideUp}
-          bgcolor={color.textTertiary}
+          bgcolor={color.btnPrimary}
+          textColor={color.textPrimary}
           onClick={() => handleBack(paginate, setEmailErr, setPswErr, dispatch)}
         >
           Назад

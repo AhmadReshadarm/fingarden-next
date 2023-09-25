@@ -8,7 +8,13 @@ import {
 } from '../../common/helpers';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
 import { FetchPayload, RequestResponse, TBannerState } from 'redux/types';
-import { Advertisement, Slide, AdvertisementService, SlideService, SlideDTO } from 'swagger/services';
+import {
+  Advertisement,
+  Slide,
+  AdvertisementService,
+  SlideService,
+  SlideDTO,
+} from 'swagger/services';
 
 export const fetchAdvertisement = createAsyncThunk<
   RequestResponse,
@@ -36,9 +42,7 @@ export const updateAdvertisement = createAsyncThunk<
       return await AdvertisementService.updateAdvertisement({
         advertisementId: payload.id!,
         body: {
-          image: payload.image,
           description: payload.description,
-          link: payload.link
         },
       });
     } catch (error: any) {
@@ -51,16 +55,13 @@ export const fetchSlides = createAsyncThunk<
   RequestResponse,
   undefined,
   { rejectValue: string }
->(
-  'banners/fetchSlides',
-  async function (_, { rejectWithValue }): Promise<any> {
-    try {
-      return await SlideService.getSlides();
-    } catch (error: any) {
-      return rejectWithValue(getErrorMassage(error.response.status));
-    }
-  },
-);
+>('banners/fetchSlides', async function (_, { rejectWithValue }): Promise<any> {
+  try {
+    return await SlideService.getSlides();
+  } catch (error: any) {
+    return rejectWithValue(getErrorMassage(error.response.status));
+  }
+});
 
 export const updateSlides = createAsyncThunk<
   Slide,
@@ -99,7 +100,7 @@ const bannersSlicer = createSlice({
     clearBanners(state) {
       state.advertisement = [];
       state.slides = [];
-      console.log('Banners cleared!')
+      console.log('Banners cleared!');
     },
   },
   extraReducers: (builder) => {
@@ -137,7 +138,7 @@ const bannersSlicer = createSlice({
         openSuccessNotification('Баннер успешно обновлен');
         console.log('fulfilled');
       })
-      .addCase(updateSlides.rejected, handleChangeError)
+      .addCase(updateSlides.rejected, handleChangeError);
   },
 });
 

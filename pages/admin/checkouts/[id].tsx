@@ -55,9 +55,7 @@ const CheckoutsPage = () => {
       ) : (
         <Contaienr>
           <Link href="/admin/checkouts">
-            <a>
-              <GoBackBtn>{`назад`}</GoBackBtn>
-            </a>
+            <GoBackBtn>{`назад`}</GoBackBtn>
           </Link>
           {checkouts.rows.map((checkout: any, index) => {
             const orderDate = checkout.createdAt!;
@@ -402,11 +400,22 @@ const Items = styled(motion.li)`
         justify-content: flex-start;
         alig-items: center;
         gap: 10px;
+
+        img {
+          width: 150px;
+          border-radius: 15px;
+          transition: 150ms;
+          cursor: pointer;
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+
         .color-wrapper {
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           justify-content: flex-start;
-          align-items: flex-start;
+          align-items: center;
           gap: 10px;
         }
         @media ${devices.mobileL} {
@@ -440,10 +449,6 @@ const Items = styled(motion.li)`
           }
         }
 
-        img {
-          width: 100px;
-          padding: 5px;
-        }
         .product-image-column {
           display: flex;
           flex-direction: column;
@@ -500,7 +505,7 @@ const Items = styled(motion.li)`
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-
+        gap: 20px;
         span {
           color: ${color.textSecondary};
         }

@@ -72,7 +72,7 @@ const CategoriesPage = () => {
       ) : (
         <Table
           scroll={{
-            x: 1366,
+            // x: 1366,
             y: 768,
           }}
           pagination={{

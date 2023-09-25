@@ -4,10 +4,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import styled from 'styled-components';
-import WishlistNormalSVG from '../../../../../assets/wishlist_normal.svg';
-import WishlistPressedSVG from '../../../../../assets/wishlilst_pressed.svg';
-import BasketNortmalWhite from '../../../../../assets/basket_normal_white.svg';
-import BasketPressedWhite from '../../../../../assets/basket_pressed_white.svg';
 import {
   handleSearchItemClick,
   TrigerhandleWishBtnClick,
@@ -18,7 +14,8 @@ import presets from 'components/store/lib/presets';
 import color from 'components/store/lib/ui.colors';
 import { ArrowBtns } from 'ui-kit/ArrowBtns';
 import { Basket, Product, Wishlist } from 'swagger/services';
-
+import { AddToCart, AddToWishlist } from 'ui-kit/ProductActionBtns';
+import { TWishlistState } from 'redux/types';
 import {
   checkIfItemInCart,
   checkIfItemInWishlist,
@@ -35,10 +32,12 @@ const SearchItem: React.FC<Props> = ({ product, index }) => {
   const dispatch = useAppDispatch();
   const images = getProductVariantsImages(product?.productVariants);
   const cart: Basket = useAppSelector((state) => state.cart.cart);
-  const wishlist: Wishlist = useAppSelector((state) => state.global.wishlist);
-
+  // const wishlist: Wishlist = useAppSelector((state) => state.global.wishlist);
+  const { wishlist }: TWishlistState = useAppSelector(
+    (state) => state.wishlist,
+  );
   return (
-    <Link href={`/product/${product.url}`}>
+    <Link key={index} href={`/product/${product.url}`}>
       <CardItemContainer
         custom={1.01}
         whileHover="hover"
@@ -47,7 +46,7 @@ const SearchItem: React.FC<Props> = ({ product, index }) => {
       >
         <ItemImageAndBtnWrapper>
           <span className="ItemPriceWrapper">
-            Цена: {product?.productVariants[0].price} ₽
+            Цена: {product?.productVariants![0].price} ₽
           </span>
           <ItemActionBtnsWrapper>
             <ArrowBtns
@@ -64,22 +63,11 @@ const SearchItem: React.FC<Props> = ({ product, index }) => {
                 ),
               )}
             >
-              <ItemActionBtnIconsWrapper
-                key={'basket-pressed'}
-                animate={checkIfItemInCart(product, cart) ? 'animate' : 'exit'}
-                variants={variants.fadeOutSlideOut}
-                className="search-absolute-position"
-              >
-                <BasketPressedWhite />
-              </ItemActionBtnIconsWrapper>
-              <ItemActionBtnIconsWrapper
-                key={'basket-normal'}
-                animate={checkIfItemInCart(product, cart) ? 'exit' : 'animate'}
-                variants={variants.fadeOutSlideOut}
-                className="search-absolute-position"
-              >
-                <BasketNortmalWhite />
-              </ItemActionBtnIconsWrapper>
+              <AddToCart
+                product={product}
+                cart={cart}
+                checkIfItemInCart={checkIfItemInCart}
+              />
             </ArrowBtns>
             <ArrowBtns
               bgcolor={color.glassmorphismSeconderBG}
@@ -87,29 +75,14 @@ const SearchItem: React.FC<Props> = ({ product, index }) => {
               position="relative"
               onClick={TrigerhandleWishBtnClick(
                 product,
-                handleWishBtnClick(product, dispatch, wishlist),
+                handleWishBtnClick(product, dispatch, wishlist!),
               )}
             >
-              <ItemActionBtnIconsWrapper
-                key={'wishlist-pressed'}
-                animate={
-                  checkIfItemInWishlist(product, wishlist) ? 'animate' : 'exit'
-                }
-                variants={variants.fadeOutSlideOut}
-                className="search-absolute-position"
-              >
-                <WishlistPressedSVG />
-              </ItemActionBtnIconsWrapper>
-              <ItemActionBtnIconsWrapper
-                key={'wishlist-normal'}
-                animate={
-                  checkIfItemInWishlist(product, wishlist) ? 'exit' : 'animate'
-                }
-                variants={variants.fadeOutSlideOut}
-                className="search-absolute-position"
-              >
-                <WishlistNormalSVG />
-              </ItemActionBtnIconsWrapper>
+              <AddToWishlist
+                checkIfItemInWishlist={checkIfItemInWishlist}
+                product={product}
+                wishlist={wishlist!}
+              />
             </ArrowBtns>
           </ItemActionBtnsWrapper>
           <img

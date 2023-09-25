@@ -7,8 +7,8 @@ import {
   searchProducts,
 } from 'redux/slicers/store/globalSlicer';
 import { AppDispatch } from 'redux/store';
-import { Category, CategoryInTree } from 'swagger/services';
-import { Basket, Product, Wishlist } from 'swagger/services';
+import { CategoryInTree } from 'swagger/services';
+import { Product } from 'swagger/services';
 
 const handleSearchItemClick = (dispatch: AppDispatch) => () => {
   dispatch(clearSearchProducts());

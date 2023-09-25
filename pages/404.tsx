@@ -14,7 +14,7 @@ const NotFound = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>Страница не найдена | Wuluxe</title>
+        <title>Страница не найдена | Fingarden 404</title>
       </Head>
       <Container
         variants={variants.fadInOut}
@@ -25,7 +25,7 @@ const NotFound = (): JSX.Element => {
         flex_direction="column"
         justify_content="center"
         align_items="center"
-        padding="200px 0"
+        padding="20px 0"
         bg_color={color.textPrimary}
       >
         <Wrapper>
@@ -33,7 +33,7 @@ const NotFound = (): JSX.Element => {
             flex_direction="column"
             justify_content="flex-start"
             align_items="center"
-            gap="30px"
+            gap="20px"
             style={{ userSelect: 'none' }}
           >
             <NotFoundSvg />
@@ -43,10 +43,6 @@ const NotFound = (): JSX.Element => {
     </>
   );
 };
-
-const NotFoundWrapper = styled.span`
-  width: 90%;
-`;
 
 NotFound.PageLayout = StoreLayout;
 export default NotFound;

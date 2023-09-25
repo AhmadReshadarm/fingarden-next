@@ -2183,7 +2183,6 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
               "items": {
                 "$ref": "#/definitions/TagResponse"
               }
@@ -3149,6 +3148,38 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/baskets/clear/{basketId}": {
+      "get": {
+        "tags": ["basket"],
+        "summary": "Clear basket by id",
+        "operationId": "clearBasket",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "basketId",
+            "in": "path",
+            "description": "ID of basket to return",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Basket"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Basket not found"
           }
         }
       }
@@ -5030,16 +5061,29 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "successful updated",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Product"
+              "type": "object",
+              "properties": {
+                "raw": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": ""
+                },
+                "affected": {
+                  "type": "integer",
+                  "description": "qty of updated raws"
+                }
               }
             }
           },
           "400": {
-            "description": "Invalid ID supplied"
+            "description": "Invalid Wishlist request"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Wishlist not found"
@@ -5151,7 +5195,7 @@
     "/advertisements": {
       "get": {
         "tags": ["advertisement"],
-        "summary": "Get array of advertisements",
+        "summary": "Get object of advertisements in string mode",
         "description": "",
         "operationId": "getAdvertisements",
         "consumes": ["application/json"],
@@ -5172,7 +5216,7 @@
     "/advertisements/{advertisementId}": {
       "get": {
         "tags": ["advertisement"],
-        "summary": "Find advertisement by id",
+        "summary": "Find Get object of advertisements in string mode by id",
         "operationId": "findAdvertisementById",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -5465,6 +5509,9 @@
         "name": {
           "type": "string"
         },
+        "desc": {
+          "type": "string"
+        },
         "image": {
           "type": "string"
         },
@@ -5570,6 +5617,9 @@
       "required": ["name", "parameters", "url"],
       "properties": {
         "name": {
+          "type": "string"
+        },
+        "desc": {
           "type": "string"
         },
         "image": {
@@ -6823,6 +6873,13 @@
             "type": "object",
             "$ref": "#/definitions/WishlistProduct"
           }
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Product"
+          }
         }
       }
     },
@@ -6887,13 +6944,8 @@
         "id": {
           "type": "string"
         },
-        "image": {
-          "type": "string"
-        },
+
         "description": {
-          "type": "string"
-        },
-        "link": {
           "type": "string"
         }
       }

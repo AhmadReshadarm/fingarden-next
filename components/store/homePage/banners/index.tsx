@@ -91,7 +91,6 @@ const SliderBgWrapper = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  position: relative;
   background: linear-gradient(
     to right,
     ${color.bgSecondary} 40%,
@@ -108,7 +107,7 @@ const SliderBgWrapper = styled.div`
     align-items: center;
     div {
       width: 100%;
-      min-height: 550px;
+      min-height: 600px;
       height: 100%;
     }
     .right-side: {

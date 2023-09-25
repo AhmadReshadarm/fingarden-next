@@ -29,46 +29,44 @@ const CartItem: React.FC<Props> = ({ item, onRemove, onCountChange }) => {
 
   return (
     <Link href="/">
-      <a>
-        <Item>
-          <motion.img
-            whileHover="hover"
-            whileTap="tap"
-            custom={1.05}
-            variants={variants.grow}
-            src={`/api/images/${images[0]}`}
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null;
-              currentTarget.src = '/assets/images/no_photo.png';
-            }}
-          />
-          <ItemDetails>
-            <h4>{name}</h4>
-            <ItemDetialDivider>
-              <h3>
-                {user?.role === Role.SuperUser
-                  ? curVariant.wholeSalePrice
-                  : curVariant.price}
-                ₽
-              </h3>
-              <ItemCounter
-                qty={item.qty!}
-                product={item.product!}
-                onCountChange={onCountChange}
-              />
-            </ItemDetialDivider>
-          </ItemDetails>
-          <motion.button
-            custom={1.1}
-            whileTap="tap"
-            whileHover="hover"
-            variants={variants.grow}
-            onClick={handleRemoveClick(item.product!, onRemove)}
-          >
-            <CloseSVG />
-          </motion.button>
-        </Item>
-      </a>
+      <Item>
+        <motion.img
+          whileHover="hover"
+          whileTap="tap"
+          custom={1.05}
+          variants={variants.grow}
+          src={`/api/images/${images[0]}`}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = '/assets/images/no_photo.png';
+          }}
+        />
+        <ItemDetails>
+          <h4>{name}</h4>
+          <ItemDetialDivider>
+            <h3>
+              {user?.role === Role.SuperUser
+                ? curVariant.wholeSalePrice
+                : curVariant.price}
+              ₽
+            </h3>
+            <ItemCounter
+              qty={item.qty!}
+              product={item.product!}
+              onCountChange={onCountChange}
+            />
+          </ItemDetialDivider>
+        </ItemDetails>
+        <motion.button
+          custom={1.1}
+          whileTap="tap"
+          whileHover="hover"
+          variants={variants.grow}
+          onClick={handleRemoveClick(item.product!, onRemove)}
+        >
+          <CloseSVG />
+        </motion.button>
+      </Item>
     </Link>
   );
 };

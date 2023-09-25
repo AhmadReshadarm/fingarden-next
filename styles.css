@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;300;400;500;600;700&display=swap');
 @font-face {
   font-family: 'Intro';
   src: url('/fonts/IntroDemo-BlackCAPS.woff2') format('woff2'),
@@ -8,13 +8,17 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Anticva';
+  src: url('/fonts/Anticva-Regular.otf') format('otf');
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   /* scroll-behavior: smooth; */
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Jost', sans-serif;
 }
 
 body {
@@ -110,4 +114,34 @@ h6 {
 
 .ant-carousel .slick-list .slick-slide > div > div {
   text-align: center;
+}
+
+/* custom css for rich text editor */
+
+.rdw-image-alignment {
+  display: inline !important;
+  object-fit: cover;
+}
+
+.rdw-image-center {
+  display: flex !important;
+  justify-content: center;
+}
+
+.rdw-image-right {
+  float: right !important;
+}
+
+.rdw-image-left {
+  float: left !important;
+}
+
+.preview-advertisment img {
+  object-fit: cover !important;
+  float: inline-start !important;
+}
+
+.main-page-advertisment {
+  width: 100%;
+  padding: 100px 0;
 }

@@ -44,7 +44,6 @@ const DatabaseImages = ({ setOpen, index }) => {
     setLoaded(true);
   };
   const handleClick = (item) => () => {
-    console.log(item);
     dispatch(
       setDefaultImageList({
         file: { name: item.filename, url: `/api/images/${item.filename}` },

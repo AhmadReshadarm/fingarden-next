@@ -109,22 +109,18 @@ export const fetchBrands = createAsyncThunk<
 
 export const fetchTags = createAsyncThunk<
   Tag[],
-  { children: string },
+  undefined,
   { rejectValue: string }
->(
-  'global/fetchTags',
-  async function (payload, { rejectWithValue }): Promise<any> {
-    try {
-      const response = await TagService.getTags({
-        ...payload,
-        limit: '1000',
-      });
-      return response.rows;
-    } catch (error: any) {
-      return rejectWithValue(getErrorMassage(error.response.status));
-    }
-  },
-);
+>('global/fetchTags', async function (_, { rejectWithValue }): Promise<any> {
+  try {
+    const response = (await TagService.getTags({
+      limit: '1000',
+    })) as unknown as { rows: Tag[] };
+    return response.rows;
+  } catch (error: any) {
+    return rejectWithValue(getErrorMassage(error.response.status));
+  }
+});
 
 export const searchProducts = createAsyncThunk<
   Product[],

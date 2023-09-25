@@ -1,37 +1,13 @@
-import { useState, useCallback, useEffect } from 'react';
-import { PopupDisplay } from '../../constants';
-import CatalogBtn from './CatalogBtn';
 import CatalogModal from './CatalogModal';
-import { outsideClickListner } from 'components/store/storeLayout/helpers';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import color from 'components/store/lib/ui.colors';
+
 type Props = {
   onWhichNav: string;
   setOnWhichNav: any;
 };
-const HeaderCatalog: React.FC<Props> = ({ onWhichNav, setOnWhichNav }) => {
-  // const [isOpened, setIsOpened] = useState(false);
-  // const [display, setDisplay] = useState(PopupDisplay.None);
-  // const [menuRef, setMenuRef] = useState(null);
-  // const [btnRef, setBtnRef] = useState(null);
-  // const [listening, setListening] = useState(false);
-  // const menuNode = useCallback((node: any) => {
-  //   setMenuRef(node);
-  // }, []);
-  // const btnNode = useCallback((node: any) => {
-  //   setBtnRef(node);
-  // }, []);
 
-  // useEffect(
-  //   outsideClickListner(
-  //     listening,
-  //     setListening,
-  //     menuRef,
-  //     btnRef,
-  //     setIsOpened,
-  //     setDisplay,
-  //   ),
-  // );
+const HeaderCatalog: React.FC<Props> = ({ onWhichNav, setOnWhichNav }) => {
   return (
     <CatalogWrapper
       onMouseEnter={() =>
@@ -45,26 +21,14 @@ const HeaderCatalog: React.FC<Props> = ({ onWhichNav, setOnWhichNav }) => {
       }
       onMouseLeave={() => setOnWhichNav('')}
     >
-      <CatalogModal
-      // isOpened={isOpened}
-      // setIsOpened={setIsOpened}
-      // display={display}
-      // setDisplay={setDisplay}
-      // menuNode={menuNode}
-      />
-      {/* <CatalogBtn
-        isOpened={isOpened}
-        setIsOpened={setIsOpened}
-        setDisplay={setDisplay}
-        btnNode={btnNode}
-      /> */}
+      <CatalogModal />
     </CatalogWrapper>
   );
 };
 
 const CatalogWrapper = styled.div`
   width: 100%;
-  height: 90vh;
+  height: 80vh;
   position: absolute;
   top: 90px;
   left: 0;

@@ -1,11 +1,14 @@
 import StoreLayout from 'components/store/storeLayout/layouts';
 import Banners from 'components/store/homePage/banners';
+import CustomBanner from 'components/store/homePage/custombanner';
+import MainPageCatalog from 'components/store/homePage/mainPageCatalog';
 // import Bestsellers from 'components/home-page/bestsellers';
 // import CreatedForYou from 'components/home-page/createdForYou';
 // import Reviews from 'components/home-page/reviews';
 import SEOstatic from 'components/store/SEO/SEOstatic';
 import Loading from 'ui-kit/Loading';
 import React, { Suspense, useEffect } from 'react';
+
 // const Banners = React.lazy(() => import('components/home-page/banners'));
 // const Bestsellers = React.lazy(
 //   () => import('components/home-page/bestsellers'),
@@ -33,6 +36,8 @@ const IndexPage = (): JSX.Element => {
 
       <Suspense fallback={<Loading />}>
         <Banners />
+        <CustomBanner />
+        <MainPageCatalog />
         {/* <Bestsellers />
         <CreatedForYou /> */}
         {/* <Reviews /> */}

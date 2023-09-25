@@ -117,26 +117,26 @@ export const columns: ColumnsType<Product> = [
     },
     width: '7.5%',
   },
-  {
-    title: 'Размер',
-    dataIndex: 'sizes',
-    render: (_, record) => {
-      return (
-        <ul>
-          {(record?.sizes as Size[]).map((size) => (
-            <li key={size.id}>
-              <TableLink
-                id={size!.id as string}
-                name={size!.name as string}
-                handleRedirect={handleRedirectSizes}
-              />
-            </li>
-          ))}
-        </ul>
-      );
-    },
-    width: '7.5%',
-  },
+  // {
+  //   title: 'Размер',
+  //   dataIndex: 'sizes',
+  //   render: (_, record) => {
+  //     return (
+  //       <ul>
+  //         {(record?.sizes as Size[]).map((size) => (
+  //           <li key={size.id}>
+  //             <TableLink
+  //               id={size!.id as string}
+  //               name={size!.name as string}
+  //               handleRedirect={handleRedirectSizes}
+  //             />
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     );
+  //   },
+  //   width: '7.5%',
+  // },
   {
     title: 'Действия',
     render: (_, record) => {

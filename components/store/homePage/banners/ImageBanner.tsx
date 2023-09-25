@@ -132,7 +132,7 @@ const SliderWrapper = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  overflow: hidden;
   @media ${devices.mobileL} {
     height: auto;
     overflow: hidden;

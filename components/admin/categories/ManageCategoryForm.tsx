@@ -1,4 +1,5 @@
 import { Button, Form, Input, List, Select, Spin } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
 import { navigateTo } from 'common/helpers/navigateTo.helper';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -49,6 +50,7 @@ const ManageCategoryForm = ({
   const imageList = useAppSelector((state) => state.images.imageList);
   const initialValues = {
     name: category?.name,
+    desc: category?.desc,
     url: category?.url,
     image: category?.image,
     parent: category?.parent?.id?.toString(),
@@ -56,6 +58,7 @@ const ManageCategoryForm = ({
 
   const [name, setName] = useState<string>();
   const [url, setUrl] = useState<string>();
+  const [desc, setDesc] = useState<string>();
 
   useEffect(() => {
     if (category) {
@@ -106,6 +109,17 @@ const ManageCategoryForm = ({
                 required={true}
                 placeholder="Введите имя категории"
                 onChange={(e) => setName(e.target.value)}
+              />
+            }
+          />
+          <FormItem
+            option={ManageCategoryFields.Desc}
+            children={
+              <TextArea
+                required={true}
+                rows={4}
+                placeholder="Краткое описание"
+                onChange={(e) => setDesc(e.target.value)}
               />
             }
           />

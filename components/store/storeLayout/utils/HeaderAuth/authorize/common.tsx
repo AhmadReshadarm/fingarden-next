@@ -29,8 +29,8 @@ const AuthBtns = styled(motion.button)`
   justify-content: center;
   align-items: center;
   background-color: ${(p: styleProps) => p.bgcolor};
-  color: ${color.textPrimary};
-  border-radius: 15px;
+  color: ${(p: styleProps) => p.textColor};
+  border-radius: 5px;
   font-family: 'intro';
 `;
 
@@ -70,12 +70,9 @@ const AuthInputsWrapper = styled(motion.div)`
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    span {
-      font-family: 'intro';
-    }
     .tool-tip {
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       border: 1px solid;
       display: flex;
@@ -93,10 +90,16 @@ const AuthInputsWrapper = styled(motion.div)`
 const AuthInput = styled(motion.input)`
   width: 100%;
   height: 50px;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0 10px;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  background: transparent;
+  &::placeholder {
+    color: ${color.bgSecondary};
+  }
+  &::-ms-input-placeholder {
+    color: ${color.bgSecondary};
+  }
 `;
 const ConfidentialityWrapper = styled.div`
   width: 40px;

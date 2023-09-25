@@ -3,10 +3,11 @@ import { motion } from 'framer-motion';
 import variants from 'components/store/lib/variants';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { updateCart } from 'redux/slicers/store/cartSlicer';
-import { updateWishlist } from 'redux/slicers/store/globalSlicer';
+// import { updateWishlist } from 'redux/slicers/store/globalSlicer';
+import { updateWishlist } from 'redux/slicers/store/wishlistSlicer';
 import { Basket, Product, Wishlist } from 'swagger/services';
 import ProductItem from 'ui-kit/products/productItem';
-
+import { TWishlistState } from 'redux/types';
 type Props = {
   products: Product[];
   children?: JSX.Element;
@@ -21,7 +22,10 @@ const ProductFlex: React.FC<Props> = ({
   slideTo,
 }) => {
   const cart: Basket = useAppSelector((state) => state.cart.cart);
-  const wishlist: Wishlist = useAppSelector((state) => state.global.wishlist);
+  // const wishlist: Wishlist = useAppSelector((state) => state.global.wishlist);
+  const { wishlist }: TWishlistState = useAppSelector(
+    (state) => state.wishlist,
+  );
   const dispatch = useAppDispatch();
 
   const handleCartBtnClick = (product: Product) => async () => {

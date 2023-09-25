@@ -89,15 +89,19 @@ const PopupWrapper = styled(motion.div)`
   width: 400px;
   height: 412px;
   position: absolute;
-  top: 70px;
-  border-radius: 25px;
+  top: 95px;
+  right: 10px;
+  border-radius: 15px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: ${color.textPrimary};
+  background-color: ${color.glassmorphismBg};
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   box-shadow: 0px 2px 10px ${color.boxShadowBtn};
   overflow: hidden;
+  z-index: 99;
 `;
 
 const AuthContent = styled(motion.div)`
@@ -107,12 +111,6 @@ const AuthContent = styled(motion.div)`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  p {
-    text-align: center;
-  }
-  span {
-    color: ${color.hover};
-  }
 `;
 
 export default Authorize;

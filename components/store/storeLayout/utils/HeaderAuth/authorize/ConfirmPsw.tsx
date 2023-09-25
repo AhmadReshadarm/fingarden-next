@@ -43,8 +43,17 @@ const ConfirmPsw = ({
       variants={variants.authorizeSlideX}
       animate={authType == 'password' ? 'center' : 'enter'}
     >
-      <FormWrapper>
-        <h4>Введите свой Логен и Пароль, чтобы войти</h4>
+      <FormWrapper
+        onSubmit={handleSignUp(
+          firstName,
+          lastName,
+          email,
+          password,
+          paginate,
+          dispatch,
+        )}
+      >
+        <h4>Введите свой пароль</h4>
         <AuthInputsWrapper>
           <label htmlFor="signup-psw">
             <b>
@@ -144,7 +153,7 @@ const ConfirmPsw = ({
             >
               <span className="tool-tip">?</span>
             </InputsTooltip>
-            <span style={{ color: color.hover, fontSize: '0.6rem' }}>
+            <span style={{ color: color.hover, fontSize: '0.8rem' }}>
               {repeatPsw !== password ? 'пароль не подходит' : ''}
             </span>
           </label>
@@ -202,6 +211,7 @@ const ConfirmPsw = ({
             </span>
           </ConfidentialityWrapper>
         </AuthInputsWrapper>
+        <button type={'submit'} style={{ display: 'none' }}></button>
       </FormWrapper>
       <BtnsWrapper>
         <AuthBtns
@@ -213,7 +223,7 @@ const ConfirmPsw = ({
           variants={variants.fadInSlideUp}
           bgcolor={
             isEmpty(password) || isEmpty(repeatPsw) || repeatPsw !== password
-              ? color.textSecondary
+              ? color.btnSecondery
               : color.btnPrimary
           }
           disabled={
@@ -221,16 +231,19 @@ const ConfirmPsw = ({
               ? true
               : false
           }
-          onClick={() =>
-            handleSignUp({
-              dispatch,
-              firstName,
-              lastName,
-              email,
-              password,
-              paginate,
-            })
+          textColor={
+            isEmpty(password) || isEmpty(repeatPsw) || repeatPsw !== password
+              ? color.btnPrimary
+              : color.textPrimary
           }
+          onClick={handleSignUp(
+            firstName,
+            lastName,
+            email,
+            password,
+            paginate,
+            dispatch,
+          )}
         >
           регистрироваться
         </AuthBtns>
@@ -241,7 +254,8 @@ const ConfirmPsw = ({
           whileHover={{ boxShadow: `0px 0px 4px 2px ${color.boxShadowBtn}` }}
           whileTap={{ boxShadow: `0px 0px 0px 0px ${color.boxShadowBtn}` }}
           variants={variants.fadInSlideUp}
-          bgcolor={color.textTertiary}
+          bgcolor={color.btnPrimary}
+          textColor={color.textPrimary}
           onClick={() => {
             paginate(paginateTo.back, 'signup');
             setInputsErr([false, false]);

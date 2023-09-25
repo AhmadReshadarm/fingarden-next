@@ -41,7 +41,7 @@ const SlidesTab = ({ isLoading }: Props) => {
             {slides?.map((slide) => {
               return (
                 <div key={slide?.id}>
-                  <a href={'https://' + slide?.link}>
+                  <a href={'https://fingarden.ru' + slide?.link}>
                     <Image
                       className={styles.bannersTab__slidesImageContainer__image}
                       preview={false}

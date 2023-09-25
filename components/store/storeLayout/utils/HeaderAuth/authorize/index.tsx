@@ -43,33 +43,36 @@ const Authorization: React.FC<Props> = ({
           whileInView="animate"
           variants={variants.fadInSlideUp}
         >
-          <h3>Wuluxe</h3>
+          <h3>Fingarden</h3>
           <h4>Войдите или зарегистрируйтесь для оформления заказа</h4>
-          <span>
-            Для регистрации мы вышлем вам ссылку для подтверждения на ваш
+          <span className="sing-up-notice">
+            При регистрации мы вышлем вам ссылку для подтверждения на ваш
             почтовый ящик
           </span>
-          <span>это разовое подтверждение</span>
         </AuthMessege>
-        <AuthBtns
-          whileHover="hover"
-          whileTap="tap"
-          variants={variants.boxShadow}
-          bgcolor={color.btnPrimary}
-          onClick={() => paginate(paginateTo.forward, 'signin')}
-        >
-          Войти
-        </AuthBtns>
-        <span style={{ fontFamily: 'intro' }}>или</span>
-        <AuthBtns
-          whileHover="hover"
-          whileTap="tap"
-          variants={variants.boxShadow}
-          bgcolor={color.btnPrimary}
-          onClick={() => paginate(paginateTo.forward, 'signup')}
-        >
-          Зарегистрироваться
-        </AuthBtns>
+        <SingInUpBtnsWrapper>
+          <AuthBtns
+            whileHover="hover"
+            whileTap="tap"
+            variants={variants.boxShadow}
+            bgcolor={color.btnPrimary}
+            textColor={color.textPrimary}
+            onClick={() => paginate(paginateTo.forward, 'signin')}
+          >
+            Войти
+          </AuthBtns>
+          <span style={{ fontFamily: 'intro' }}>или</span>
+          <AuthBtns
+            whileHover="hover"
+            whileTap="tap"
+            variants={variants.boxShadow}
+            bgcolor={color.btnPrimary}
+            textColor={color.textPrimary}
+            onClick={() => paginate(paginateTo.forward, 'signup')}
+          >
+            Зарегистрироваться
+          </AuthBtns>
+        </SingInUpBtnsWrapper>
       </Content>
 
       <SignIn
@@ -104,15 +107,24 @@ const AuthMessege = styled(motion.div)`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 5px;
+  gap: 15px;
   h3 {
     font-family: 'intro';
-    font-size: 1.3rem;
+    font-size: 2rem;
     margin: 0;
   }
-  span {
-    color: ${color.textSecondary};
+  .sing-up-notice {
+    color: ${color.bgSecondary};
   }
+`;
+
+const SingInUpBtnsWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 `;
 
 export default Authorization;

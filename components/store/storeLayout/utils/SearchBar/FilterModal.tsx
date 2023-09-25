@@ -68,14 +68,16 @@ const FilterModal: React.FC<Props> = ({
                   key={index}
                   onClick={handleSelect(category)}
                 >
-                  <span className="catalog-icon">
+                  {/* <span className="catalog-icon">
                     <img
                       src={`/api/images/${category.image}`}
                       alt={category.name}
                     />
-                  </span>
+                  </span> */}
 
-                  <span className="catalog-name">{category.name}</span>
+                  <span className="catalog-name">
+                    {category.name?.toUpperCase()}
+                  </span>
                 </motion.li>
               );
             })}
@@ -93,8 +95,8 @@ const PopupContainer = styled.div`
   top: 0;
   left: 0;
   background-color: ${color.glassmorphismBg};
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
+  // backdrop-filter: blur(9px);
+  // -webkit-backdrop-filter: blur(9px);
   position: absolute;
   display: flex;
   flex-direction: row;
@@ -157,7 +159,7 @@ const ContentInner = styled.ul`
   grid-template-columns: 1fr 1fr;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 30px;
+  gap: 20px;
 
   li {
     display: flex;
@@ -181,6 +183,7 @@ const ContentInner = styled.ul`
     }
     .catalog-name {
       white-space: nowrap;
+      font-size: 1.2rem;
     }
     &:hover {
       color: ${color.hover};

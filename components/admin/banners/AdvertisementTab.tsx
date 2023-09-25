@@ -1,65 +1,60 @@
-import { Col, Row, Spin } from 'antd';
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import AdvertisementDescList from './AdvertisementDescList';
-
-import AdvertisementImage from './AdvertisementImage';
+import { Spin } from 'antd';
+import { useEffect, useState } from 'react';
+import { useAppSelector } from 'redux/hooks';
+import { Advertisement } from 'swagger/services';
 import styles from './index.module.scss';
-
+import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import DOMPurify from 'dompurify';
 interface Props {
   isLoading: boolean;
 }
 
 const AdvertisementTab = ({ isLoading }: Props) => {
+  const data = useAppSelector<Advertisement[]>(
+    (state) => state.banners.advertisement,
+  );
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty(),
+  );
+
+  useEffect(() => {
+    if (!isLoading && data.length !== 0) {
+      setEditorState(
+        EditorState.createWithContent(
+          convertFromRaw(JSON.parse(data[0]?.description!)),
+        ),
+      );
+    }
+  }, [data]);
+
+  // _________________________ preview converter _______________________
+  const [convertedContent, setConvertedContent] = useState(null);
+  useEffect(() => {
+    const rawContentState = convertToRaw(editorState.getCurrentContent());
+    const htmlOutput = draftToHtml(rawContentState);
+    setConvertedContent(htmlOutput);
+  }, [editorState]);
+
+  function createMarkup(html) {
+    if (typeof window !== 'undefined') {
+      const domPurify = DOMPurify(window);
+      return {
+        __html: domPurify.sanitize(html),
+      };
+    }
+  }
+
   return (
     <>
       {isLoading ? (
         <Spin className={styles.spinner} size="large" />
       ) : (
-        <Row
-          gutter={[
-            {
-              xs: 8,
-              sm: 16,
-              md: 24,
-              lg: 32,
-              xl: 40,
-              xxl: 48,
-            },
-            {
-              xs: 8,
-              sm: 16,
-              md: 24,
-              lg: 32,
-              xl: 40,
-              xxl: 48,
-            },
-          ]}
-          className={styles.bannersTab}
-        >
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 12 }}
-            lg={{ span: 10 }}
-            xl={{ span: 10 }}
-            xxl={{ span: 12 }}
-            className={styles.bannersTab__advertisementImageContainer}
-          >
-            <AdvertisementImage />
-          </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 12 }}
-            lg={{ span: 14 }}
-            xl={{ span: 14 }}
-            xxl={{ span: 12 }}
-            className={styles.bannersTab__descriptionListContainer}
-          >
-            <AdvertisementDescList />
-          </Col>
-        </Row>
+        <div
+          className="preview"
+          dangerouslySetInnerHTML={createMarkup(convertedContent)}
+        ></div>
       )}
     </>
   );

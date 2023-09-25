@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import styled from 'styled-components';
 import { Basket } from 'swagger/services';
-import CartSVG from '../../../../../assets/cart.svg';
+import BasketNormalSvg from '../../../../../assets/basket_normal.svg';
 import { Btns } from '../../common';
 import CartItem from './CartItem';
 import { outsideClickListner } from 'components/store/storeLayout/helpers';
@@ -46,19 +46,21 @@ const HeaderCart = () => {
 
   return (
     <>
-      {!!cart?.orderProducts?.length && (
-        <Counter>{cart?.orderProducts?.length}</Counter>
-      )}
-      <Btns
-        ref={btnNode}
-        id="cart-btn"
-        onClick={handleMenuState(setIsOpened, setDisplay)}
-      >
-        <span>
-          <CartSVG />
-        </span>
-        <span>Корзина</span>
-      </Btns>
+      <div style={{ position: 'relative' }}>
+        {!!cart?.orderProducts?.length && (
+          <Counter>{cart?.orderProducts?.length}</Counter>
+        )}
+        <Btns
+          ref={btnNode}
+          id="cart-btn"
+          title="Корзина"
+          onClick={handleMenuState(setIsOpened, setDisplay)}
+        >
+          <span>
+            <BasketNormalSvg />
+          </span>
+        </Btns>
+      </div>
       <PopupWrapper
         ref={menuNode}
         style={{ display }}
@@ -82,7 +84,7 @@ const HeaderCart = () => {
               })}
             </PopupContent>
             <TotalPriceWrapper>
-              <span>Общая сумма</span>
+              <span>Итого:</span>
               <span>{getTotalPrice(cart.orderProducts, user!)}₽</span>
             </TotalPriceWrapper>
             <PopupBtnsDivider>
@@ -96,17 +98,15 @@ const HeaderCart = () => {
                   Перейти в корзину
                 </ActionBtns>
               </Link>
-              <Link href="/checkout">
-                <a>
-                  <ActionBtns
-                    whileHover="hover"
-                    whileTap="tap"
-                    variants={variants.boxShadow}
-                    onClick={handleMenuState(setIsOpened, setDisplay)}
-                  >
-                    Перейти к оформлению
-                  </ActionBtns>
-                </a>
+              <Link style={{ alignSelf: 'flex-end' }} href="/checkout">
+                <ActionBtns
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={variants.boxShadow}
+                  onClick={handleMenuState(setIsOpened, setDisplay)}
+                >
+                  Перейти к оформлению
+                </ActionBtns>
               </Link>
             </PopupBtnsDivider>
           </PopupDivider>
@@ -118,12 +118,12 @@ const HeaderCart = () => {
 
 const Counter = styled.span`
   position: absolute;
-  top: -10px;
-  right: 10px;
+  top: -8px;
+  right: -10px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: ${color.rating};
+  background-color: ${color.hoverBtnBg};
   color: ${color.textPrimary};
   display: flex;
   flex-direction: row;
@@ -136,16 +136,19 @@ const PopupWrapper = styled(motion.div)`
   width: 450px;
   height: 350px;
   position: absolute;
-  top: 70px;
-  right: 0px;
-  border-radius: 25px;
+  top: 95px;
+  right: 10px;
+  border-radius: 15px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: ${color.textPrimary};
+  background-color: ${color.glassmorphismBg};
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   box-shadow: 0px 2px 10px ${color.boxShadowBtn};
   overflow: hidden;
+  z-index: 99;
 `;
 
 const PopupDivider = styled.div`
@@ -165,13 +168,9 @@ const PopupBtnsDivider = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  gap: 10px;
+  gap: 30px;
   a {
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
   }
 `;
 
@@ -179,14 +178,13 @@ const TotalPriceWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 10px 0;
   gap: 10px;
   padding-right: 10px;
   span {
-    font-family: 'intro';
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 `;
 
@@ -199,8 +197,8 @@ const PopupContent = styled(motion.ul)`
   align-items: flex-start;
   overflow-y: scroll;
   gap: 10px;
-  ::-webkit-scrollbar {
-    width: 10px;
+  &::-webkit-scrollbar {
+    width: 5px;
   }
   a {
     width: 100%;
@@ -213,7 +211,7 @@ const PopupContent = styled(motion.ul)`
 `;
 
 const ActionBtns = styled(motion.button)`
-  width: 90%;
+  width: 100%;
   height: 45px;
   background: ${color.btnPrimary};
   color: ${color.textPrimary};

@@ -3,12 +3,17 @@ import cloneDeep from 'lodash/cloneDeep';
 import { NextRouter } from 'next/router';
 import { Dispatch } from 'react';
 import { SetStateAction } from 'react';
-import { createCategory, deleteCategory, editCategory, fetchCategories } from 'redux/slicers/categoriesSlicer';
+import {
+  createCategory,
+  deleteCategory,
+  editCategory,
+  fetchCategories,
+} from 'redux/slicers/categoriesSlicer';
 import { AppDispatch } from 'redux/store';
 import { Page, paths } from 'routes/constants';
-import {Image, Parameter} from 'swagger/services';
-import {FormInstance} from "antd";
-import {imageToCheck, valueToCheck} from "../types";
+import { Image, Parameter } from 'swagger/services';
+import { FormInstance } from 'antd';
+import { imageToCheck, valueToCheck } from '../types';
 
 const handleFormSubmit =
   (
@@ -18,7 +23,7 @@ const handleFormSubmit =
     parameters: Parameter[],
   ) =>
   async (form) => {
-    // console.log((!form.url || !form.name || !image.length))
+    console.log(form);
     if (router.query.id) {
       const payload = {
         ...form,
@@ -50,13 +55,16 @@ const handleFormSubmit =
   };
 
 const handleDeleteCategory =
-  (id: string, dispatch: AppDispatch, setVisible: any, offset: number) => async () => {
+  (id: string, dispatch: AppDispatch, setVisible: any, offset: number) =>
+  async () => {
     const isSaved: any = await dispatch(deleteCategory(id));
     if (!isSaved.error) {
-      dispatch(fetchCategories({
-        offset: String(offset),
-        limit: '20'
-      }));
+      dispatch(
+        fetchCategories({
+          offset: String(offset),
+          limit: '20',
+        }),
+      );
       setVisible((prev) => !prev);
     }
   };

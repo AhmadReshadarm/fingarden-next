@@ -25,9 +25,11 @@ const ManageProduct = () => {
   const filteredProducts = products.filter(
     (product) => product.id !== Number(router.query.id),
   );
-  const product = useAppSelector((state) => state.products.chosenProduct);
+
   const isLoading = useAppSelector((state) => state.products.loading);
   const isSaveLoading = useAppSelector((state) => state.products.saveLoading);
+
+  const product = useAppSelector((state) => state.products.chosenProduct);
 
   const colors = useAppSelector((state) => state.colors.colors);
   const categories = useAppSelector((state) => state.categories.categories);

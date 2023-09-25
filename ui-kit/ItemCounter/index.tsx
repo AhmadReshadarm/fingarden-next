@@ -38,13 +38,7 @@ const ItemCounter: React.FC<Props> = ({
       >
         -
       </motion.button>
-      <input
-        style={inputStyle}
-        readOnly
-        value={itemCounter}
-        type="number"
-        min={user?.role === Role.SuperUser ? 10 : 1}
-      />
+      <span>{itemCounter}</span>
       <motion.button
         whileHover="hover"
         whileTap="tap"
@@ -67,29 +61,23 @@ const ItemCounterWrapper = styled.div`
   button {
     width: 30px;
     height: 30px;
-    border-radius: 5px;
+    border-radius: 3px;
     background-color: ${color.btnPrimary};
     color: ${color.textPrimary};
     align-self: center !important;
   }
 
-  input {
+  span {
     width: 34px;
     height: 30px;
-    text-align: center;
-    border-radius: 5px;
-    padding: 0 8px;
+    border-radius: 3px;
     border: 1px solid ${color.btnPrimary};
-    background-color: ${color.textPrimary};
-    color: ${color.btnPrimary};
-    ::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    ::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    background-color: transparent;
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 `;
 

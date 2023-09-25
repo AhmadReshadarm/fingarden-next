@@ -17,9 +17,11 @@ import {
   fetchCategories,
   fetchTags,
 } from 'redux/slicers/store/globalSlicer';
-
 import { createCart, fetchCart } from 'redux/slicers/store/cartSlicer';
 import { ContextProvider } from 'common/context/AppContext';
+import { fetchWishlistProducts } from 'redux/slicers/store/wishlistSlicer';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { fetchAdvertisement } from 'redux/slicers/bannersSlicer';
 
 export type ComponentWithPageLayout = AppProps & {
   Component: AppProps['Component'] & {
@@ -53,10 +55,13 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
     if (!wishlistId) {
       dispatch(createWishlist());
     } else {
-      dispatch(fetchWishlist(wishlistId));
+      // dispatch(fetchWishlist(wishlistId));
+      dispatch(fetchWishlistProducts(wishlistId));
     }
     dispatch(fetchCategories());
-
+    dispatch(fetchTags());
+    dispatch(fetchAdvertisement());
+    // dispatch(incrementCartCounter(0));
     if (!user && router.pathname.includes('/admin')) {
       navigateTo(router, Page.ADMIN_LOGIN)();
     }

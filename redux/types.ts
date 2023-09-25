@@ -237,7 +237,7 @@ type TStoreCheckoutState = {
 };
 
 type TWishlistState = {
-  products: Product[];
+  wishlist: Wishlist | null;
   loading: boolean;
 };
 

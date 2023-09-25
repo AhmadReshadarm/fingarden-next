@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { Btns, Container, Content, Wrapper } from './common';
+import { Container, Content, Wrapper } from './common';
 import { overrideDefaultIOSZoom } from './helpers';
-import AuthComp from './utils/HeaderAuth/index';
+import AuthorizationModel from './utils/HeaderAuth/index';
 import HeaderCart from './utils/HeaderCart';
 import SearchBar from './utils/SearchBar/SearchBar';
 import ExtraNavBar from './utils/ExtraNav';
@@ -13,9 +13,7 @@ import { outsideClickListner } from 'components/store/storeLayout/helpers';
 import LogoSVG from '../../../assets/fingarden.svg';
 import SearchedNormalSVG from '../../../assets/search_normal.svg';
 import SearchedPressedSVG from '../../../assets/search_pressed.svg';
-import ProfileLogedOutSVG from '../../../assets/profile_loged_out.svg';
 import WishlistNormalSVG from '../../../assets/Wishlist_normal_black.svg';
-import BasketNormalSvg from '../../../assets/basket_normal.svg';
 import { PopupDisplay } from './constants';
 import { motion } from 'framer-motion';
 import HeaderCatalog from './utils/HeaderCatalog/index';
@@ -27,6 +25,8 @@ import AuthBtnMobile from './utils/HeaderAuth/AuthBtnMobile';
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 import { handleSearchclosed } from './helpers';
+import { TWishlistState } from 'redux/types';
+import { useAppSelector } from 'redux/hooks';
 const Header = () => {
   const dispatch = useAppDispatch();
   const [isSearchActive, setSearchActive] = useState(false);
@@ -42,7 +42,9 @@ const Header = () => {
   }, []);
 
   const [onWhichNav, setOnWhichNav] = useState('');
-
+  const { wishlist }: TWishlistState = useAppSelector(
+    (state) => state.wishlist,
+  );
   useEffect(
     outsideClickListner(
       listening,
@@ -122,7 +124,7 @@ const Header = () => {
             <NavWraper>
               <button
                 onMouseEnter={() => setOnWhichNav('catalog')}
-                // onMouseLeave={() => setOnWhichNav('')}
+                onMouseLeave={() => setOnWhichNav('')}
               >
                 <span>КАТАЛОГ</span>
               </button>
@@ -142,6 +144,7 @@ const Header = () => {
             <BtnsWrapper>
               <div className="innerWrapper">
                 <button
+                  className="header-action-btns"
                   ref={searchBtnNode}
                   title="Поиск"
                   onClick={() => {
@@ -166,21 +169,20 @@ const Header = () => {
                     <SearchedPressedSVG />
                   </motion.span>
                 </button>
-                <button title="Войти">
-                  <span>
-                    <ProfileLogedOutSVG />
-                  </span>
-                </button>
-                <button title="Избранное">
+                <AuthorizationModel />
+                <Link
+                  href="/wishlist"
+                  className="header-action-btns wishlist-Wrapper"
+                  title="Избранное"
+                >
+                  {!!wishlist?.items?.length && (
+                    <Counter>{wishlist?.items?.length}</Counter>
+                  )}
                   <span>
                     <WishlistNormalSVG />
                   </span>
-                </button>
-                <button title="Корзина">
-                  <span>
-                    <BasketNormalSvg />
-                  </span>
-                </button>
+                </Link>
+                <HeaderCart />
               </div>
             </BtnsWrapper>
           </Content>
@@ -269,7 +271,10 @@ const BtnsWrapper = styled.div`
     justify-content: center;
     align-items: center;
     gap: 20px;
-    button {
+    .wishlist-Wrapper {
+      position: relative;
+    }
+    .header-action-btns {
       cursor: pointer;
       width: 25px;
       height: 25px;
@@ -285,6 +290,21 @@ const BtnsWrapper = styled.div`
       }
     }
   }
+`;
+const Counter = styled.span`
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50%;
+  background-color: ${color.hoverBtnBg};
+  color: ${color.textPrimary};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
 `;
 
 export default Header;

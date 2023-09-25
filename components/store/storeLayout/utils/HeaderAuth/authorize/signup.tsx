@@ -58,7 +58,12 @@ const SignUp: React.FC<Props> = ({
         variants={variants.authorizeSlideX}
         animate={authType == 'signup' ? 'center' : 'enter'}
       >
-        <FormWrapper>
+        <FormWrapper
+          onSubmit={(e) => {
+            e.preventDefault();
+            paginate(paginateTo.forward, 'password');
+          }}
+        >
           <h4>Введите свои данные</h4>
           <AuthDevider>
             <AuthInputsWrapper>
@@ -208,6 +213,7 @@ const SignUp: React.FC<Props> = ({
               )}
             />
           </AuthInputsWrapper>
+          <button type={'submit'} style={{ display: 'none' }}></button>
         </FormWrapper>
         <BtnsWrapper>
           <AuthBtns
@@ -222,7 +228,7 @@ const SignUp: React.FC<Props> = ({
               isEmpty(name) ||
               isEmpty(lastName) ||
               !isEmail(email)
-                ? color.textSecondary
+                ? color.btnSecondery
                 : color.btnPrimary
             }
             disabled={
@@ -233,15 +239,15 @@ const SignUp: React.FC<Props> = ({
                 ? true
                 : false
             }
-            onClick={
-              () => paginate(paginateTo.forward, 'password')
-              //   handleSignUpEmail({
-              //     email,
-              //     paginate,
-              //     setLoading,
-              //     setServerErr,
-              //   })
+            textColor={
+              isEmpty(email) ||
+              isEmpty(name) ||
+              isEmpty(lastName) ||
+              !isEmail(email)
+                ? color.btnPrimary
+                : color.textPrimary
             }
+            onClick={() => paginate(paginateTo.forward, 'password')}
           >
             Следующий
           </AuthBtns>
@@ -252,7 +258,8 @@ const SignUp: React.FC<Props> = ({
             whileHover={{ boxShadow: `0px 0px 4px 2px ${color.boxShadowBtn}` }}
             whileTap={{ boxShadow: `0px 0px 0px 0px ${color.boxShadowBtn}` }}
             variants={variants.fadInSlideUp}
-            bgcolor={color.textTertiary}
+            bgcolor={color.btnPrimary}
+            textColor={color.textPrimary}
             onClick={() => {
               dispatch(clearServerErr());
               setInputsErr([false, false, false]);

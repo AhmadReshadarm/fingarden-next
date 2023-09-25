@@ -79,18 +79,20 @@ const handleItemRemove =
 const handleItemCountChange =
   (dispatch: AppDispatch, cart?: Basket) =>
   (counter: number, product: Product) => {
-    dispatch(
-      updateCart({
-        orderProducts: cart?.orderProducts
-          ?.filter((orderProduct) => orderProduct.product?.id != product.id)
-          ?.concat({ product: { id: product.id }, qty: counter })
-          .map((orderProduct) => ({
-            productId: orderProduct.product?.id,
-            qty: orderProduct.qty,
-            productVariantId: orderProduct.productVariant?.id,
-          })),
-      }),
-    );
+    setTimeout(() => {
+      dispatch(
+        updateCart({
+          orderProducts: cart?.orderProducts
+            ?.filter((orderProduct) => orderProduct.product?.id != product.id)
+            ?.concat({ product: { id: product.id }, qty: counter })
+            .map((orderProduct) => ({
+              productId: orderProduct.product?.id,
+              qty: orderProduct.qty,
+              productVariantId: orderProduct.productVariant?.id,
+            })),
+        }),
+      );
+    }, 500);
   };
 
 const handleRemoveClick =

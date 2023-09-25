@@ -3,31 +3,34 @@ import variants from 'components/store/lib/variants';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { OrderProduct, Product } from 'swagger/services';
-import FilterCheckbox from 'ui-kit/FilterCheckbox';
-import { FilterCheckboxSize } from 'ui-kit/FilterCheckbox/types';
-import ItemCounter from 'ui-kit/ItemCounter';
+import { Basket, OrderProduct, Product, Wishlist } from 'swagger/services';
 import CloseSVG from '../../../assets/close_black.svg';
 import { devices } from '../lib/Devices';
 import { Rating } from '@mui/material';
-import { useAppSelector } from 'redux/hooks';
+import { useAppSelector, useAppDispatch } from 'redux/hooks';
 import { TAuthState } from 'redux/types';
-import { Role } from 'common/enums/roles.enum';
+import { AppDispatch } from 'redux/store';
+import color from '../lib/ui.colors';
+import { TrigerhandleWishBtnClick } from '../storeLayout/utils/SearchBar/helpers';
+import { ArrowBtns } from 'ui-kit/ArrowBtns';
+import { AddToWishlist } from 'ui-kit/ProductActionBtns';
+import {
+  checkIfItemInWishlist,
+  handleWishBtnClick,
+} from 'ui-kit/products/helpers';
+import { handleItemCountChange } from './helpers';
+import { useState } from 'react';
 type Props = {
   item: OrderProduct;
-  selected?: boolean;
-  onRemove: (product: Product) => void;
-  onCountChange: (counter: number, product: Product) => void;
-  onSelect: (item: OrderProduct) => void;
+  cart: Basket;
+  onRemove: (product: Product, dispatch: AppDispatch, cart: Basket) => void;
+  wishlist: Wishlist;
 };
 
-const CartItem: React.FC<Props> = ({
-  item,
-  selected,
-  onRemove,
-  onCountChange,
-  onSelect,
-}) => {
+const CartItem: React.FC<Props> = ({ item, cart, onRemove, wishlist }) => {
+  const dispatch = useAppDispatch();
+  // const wishlist: Wishlist = useAppSelector((state) => state.global.wishlist);
+
   const { name, url } = item.product!;
 
   const curVariant = item.productVariant
@@ -39,22 +42,14 @@ const CartItem: React.FC<Props> = ({
   const images = getProductVariantsImages(item.product?.productVariants);
 
   const handleRemoveClick = (product: Product) => () => {
-    onRemove(product);
+    onRemove(product, dispatch, cart);
   };
 
-  const handleSelectCheck = () => {
-    onSelect(item);
-  };
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
-
+  const [itemCounter, setItemCounter] = useState(item.qty!);
   return (
     <Item>
-      <FilterCheckbox
-        checked={selected}
-        size={FilterCheckboxSize.Big}
-        onChange={handleSelectCheck}
-      />
-      <Link href={`/product/${url}`}>
+      <div className="item-container">
         <ImageWrapper>
           <motion.img
             whileHover="hover"
@@ -67,135 +62,273 @@ const CartItem: React.FC<Props> = ({
               currentTarget.src = '/assets/images/img_error.png';
             }}
           />
+          <div className="wishlist-btn-container">
+            <ArrowBtns
+              style={{
+                background: color.glassmorphismSeconderBG,
+                backdropFilter: 'blur(9px)',
+                position: 'relative',
+              }}
+              onClick={TrigerhandleWishBtnClick(
+                item.product!,
+                handleWishBtnClick(item.product!, dispatch, wishlist),
+              )}
+            >
+              <AddToWishlist
+                checkIfItemInWishlist={checkIfItemInWishlist}
+                product={item.product!}
+                wishlist={wishlist}
+              />
+            </ArrowBtns>
+          </div>
         </ImageWrapper>
-      </Link>
-      <ItemDetails>
-        <h4>{name}</h4>
-        <ItemDetailDivider>
-          <h3>
-            {user?.role === Role.SuperUser
-              ? curVariant.wholeSalePrice
-              : curVariant.price}
-            ₽
-          </h3>
-          <ItemCounter
-            qty={item.qty!}
-            inputStyle={{
-              width: '65px',
-              height: '45px',
-              background: '#C4C4C4',
-              border: 'none',
-            }}
-            product={item.product!}
-            onCountChange={onCountChange}
-          />
-        </ItemDetailDivider>
-        <RateWrapper>
-          <Rating value={item.product?.rating?.avg} size="medium" readOnly />
-        </RateWrapper>
-        <ReviewsNumber>{item.product?.reviews?.length} отзывов</ReviewsNumber>
-      </ItemDetails>
-      <motion.button
-        custom={1.1}
-        whileTap="tap"
-        whileHover="hover"
-        variants={variants.grow}
-        onClick={handleRemoveClick(item.product!)}
-      >
-        <CloseSVG />
-      </motion.button>
+        <ItemDetails>
+          <Link className="product-title" href={`/product/${url}`}>
+            <h4>{name}</h4>
+          </Link>
+          <div className="product-price-wrapper">
+            <span>Цена: </span>
+            <h3>{curVariant.price} ₽</h3>
+          </div>
+          <div className="review-and-rating-Wrapper">
+            <Rating value={item.product?.rating?.avg} size="small" readOnly />
+            <span className="reviews">
+              {item.product?.reviews?.length} отзывов
+            </span>
+          </div>
+
+          <div className="item-action-btns-wrapper">
+            <div className="in-cart-sign">
+              <span>уже в корзине</span>
+              <img src="/icons/vector.png" alt="in cart sign" />
+            </div>
+            <ItemCounterWrapper onClick={(e) => e.preventDefault()}>
+              <motion.button
+                className="left-btn"
+                whileHover="hover"
+                whileTap="tap"
+                variants={variants.boxShadow}
+                onClick={() =>
+                  setItemCounter((prev) => {
+                    if (prev == 1) return prev;
+                    const itemCounter = prev - 1;
+                    handleItemCountChange(
+                      itemCounter,
+                      item.product!,
+                      dispatch,
+                      cart,
+                    );
+
+                    return itemCounter;
+                  })
+                }
+              >
+                <span>-</span>
+              </motion.button>
+              <span>{itemCounter} шт</span>
+              <motion.button
+                className="right-btn"
+                whileHover="hover"
+                whileTap="tap"
+                variants={variants.boxShadow}
+                onClick={() =>
+                  setItemCounter((prev) => {
+                    const itemCounter = prev + 1;
+                    handleItemCountChange(
+                      itemCounter,
+                      item.product!,
+                      dispatch,
+                      cart,
+                    );
+
+                    return itemCounter;
+                  })
+                }
+              >
+                <span>+</span>
+              </motion.button>
+            </ItemCounterWrapper>
+          </div>
+        </ItemDetails>
+        <motion.button
+          className="remove-btn"
+          custom={1.2}
+          whileTap="tap"
+          whileHover="hover"
+          variants={variants.grow}
+          onClick={handleRemoveClick(item.product!)}
+        >
+          <CloseSVG />
+        </motion.button>
+      </div>
     </Item>
   );
 };
 
 const Item = styled.li`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 15px;
-  gap: 15px;
-  position: relative;
-
-  img {
+  padding: 10px 0;
+  .item-container {
     width: 100%;
-    height: 100%;
-    min-width: 70px;
-    object-fit: contain;
-  }
-  button {
-    justify-self: flex-end;
-    align-self: flex-start;
-    width: 30px;
-    height: 30px;
-  }
-
-  > button {
-    position: absolute;
-    right: 3px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+    background-color: ${color.bgProduct};
+    box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
+    border-radius: 10px;
+    gap: 50px;
+    .remove-btn {
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+    }
   }
 `;
 
 const ImageWrapper = styled.div`
-  width: 220px;
-  height: 246px;
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
+  position: relative;
   cursor: pointer;
-  margin-right: 30px;
-  padding: 25px;
+  img {
+    width: 220px;
+    height: 220px;
+    border-radius: 5px;
+    object-fit: cover;
+  }
+  .wishlist-btn-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+  }
   @media ${devices.mobileL} {
-    margin-right: 0;
-    min-width: 140px;
   }
 `;
 
 const ItemDetails = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-
-  h4 {
-    font-size: 16px;
-    font-weight: 400;
-    margin: 0;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  .product-title {
+    width: 100%;
+    h4 {
+      text-align: left;
+      font-family: 'Anticva';
+      font-size: 2.5rem;
+      font-weight: 400;
+      &:hover {
+        text-decoration: underline 1px;
+        color: ${color.hoverBtnBg};
+      }
+    }
   }
-
-  h3 {
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0;
+  .product-price-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-left;
+    align-items: center;
+    gap: 20px;
+    h3 {
+      font-family: 'Jost';
+      font-size: 2rem;
+      font-weight: 400;
+    }
+    span {
+      font-family: 'Jost';
+      font-size: 2rem;
+      font-weight: 300;
+    }
+  }
+  .review-and-rating-Wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-left;
+    align-items: center;
+    gap: 5px;
+    span {
+      font-family: 'Jost';
+      font-size: 14px;
+    }
+    .reviews {
+      color: ${color.hoverBtnBg};
+    }
+  }
+  .item-action-btns-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-left;
+    align-items: center;
+    gap: 20px;
+    .in-cart-sign {
+      width: 200px;
+      height: 40px;
+      border: 1px solid;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
   }
 `;
 
-const ItemDetailDivider = styled.div`
-  width: 100%;
+const ItemCounterWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-
-  @media ${devices.mobileL} {
-    flex-direction: column;
-    align-items: baseline;
+  gap: 5px;
+  box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
+  font-family: 'Jost';
+  font-size: 1rem;
+  border-radius: 4px;
+  .left-btn {
+    border-radius: 4px 0 0 4px;
   }
-`;
+  .right-btn {
+    border-radius: 0 4px 4px 0;
+  }
+  button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: ${color.btnSecondery};
+    span {
+      width: 100%;
+      height: 100%;
+      font-family: 'Jost';
+      font-size: 2rem;
+      font-weight: 200;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 
-const RateWrapper = styled.div`
-  display: flex;
-  gap: 7px;
-  margin-top: 15px;
-`;
-
-const ReviewsNumber = styled.div`
-  font-size: 14px;
-  margin-top: 10px;
+  span {
+    width: 50px;
+    background-color: transparent;
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Jost';
+  }
 `;
 
 export default CartItem;

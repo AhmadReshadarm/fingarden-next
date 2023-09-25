@@ -4,6 +4,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import ReviewsSVG from '../../../../../assets/reviews.svg';
 import SettingskSVG from '../../../../../assets/settings.svg';
+import QuestionsSVG from '../../../../../assets/quastions_profile.svg';
 import variants from 'components/store/lib/variants';
 import { handleMenuState } from '../../helpers';
 import { handleLogout } from './authorize/helpers';
@@ -45,65 +46,71 @@ const Profile: React.FC<Props> = ({
     >
       <ProfileWrapper>
         <AuthDevider style={{ justifyContent: 'flex-start' }}>
-          <Link href="/profile">
-            <a>
+          <Link legacyBehavior href="/profile">
+            <span>
               <motion.img
                 src={`https://avatars.dicebear.com/api/micah/${user?.id}.svg?facialHairProbability=0&mouth[]=smile&scale=100&hair[]=fonze,full,pixie`}
                 alt="profile"
               />
-            </a>
+            </span>
           </Link>
           <ProfileDataWrapper>
             <h3>{`${user?.firstName} ${user?.lastName}`}</h3>
-            <span>{user?.email}</span>
+            <span className="user-email">{user?.email}</span>
             <Link href="/profile">
-              <a onClick={handleMenuState(setIsOpened, setDisplay)}>
+              <span
+                className="user-profile-link"
+                onClick={handleMenuState(setIsOpened, setDisplay)}
+              >
                 <b>Личные данные</b>
-              </a>
+              </span>
             </Link>
           </ProfileDataWrapper>
         </AuthDevider>
       </ProfileWrapper>
-
-      <Link href="/profile#reviews">
-        <motion.a
-          whileHover="hover"
-          whileTap="tap"
-          custom={1.04}
-          variants={variants.grow}
-          style={{ alignSelf: 'flex-start' }}
-          onClick={handleMenuState(setIsOpened, setDisplay)}
-        >
-          <AuthDevider style={{ justifyContent: 'flex-start' }}>
+      <div className="profile-action-btn">
+        <Link href="/profile#reviews">
+          <AuthDevider
+            whileHover="hover"
+            whileTap="tap"
+            custom={1.04}
+            variants={variants.grow}
+            onClick={handleMenuState(setIsOpened, setDisplay)}
+          >
             <ReviewsSVG />
-            <span style={{ fontWeight: '500', color: color.textSecondary }}>
-              Мои отзывы
-            </span>
+            <span>Мои отзывы</span>
           </AuthDevider>
-        </motion.a>
-      </Link>
-      <Link href="/profile#settings">
-        <motion.a
-          whileHover="hover"
-          whileTap="tap"
-          custom={1.04}
-          variants={variants.grow}
-          style={{ alignSelf: 'flex-start' }}
-          onClick={handleMenuState(setIsOpened, setDisplay)}
-        >
-          <AuthDevider style={{ justifyContent: 'flex-start' }}>
+        </Link>
+        <Link href="/profile#settings">
+          <AuthDevider
+            whileHover="hover"
+            whileTap="tap"
+            custom={1.04}
+            variants={variants.grow}
+            onClick={handleMenuState(setIsOpened, setDisplay)}
+          >
             <SettingskSVG />
-            <span style={{ fontWeight: '500', color: color.textSecondary }}>
-              Настройки
-            </span>
+            <span>Настройки</span>
           </AuthDevider>
-        </motion.a>
-      </Link>
-
+        </Link>
+        <Link href="/profile#questions">
+          <AuthDevider
+            whileHover="hover"
+            whileTap="tap"
+            custom={1.04}
+            variants={variants.grow}
+            onClick={handleMenuState(setIsOpened, setDisplay)}
+          >
+            <QuestionsSVG />
+            <span>Вопросы</span>
+          </AuthDevider>
+        </Link>
+      </div>
       <AuthBtns
         whileHover="hover"
         whileTap="tap"
-        variants={variants.boxShadow}
+        custom={1.01}
+        variants={variants.grow}
         width="100"
         onClick={handleLogout(dispatch, setDisplay, setIsOpened)}
       >
@@ -120,15 +127,19 @@ const AuthContent = styled(motion.div)`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  p {
-    text-align: center;
-  }
-  span {
-    color: ${color.hover};
+
+  .profile-action-btn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 25px;
+    padding: 10px 0 20px 30px;
   }
 `;
 
-const AuthDevider = styled.div`
+const AuthDevider = styled(motion.div)`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -143,11 +154,14 @@ const AuthBtns = styled(motion.button)<any>`
   background: ${color.btnPrimary};
   color: ${color.textPrimary};
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  &:hover {
+    background: ${color.hoverBtnBg};
+  }
 `;
 
 const ProfileWrapper = styled.div`
@@ -162,11 +176,6 @@ const ProfileWrapper = styled.div`
     height: 80px;
     border-radius: 50%;
   }
-  a {
-    &:hover {
-      color: ${color.hover};
-    }
-  }
 `;
 
 const ProfileDataWrapper = styled.div`
@@ -174,14 +183,22 @@ const ProfileDataWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  gap: 5px;
   h3 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 700;
-    font-family: 'Intro';
+    text-shadow: 0px 5px 10px ${color.boxShadowBtn};
   }
-  span {
-    color: ${color.ratingEmpty};
+  .user-email {
+    color: ${color.ok};
+  }
+  .user-profile-link {
+    color: ${color.hoverBtnBg};
+    font-size: 1.2rem;
+    &:hover {
+      color: ${color.hover};
+    }
   }
 `;
 

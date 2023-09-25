@@ -46,22 +46,23 @@ const handleSignIn =
     dispatch: AppDispatch;
     onAfterAuthorized?: () => void;
   }) =>
-    async () => {
-      if (isEmail(email) && !isEmpty(password)) {
-        const payload = {
-          email,
-          password,
-        };
+  async (e) => {
+    e.preventDefault();
+    if (isEmail(email) && !isEmpty(password)) {
+      const payload = {
+        email,
+        password,
+      };
 
-        const resp: any = await dispatch(userSignin(payload));
+      const resp: any = await dispatch(userSignin(payload));
 
-        if (!resp.error) {
-          if (onAfterAuthorized) {
-            onAfterAuthorized();
-          }
+      if (!resp.error) {
+        if (onAfterAuthorized) {
+          onAfterAuthorized();
         }
       }
-    };
+    }
+  };
 
 const handleLogout =
   (
@@ -69,49 +70,45 @@ const handleLogout =
     setDisplay: Dispatch<SetStateAction<PopupDisplay>>,
     setIsOpened: Dispatch<SetStateAction<boolean>>,
   ) =>
-    () => {
-      setIsOpened((prev) => !prev);
-      setTimeout(() => {
-        setDisplay((prev) =>
-          prev === PopupDisplay.None ? PopupDisplay.Flex : PopupDisplay.None,
-        );
-      });
-      dispatch(signout());
-    };
+  () => {
+    setIsOpened((prev) => !prev);
+    setTimeout(() => {
+      setDisplay((prev) =>
+        prev === PopupDisplay.None ? PopupDisplay.Flex : PopupDisplay.None,
+      );
+    });
+    dispatch(signout());
+  };
 
-const handleSignUp = async ({
-  firstName,
-  lastName,
-  email,
-  password,
-  dispatch,
-  paginate,
-}: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  dispatch: AppDispatch;
-  paginate: any;
-}) => {
-  if (isEmail(email)) {
-    const payload = {
-      firstName,
-      lastName,
-      email,
-      password,
-    };
-    const resp: any = await dispatch(signup(payload));
+const handleSignUp =
+  (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    paginate: any,
+    dispatch: AppDispatch,
+  ) =>
+  async (e) => {
+    e.preventDefault();
+    if (isEmail(email)) {
+      const payload = {
+        firstName,
+        lastName,
+        email,
+        password,
+      };
+      const resp: any = await dispatch(signup(payload));
 
-    if (!resp.error) {
-      paginate(paginateTo.back, 'signin');
+      if (!resp.error) {
+        paginate(paginateTo.back, 'signin');
 
-      return;
+        return;
+      }
+
+      paginate(paginateTo.back, 'signup');
     }
-
-    paginate(paginateTo.back, 'signup');
-  }
-};
+  };
 
 const handleEmailChange =
   (
@@ -121,15 +118,15 @@ const handleEmailChange =
     setInputsErr: Dispatch<SetStateAction<[boolean, boolean, boolean]>>,
     dispatch: AppDispatch,
   ) =>
-    (e) => {
-      setEmail(e.target.value.toLowerCase());
-      dispatch(clearServerErr());
-      setInputsErr([
-        nameInput ? true : false,
-        lastNameInput ? true : false,
-        true,
-      ]);
-    };
+  (e) => {
+    setEmail(e.target.value.toLowerCase());
+    dispatch(clearServerErr());
+    setInputsErr([
+      nameInput ? true : false,
+      lastNameInput ? true : false,
+      true,
+    ]);
+  };
 
 const handleFirstNameChange =
   (
@@ -138,14 +135,14 @@ const handleFirstNameChange =
     setName: Dispatch<SetStateAction<string>>,
     setInputsErr: Dispatch<SetStateAction<[boolean, boolean, boolean]>>,
   ) =>
-    (e) => {
-      setName(e.target.value);
-      setInputsErr([
-        true,
-        lastNameInput ? true : false,
-        emailInput ? true : false,
-      ]);
-    };
+  (e) => {
+    setName(e.target.value);
+    setInputsErr([
+      true,
+      lastNameInput ? true : false,
+      emailInput ? true : false,
+    ]);
+  };
 
 const handleLastNameChange =
   (
@@ -154,10 +151,10 @@ const handleLastNameChange =
     setlastName: Dispatch<SetStateAction<string>>,
     setInputsErr: Dispatch<SetStateAction<[boolean, boolean, boolean]>>,
   ) =>
-    (e) => {
-      setlastName(e.target.value);
-      setInputsErr([nameInput ? true : false, true, emailInput ? true : false]);
-    };
+  (e) => {
+    setlastName(e.target.value);
+    setInputsErr([nameInput ? true : false, true, emailInput ? true : false]);
+  };
 
 export {
   UsePagination,

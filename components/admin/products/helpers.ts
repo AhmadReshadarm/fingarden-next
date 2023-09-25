@@ -14,7 +14,7 @@ import { Category, Image, ParameterProduct, Product } from 'swagger/services';
 import { Dispatch, SetStateAction } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import { ManageProductFields } from './ManageProductsFields.enum';
-
+import { createImage } from 'redux/slicers/imagesSlicer';
 const handleDeleteProduct =
   (id: string, dispatch: AppDispatch, setVisible: any, offset: number) =>
   async () => {
@@ -91,6 +91,11 @@ const handleFormSubmitProduct =
     variantsLength: number,
   ) =>
   async (form) => {
+    form = {
+      ...form,
+      desc: JSON.stringify(form.desc),
+    };
+
     const convertedForm = handleDataConvertation(
       form,
       imagesMap,
@@ -211,6 +216,23 @@ const handleCategoryChange =
     );
   };
 
+async function uploadImage(file, dispatch) {
+  const config = {
+    headers: { 'content-type': 'multipart/form-data' },
+  };
+
+  const image = await dispatch(
+    createImage({
+      config,
+      file,
+    }),
+  );
+
+  return new Promise((resolve, reject) => {
+    resolve({ data: { link: `/api/images/${image.payload}` } });
+  });
+}
+
 export {
   handleDeleteProduct,
   handleFormSubmitProduct,
@@ -219,4 +241,5 @@ export {
   initialValuesConverter,
   handleParameterChange,
   handleCategoryChange,
+  uploadImage,
 };

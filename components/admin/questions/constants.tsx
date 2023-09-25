@@ -90,10 +90,10 @@ export const columns: ColumnsType<Product> = [
     },
     width: '7.5%',
   },
-  {
-    title: 'URL',
-    dataIndex: 'url',
-  },
+  // {
+  //   title: 'URL',
+  //   dataIndex: 'url',
+  // },
   {
     title: 'Теги',
     dataIndex: 'tags',

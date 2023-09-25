@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { content } from './helpers';
 import color from 'components/store/lib/ui.colors';
 import Link from 'next/link';
@@ -29,8 +29,10 @@ const ExtraNavBar: React.FC<Props> = ({ onWhichNav, setOnWhichNav }) => {
                 {item.text}
               </Link>
             ))
-          : content.aboutUs.map((item) => (
-              <Link href={item.url}>{item.text}</Link>
+          : content.aboutUs.map((item, index) => (
+              <Link key={index} href={item.url}>
+                {item.text}
+              </Link>
             ))}
       </ExtraNavbarWrapper>
     </ExtraNavBarContainer>

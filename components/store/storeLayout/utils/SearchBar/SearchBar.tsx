@@ -16,11 +16,12 @@ import SearchItem from './SearchItem';
 import { useRouter } from 'next/router';
 import Loading from 'ui-kit/Loading';
 import { devices } from 'components/store/lib/Devices';
+import { styleProps } from 'components/store/lib/types';
 
-type StyleProps = {
-  padding?: string;
-  boxShadow?: string;
-};
+// type StyleProps = {
+//   padding?: string ;
+//   boxShadow?: string;
+// };
 
 type Props = {
   isSearchActive: boolean;
@@ -198,7 +199,7 @@ const SearchFieldInput = styled(motion.input)`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  padding: ${(p: StyleProps) => p.padding};
+  padding: ${(p: styleProps) => p.padding};
   background-color: transparent;
   margin-left: -35px;
   @media ${devices.laptopM} {
@@ -231,7 +232,7 @@ const SearchBtn = styled(motion.button)`
   }
 `;
 
-const ResultsWrapper = styled.div<StyleProps>`
+const ResultsWrapper = styled.div`
   width: 100%;
   max-width: 1230px;
   display: flex;

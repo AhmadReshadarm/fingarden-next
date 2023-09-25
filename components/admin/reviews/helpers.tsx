@@ -68,7 +68,7 @@ const getColumns = (dispatch: AppDispatch): ColumnsType<Review> => {
       },
     },
     {
-      title: 'Почта пользователя',
+      title: 'Пользователя',
       dataIndex: 'email',
       width: '15%',
       render: (_, record) => {

@@ -22,7 +22,7 @@ export const fetchCategories = createAsyncThunk<
     try {
       return await CategoryService.getCategories({
         limit: payload?.limit,
-        offset: payload?.offset
+        offset: payload?.offset,
       });
     } catch (error: any) {
       return rejectWithValue(getErrorMassage(error.response.status));
@@ -56,6 +56,7 @@ export const createCategory = createAsyncThunk<
       return await CategoryService.createCategory({
         body: {
           name: payload.name,
+          desc: payload.desc,
           image: payload.image,
           url: payload.url,
           parentId: payload.parent,
@@ -80,6 +81,7 @@ export const editCategory = createAsyncThunk<
         categoryId: payload.id as string,
         body: {
           name: payload.name,
+          desc: payload.desc,
           url: payload.url,
           image: payload.image,
           parentId: payload.parent,
@@ -119,7 +121,7 @@ const categoriesSlicer = createSlice({
   initialState,
   reducers: {
     clearCategories(state) {
-      console.log('Categories cleared!')
+      console.log('Categories cleared!');
       state.categories = [];
     },
     clearCategory(state) {
