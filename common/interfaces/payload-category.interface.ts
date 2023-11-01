@@ -8,5 +8,5 @@ export interface PayloadCategory {
   parent?: string;
   parameters?: Parameter[];
   id?: string | string[] | undefined;
-  children?: string;
+  children?: string[];
 }

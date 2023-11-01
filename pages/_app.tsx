@@ -1,21 +1,16 @@
-// import 'antd/dist/antd.css';
-import { navigateTo } from 'common/helpers';
-import { getUserInfo } from 'common/helpers/jwtToken.helpers';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useAppDispatch } from 'redux/hooks';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { AnimatePresence } from 'framer-motion';
-import { setUser } from 'redux/slicers/authSlicer';
-import { Page } from 'routes/constants';
+import { session } from 'redux/slicers/authSlicer';
 import 'styles.css';
 import { wrapper } from '../redux/store';
-// import type {} from 'styled-components/cssprop';
 import {
-  fetchWishlist,
   createWishlist,
   fetchCategories,
   fetchTags,
+  fetchNewsPost,
 } from 'redux/slicers/store/globalSlicer';
 import { createCart, fetchCart } from 'redux/slicers/store/cartSlicer';
 import { ContextProvider } from 'common/context/AppContext';
@@ -34,54 +29,85 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const user = getUserInfo();
     const basketId = localStorage.getItem('basketId');
     const wishlistId = localStorage.getItem('wishlistId')!;
-    // let userId = localStorage.getItem('userId') ?? '';
-
-    // if (!user && !userId) {
-    //   userId = v4();
-    //   localStorage.setItem('userId', userId);
-    // } else if (user) {
-    //   userId = user.id!;
-    // }
 
     if (!basketId) {
       dispatch(createCart());
-    } else {
-      dispatch(fetchCart(basketId));
     }
+    // else {
+    //   dispatch(fetchCart(basketId));
+    // }
+    const fetchDataCartProducts = async () => {
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      await sleep(500);
+      const createdCardId = localStorage.getItem('basketId');
+      if (createdCardId) {
+        const fetched = await dispatch(fetchCart(createdCardId));
+      }
+      if (!createdCardId) {
+        fetchDataCartProducts();
+      }
+    };
+    fetchDataCartProducts();
 
     if (!wishlistId) {
       dispatch(createWishlist());
-    } else {
-      // dispatch(fetchWishlist(wishlistId));
-      dispatch(fetchWishlistProducts(wishlistId));
     }
+    // else {
+    //   dispatch(fetchWishlistProducts(wishlistId));
+    // }
+    const fetchDataWishlistProducts = async () => {
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      // waits for 500ms
+      await sleep(500);
+      const createdWishlistId = localStorage.getItem('wishlistId');
+      if (createdWishlistId) {
+        await dispatch(fetchWishlistProducts(createdWishlistId));
+      }
+      if (!createdWishlistId) {
+        fetchDataWishlistProducts();
+      }
+    };
+    fetchDataWishlistProducts();
+    dispatch(session());
     dispatch(fetchCategories());
     dispatch(fetchTags());
     dispatch(fetchAdvertisement());
-    // dispatch(incrementCartCounter(0));
-    if (!user && router.pathname.includes('/admin')) {
-      navigateTo(router, Page.ADMIN_LOGIN)();
-    }
-
-    dispatch(setUser(user));
+    dispatch(fetchNewsPost());
   }, []);
 
+  const [isClient, setClient] = useState(false);
+  useEffect(() => {
+    setClient(true);
+  }, []);
+  useEffect(() => {
+    if (!router.pathname.includes('/admin')) {
+      dispatch(session());
+    }
+  }, [router]);
   return (
     <>
-      <ContextProvider>
-        {Component.PageLayout ? (
-          <Component.PageLayout>
-            <AnimatePresence mode="wait">
-              <Component {...pageProps} key={router.asPath} />
-            </AnimatePresence>
-          </Component.PageLayout>
-        ) : (
-          <Component {...pageProps} />
-        )}
-      </ContextProvider>
+      {isClient ? (
+        <ContextProvider>
+          {Component.PageLayout ? (
+            <Component.PageLayout>
+              <AnimatePresence mode="wait">
+                <Component {...pageProps} key={router.asPath} />
+              </AnimatePresence>
+            </Component.PageLayout>
+          ) : (
+            <Component {...pageProps} />
+          )}
+        </ContextProvider>
+      ) : (
+        ''
+      )}
     </>
   );
   // return router.pathname !== paths[Page.LOGIN] &&

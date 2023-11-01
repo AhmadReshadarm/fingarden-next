@@ -91,10 +91,6 @@ const ReciverData = (props: any) => {
 const PhoneField = styled.div`
   display: flex;
   width: 100%;
-
-  .MuiOutlinedInput-root {
-    padding: 11.5px 0;
-  }
 `;
 
 export default ReciverData;

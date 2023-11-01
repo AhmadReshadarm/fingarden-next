@@ -73,7 +73,6 @@ const StepsWrapper = styled(motion.div)`
   padding: 20px 0;
   user-select: none;
   span {
-    font-family: 'intro';
     font-size: 1rem;
   }
 

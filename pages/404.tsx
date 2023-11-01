@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import StoreLayout from 'components/store/storeLayout/layouts';
 import variants from 'components/store/lib/variants';
 import color from 'components/store/lib/ui.colors';

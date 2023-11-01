@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import {
   clearImageList,
-  setDefaultImageList,
+  setDefaultSingleImageList,
 } from 'redux/slicers/imagesSlicer';
 import { Page } from 'routes/constants';
 import styled from 'styled-components';
@@ -19,7 +19,8 @@ import { ManageSlidesFields } from './manageSlidesFields';
 import CloseSVG from '../../../assets/close_black.svg';
 import { TBannerState } from 'redux/types';
 import { addSlide, removeSlide } from 'redux/slicers/bannersSlicer';
-
+import DatabaseImages from 'ui-kit/DatabaseImages';
+import { InsertRowLeftOutlined } from '@ant-design/icons';
 interface Props {
   isLoading: boolean;
   isSaveLoading: boolean;
@@ -42,19 +43,21 @@ const SlidesForm = ({ isLoading, isSaveLoading }: Props) => {
   };
 
   useEffect(() => {
-    const linksMap = slides?.reduce((accum, slide, index) => {
-      accum[index] = slide.link;
-      return accum;
-    }, {});
+    if (slides.length) {
+      const linksMap = slides?.reduce((accum, slide, index) => {
+        accum[index] = slide.link;
+        return accum;
+      }, {});
 
-    setLinks(linksMap);
+      setLinks(linksMap);
+    }
   }, [slides]);
 
   useEffect(() => {
     if (slides) {
       slides.forEach((slide, i) => {
         dispatch(
-          setDefaultImageList({
+          setDefaultSingleImageList({
             uid: i + 1,
             name: slide?.image,
             url: `/api/images/${slide?.image}`,
@@ -81,7 +84,8 @@ const SlidesForm = ({ isLoading, isSaveLoading }: Props) => {
   const handleRemove = (index) => () => {
     dispatch(removeSlide(index));
   };
-
+  const [isOpen, setOpen] = useState(false);
+  const [selecteIndex, setSelectedIndex] = useState(1);
   return (
     <>
       {isLoading ? (
@@ -98,35 +102,60 @@ const SlidesForm = ({ isLoading, isSaveLoading }: Props) => {
               router,
               dispatch,
               imageList,
-              'slide',
+              'slides',
             )}
           >
-            {slides.map((slide, index) => (
-              <SlideItem key={`slides-${index + 1}`}>
-                {index + 1}
-                <FormItem
-                  option={`${ManageSlidesFields.Link}${index + 1}`}
-                  children={
-                    <Input
-                      onChange={handleLinkChange(index + 1)}
-                      required={true}
-                      placeholder="Введите ссылку"
-                    />
-                  }
-                />
-                <FormItem
-                  option={undefined}
-                  children={
-                    <ImageUpload
-                      fileList={handleGetImage(index + 1, imageList)}
-                      isProduct={false}
-                      slideNum={index + 1}
-                    />
-                  }
-                />
-                <CloseSVG onClick={handleRemove(index)} />
-              </SlideItem>
-            ))}
+            {slides.map((slide, index) => {
+              return (
+                <SlideItem key={`slides-${index + 1}`}>
+                  {index + 1}
+                  <FormItem
+                    option={`${ManageSlidesFields.Link}${index + 1}`}
+                    children={
+                      <Input
+                        onChange={handleLinkChange(index + 1)}
+                        required={true}
+                        placeholder="Введите ссылку"
+                      />
+                    }
+                  />
+                  <FormItem
+                    option={undefined}
+                    children={
+                      <>
+                        <ImageUpload
+                          fileList={handleGetImage(index + 1, imageList)}
+                          isProduct={false}
+                          slideNum={index + 1}
+                        />
+                        <ButtonDevider>
+                          {imageList.length < slides.length ? (
+                            <Button
+                              onClick={() => {
+                                setSelectedIndex(index + 1);
+                                setOpen(true);
+                              }}
+                              icon={<InsertRowLeftOutlined />}
+                            >
+                              Выбрать из базы данных
+                            </Button>
+                          ) : (
+                            ''
+                          )}
+                        </ButtonDevider>
+                        <DatabaseImages
+                          isProducts={false}
+                          setOpen={setOpen}
+                          isOpen={isOpen}
+                          slideNum={selecteIndex}
+                        />
+                      </>
+                    }
+                  />
+                  <CloseSVG onClick={handleRemove(index)} />
+                </SlideItem>
+              );
+            })}
             <Button
               onClick={handleAddSlide}
               type="primary"
@@ -168,6 +197,16 @@ const SlideItem = styled.div`
     right: 0;
     cursor: pointer;
   }
+`;
+
+const ButtonDevider = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 40px;
+  padding: 20px 0;
 `;
 
 export default SlidesForm;

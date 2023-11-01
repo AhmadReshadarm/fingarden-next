@@ -12,7 +12,9 @@ const AddressAutofill: any = dynamic(
 );
 
 const geoLocatClick = () => {
-  const btn: any = document.querySelector('.mapboxgl-ctrl-geolocate');
+  const btn: any = document.querySelector(
+    '.ymaps-2-1-79-controls__control_toolbar',
+  );
   btn.click();
 };
 
@@ -61,14 +63,14 @@ const addressToCoord = async (
 const handleHiddenInputChange = (evt: any, setAddress: any) => {
   evt.preventDefault();
   setAddress(evt.target.value);
-  const input: any = document.getElementById('address-autofill');
-  const nativeInputValueSetter = Object?.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    'value',
-  )?.set;
-  nativeInputValueSetter?.call(input, evt.target.value);
-  let inputEvent = new Event('input', { bubbles: true });
-  input.dispatchEvent(inputEvent);
+  // const input: any = document.getElementById('address-autofill');
+  // const nativeInputValueSetter = Object?.getOwnPropertyDescriptor(
+  //   window.HTMLInputElement.prototype,
+  //   'value',
+  // )?.set;
+  // nativeInputValueSetter?.call(input, evt.target.value);
+  // let inputEvent = new Event('input', { bubbles: true });
+  // input.dispatchEvent(inputEvent);
 };
 
 export {

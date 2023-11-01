@@ -7,7 +7,6 @@ import { paginateTo } from 'components/store/checkout/constant';
 import { handleMenuState } from '../../helpers';
 import { PopupDisplay } from '../../constants';
 import { User } from 'swagger/services';
-import { devices } from 'components/store/lib/Devices';
 import ProfileLogedOutSVG from '../../../../../assets/profile_loged_out.svg';
 type Props = {
   user: User | null;
@@ -44,16 +43,23 @@ const AuthBtn: React.FC<Props> = ({
           <span
             style={{
               borderRadius: '50%',
-              width: '28px',
-              height: '28px',
+              width: '25px',
+              height: '25px',
               backgroundColor: '#000',
               display: 'block',
             }}
           >
             <img
-              src={`https://avatars.dicebear.com/api/micah/${user?.id}.svg?facialHairProbability=0&mouth[]=smile&scale=100&hair[]=fonze,full,pixie`}
-              width={25}
-              height={25}
+              src={
+                user?.image
+                  ? `/api/images/${user.image}`
+                  : `https://api.dicebear.com/7.x/micah/svg?radius=50&backgroundColor=ECEEE7&seed=${user?.firstName}`
+              }
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = `https://api.dicebear.com/7.x/micah/svg?radius=50&backgroundColor=ECEEE7&seed=${user?.firstName}`;
+              }}
+              className="user-profile-image"
             />
           </span>
         </Btns>
@@ -88,10 +94,6 @@ const ParentContainer = styled.div`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  @media ${devices.mobileL} {
-    width: 100%;
-    hieght: 100%;
-  }
 `;
 
 export default AuthBtn;

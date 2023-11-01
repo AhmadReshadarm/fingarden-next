@@ -1,4 +1,5 @@
 import { Button, Form, Input, List, Select, Spin } from 'antd';
+import { InsertRowLeftOutlined } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { navigateTo } from 'common/helpers/navigateTo.helper';
 import { useRouter } from 'next/router';
@@ -6,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import {
   clearImageList,
-  setDefaultImageList,
+  setDefaultSingleImageList,
 } from 'redux/slicers/imagesSlicer';
 import { Page } from 'routes/constants';
 import { Category, Parameter } from 'swagger/services';
@@ -21,7 +22,9 @@ import {
   handleRemoveParameter,
 } from './helpers';
 import { ManageCategoryFields } from './ManageCategoryFields.enum';
-import { handleFalsyValuesCheck } from '../../../common/helpers/handleFalsyValuesCheck.helper';
+import DatabaseImages from 'ui-kit/DatabaseImages';
+import styled from 'styled-components';
+import { handleFalsyValuesCheck } from 'common/helpers/handleFalsyValuesCheck.helper';
 
 const { Option } = Select;
 
@@ -74,7 +77,7 @@ const ManageCategoryForm = ({
   useEffect(() => {
     if (category?.image) {
       dispatch(
-        setDefaultImageList({
+        setDefaultSingleImageList({
           name: category.image,
           url: `/api/images/${category?.image}`,
         }),
@@ -84,8 +87,13 @@ const ManageCategoryForm = ({
     setParameters(category?.parameters! ? [...category?.parameters!] : []);
   }, [category]);
 
-  // const isDisabled: boolean = handleFalsyValuesCheck(name, url, imageList)
-
+  const isDisabled: boolean = handleFalsyValuesCheck(
+    name,
+    url,
+    desc,
+    imageList,
+  );
+  const [isOpen, setOpen] = useState(false);
   return (
     <>
       <div className={styles.createCategoryHeader}>
@@ -135,7 +143,27 @@ const ManageCategoryForm = ({
           />
           <FormItem
             option={ManageCategoryFields.Image}
-            children={<ImageUpload fileList={imageList} />}
+            children={
+              <>
+                <ImageUpload fileList={imageList} />
+                <ButtonDevider>
+                  {imageList.length < 1 && (
+                    <Button
+                      onClick={() => setOpen(true)}
+                      icon={<InsertRowLeftOutlined />}
+                    >
+                      Выбрать из базы данных
+                    </Button>
+                  )}
+                </ButtonDevider>
+
+                <DatabaseImages
+                  isProducts={false}
+                  setOpen={setOpen}
+                  isOpen={isOpen}
+                />
+              </>
+            }
           />
           <Form.Item
             name={ManageCategoryFields.Parent}
@@ -198,7 +226,7 @@ const ManageCategoryForm = ({
               htmlType="submit"
               className={styles.createCategoryForm__buttonsStack__submitButton}
               loading={isSaveLoading}
-              // disabled={isDisabled}
+              disabled={isDisabled}
             >
               {category ? 'Сохранить' : 'Создать'}
             </Button>
@@ -214,5 +242,15 @@ const ManageCategoryForm = ({
     </>
   );
 };
+
+const ButtonDevider = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 40px;
+  padding: 20px 0;
+`;
 
 export default ManageCategoryForm;

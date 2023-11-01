@@ -70,7 +70,7 @@ const ManageTagForm = ({
             children={
               <Input
                 required={true}
-                placeholder="Введите имя тега"
+                placeholder="Введите имя Коллекция"
                 onChange={(e) => setName(e.target.value)}
               />
             }
@@ -80,7 +80,7 @@ const ManageTagForm = ({
             children={
               <Input
                 required={true}
-                placeholder="Введите URL тега"
+                placeholder="Введите URL Коллекция"
                 onChange={(e) => setUrl(e.target.value)}
               />
             }

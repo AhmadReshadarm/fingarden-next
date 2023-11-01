@@ -5,6 +5,7 @@ import {
   handlePending,
   handleError,
   handleChangeError,
+  openErrorNotification,
 } from '../../common/helpers';
 import { PayloadTag } from 'common/interfaces/payload-tags.interface';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
@@ -159,7 +160,11 @@ const tagsSlicer = createSlice({
         openSuccessNotification('Тег успешно удален');
         console.log('fulfilled');
       })
-      .addCase(deleteTag.rejected, handleChangeError);
+      .addCase(deleteTag.rejected, () => {
+        openErrorNotification(
+          'Удалить невозможно, В файле есть дополнительные данные',
+        );
+      });
   },
 });
 

@@ -70,6 +70,7 @@ export const updateCart = createAsyncThunk<
 const initialState: TCartState = {
   cart: null,
   variant: null,
+  productSize: '',
   loading: false,
   countLoading: false,
 };
@@ -83,6 +84,12 @@ const cartSlicer = createSlice({
     },
     clearVariant(state) {
       state.variant = initialState.variant;
+    },
+    setproductSize(state, action: PayloadAction<string>) {
+      state.productSize = action.payload;
+    },
+    clearproductSize(state) {
+      state.productSize = initialState.productSize;
     },
   },
   extraReducers: (builder) => {
@@ -128,6 +135,7 @@ const cartSlicer = createSlice({
   },
 });
 
-export const { setVariant, clearVariant } = cartSlicer.actions;
+export const { setVariant, clearVariant, setproductSize, clearproductSize } =
+  cartSlicer.actions;
 
 export default cartSlicer.reducer;

@@ -4,7 +4,7 @@ import isEmpty from 'validator/lib/isEmpty';
 import color from '../../lib/ui.colors';
 import variants from '../../lib/variants';
 import MapContainer from './MapContainer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { styleProps } from 'components/store/lib/types';
 import { geoLocatClick } from './helpers';
 import AutoFill from './Autofill';
@@ -15,6 +15,9 @@ import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { setDeliveryInfo } from 'redux/slicers/store/checkoutSlicer';
 import { TStoreCheckoutState } from 'redux/types';
 import { devices } from 'components/store/lib/Devices';
+import { fetchCheckouts } from 'redux/slicers/store/checkoutSlicer';
+import { initialStateAdress } from './constant';
+// import * as turf from '@turf/turf';
 
 const UserData = ({ setStep, backToFinal, setHasAddress }) => {
   const dispatch = useAppDispatch();
@@ -23,19 +26,32 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
   );
 
   const [address, setAddress] = useState('');
-  const [viewport, setViewPort]: [any, any] = useState({
-    latitude: 55.755825,
-    longitude: 37.617298,
-    zoom: 10,
-    width: 'fit',
-  });
-  const [postCode, setPostCode] = useState('');
+  const mapRef: any = useRef(null);
+  // const [viewport, setViewPort]: [any, any] = useState({
+  //   latitude: 59.98653,
+  //   longitude: 30.22623,
+  //   zoom: 10,
+  //   width: 'fit',
+  // });
+
+  const [viewport, setViewPort] = useState({ ...initialStateAdress });
+
+  // useEffect(() => {
+  //   const { latitude, longitude } = viewport;
+
+  //   let from = turf.point([59.98653, 30.22623]);
+  //   let to = turf.point([latitude, longitude]);
+
+  //   let distance = turf.distance(from, to, { units: 'kilometers' });
+  //   console.log(distance);
+  // }, [viewport]);
+  const [zipCode, setPostCode] = useState('');
   const [roomOrOffice, setRoomOrOffice] = useState('');
   const [door, setDoor] = useState('');
   const [floor, setFloor] = useState('');
   const [rignBell, setRingBell] = useState('');
-  const [fullName, setFullname] = useState('');
-  const [phone, setPhone] = useState('+7');
+  const [receiverName, setFullname] = useState('');
+  const [receiverPhone, setPhone] = useState('+7');
 
   const handleClickBack = () => {
     setStep(2);
@@ -45,12 +61,12 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
   const handleClickSave = () => {
     const payload = {
       address,
-      fullName,
-      phone,
+      receiverName,
+      receiverPhone,
       floor,
       door,
       roomOrOffice,
-      postCode,
+      zipCode,
       rignBell,
     };
     dispatch(setDeliveryInfo(payload));
@@ -59,15 +75,19 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
   };
 
   useEffect(() => {
-    setPostCode(deliveryInfo?.postCode ?? '');
+    setPostCode(deliveryInfo?.zipCode ?? '');
     setRoomOrOffice(deliveryInfo?.roomOrOffice ?? '');
     setDoor(deliveryInfo?.door ?? '');
     setFloor(deliveryInfo?.floor ?? '');
     setRingBell(deliveryInfo?.rignBell ?? '');
-    setFullname(deliveryInfo?.fullName ?? '');
-    setPhone(deliveryInfo?.phone ?? '');
+    setFullname(deliveryInfo?.receiverName ?? '');
+    setPhone(deliveryInfo?.receiverPhone ?? '');
     setAddress(deliveryInfo?.address ?? '');
   }, [deliveryInfo]);
+
+  useEffect(() => {
+    dispatch(fetchCheckouts());
+  }, []);
 
   return (
     <Container>
@@ -75,6 +95,7 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
         viewport={viewport}
         setViewPort={setViewPort}
         setAddress={setAddress}
+        mapRef={mapRef}
         setPostCode={setPostCode}
       />
       <FormContainer
@@ -83,13 +104,7 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
         variants={variants.fadInSlideUp}
       >
         {backToFinal ? (
-          <ActionBtns
-            whileHover="hover"
-            whileTap="tap"
-            variants={variants.boxShadow}
-            bgcolor={color.btnPrimary}
-            onClick={handleClickBack}
-          >
+          <ActionBtns bgcolor={color.btnSecondery} onClick={handleClickBack}>
             Назад
           </ActionBtns>
         ) : (
@@ -105,6 +120,7 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
             setAddress={setAddress}
             setPostCode={setPostCode}
             setViewPort={setViewPort}
+            mapRef={mapRef}
           />
           <button
             className="geolocate"
@@ -119,7 +135,7 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
           <AddressDetails
             roomOrOffice={roomOrOffice}
             setRoomOrOffice={setRoomOrOffice}
-            postCode={postCode}
+            postCode={zipCode}
             setPostCode={setPostCode}
             door={door}
             setDoor={setDoor}
@@ -129,28 +145,25 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
             setRingBell={setRingBell}
           />
           <ReciverData
-            fullName={fullName}
+            fullName={receiverName}
             setFullname={setFullname}
-            phone={phone}
+            phone={receiverPhone}
             setPhone={setPhone}
           />
           <ActionBtns
-            whileHover="hover"
-            whileTap="tap"
-            variants={variants.boxShadow}
             bgcolor={
               isEmpty(address) ||
-              isEmpty(postCode) ||
-              isEmpty(fullName) ||
-              isEmpty(phone)
+              isEmpty(zipCode) ||
+              isEmpty(receiverName) ||
+              isEmpty(receiverPhone)
                 ? color.textSecondary
-                : color.btnPrimary
+                : color.btnSecondery
             }
             disabled={
               isEmpty(address) ||
-              isEmpty(postCode) ||
-              isEmpty(fullName) ||
-              isEmpty(phone)
+              isEmpty(zipCode) ||
+              isEmpty(receiverName) ||
+              isEmpty(receiverPhone)
                 ? true
                 : false
             }
@@ -167,12 +180,41 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
 const Container = styled.div`
   width: 100%;
   position: relative;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 30px;
+  @media (min-width: 768px) and (max-width: 1100px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  @media ${devices.mobileL} {
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  @media ${devices.mobileM} {
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  @media ${devices.mobileS} {
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
 `;
 
 const FormContainer = styled(motion.div)`
   width: 450px;
-  height: 95vh;
-  min-height: 100%;
+  // height: 95vh;
+  // min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -182,14 +224,38 @@ const FormContainer = styled(motion.div)`
   border-radius: 20px;
   padding: 20px;
   gap: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  overflow-y: scroll;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // z-index: 10;
+  // overflow-y: scroll;
+  // overflow-x: hidden;
   user-select: none;
-
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  @media (min-width: 768px) and (max-width: 1100px) {
+    padding: 15px;
+    position: relative;
+    overflow-y: unset;
+    width: 100%;
+    height: auto;
+  }
   @media ${devices.mobileL} {
+    padding: 15px;
+    position: relative;
+    overflow-y: unset;
+    width: 100%;
+    height: auto;
+  }
+  @media ${devices.mobileM} {
+    padding: 15px;
+    position: relative;
+    overflow-y: unset;
+    width: 100%;
+    height: auto;
+  }
+  @media ${devices.mobileS} {
     padding: 15px;
     position: relative;
     overflow-y: unset;
@@ -198,17 +264,26 @@ const FormContainer = styled(motion.div)`
   }
 `;
 
-const ActionBtns = styled(motion.button)`
+const ActionBtns = styled.button`
   width: 100%;
-  height: 50px;
-  min-height: 50px;
-  text-align: center;
+  height: 40px;
+  min-height: 40px;
+  border-radius: 3px;
   background-color: ${(p: styleProps) => p.bgcolor};
-  color: ${color.textPrimary};
-  border-radius: 15px;
-  font-family: 'intro';
-  font-size: 1rem;
   cursor: pointer;
+  transition: 300ms;
+  &:hover {
+    background-color: ${color.btnPrimary};
+    color: ${color.textPrimary};
+    transform: scale(1.02);
+  }
+  &:active {
+    transform: scale(1);
+  }
+  span {
+    font-family: 'Jost';
+    font-size: 1rem;
+  }
 `;
 
 const FormWrapper = styled.div`

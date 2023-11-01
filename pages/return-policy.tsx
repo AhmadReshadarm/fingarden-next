@@ -17,11 +17,11 @@ const ReturnPolicy = () => {
         page={{
           name: 'Политика возврата',
           url: '/return-policy',
-          desc: 'Интернет-магазин Wuluxe',
+          desc: 'Интернет-магазин fingarden',
           keywords:
             'одноразовые, одноразовые сигареты, купить одноразовые, одноразовые электронные, одноразовые электронные сигареты, одноразовые сигареты купить',
         }}
-        image="https://wuluxe.ru/wuluxe.svg"
+        image="https://fingarden.ru/fingarden.svg"
       />
       <Container
         variants={variants.fadInOut}
@@ -50,7 +50,7 @@ const ReturnPolicy = () => {
               они могут отказаться от получения доставленного товара и вернуть
               его нам, и мы вышлем покупателю замену этого товара. также клиент
               может отменить свой заказ до того, как он получит свой заказ (
-              <span style={{ color: color.yellow }}>
+              <span style={{ color: color.hoverBtnBg }}>
                 кнопка отмены заказа будет доступна для пользователя на странице
                 заказов в течение 24 часов после оплаты, через 24 часов кнопка
                 исчезнет, и отменить заказ будет невозможно
@@ -79,9 +79,13 @@ const ReturnPolicy = () => {
 };
 
 const Headers = styled.h1`
-width:100%:
-text-align:start;
-font-family:'intro';
+  width: 100%;
+  text-align: start;
+  font-family: 'Anticva';
+  font-size: 1.5rem;
+  @media ${devices.mobileL} {
+    max-width: 95vw;
+  }
 `;
 
 const Contents = styled.span`

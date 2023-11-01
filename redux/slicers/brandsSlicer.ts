@@ -11,6 +11,7 @@ import {
   handleChangePending,
   handleError,
   handlePending,
+  openErrorNotification,
 } from '../../common/helpers';
 
 export const fetchBrands = createAsyncThunk<
@@ -173,7 +174,11 @@ const brandsSlicer = createSlice({
         openSuccessNotification('Бренд успешно удален');
         console.log('fulfilled');
       })
-      .addCase(deleteBrand.rejected, handleChangeError);
+      .addCase(deleteBrand.rejected, () => {
+        openErrorNotification(
+          'Удалить невозможно, В файле есть дополнительные данные',
+        );
+      });
   },
 });
 

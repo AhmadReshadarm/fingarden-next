@@ -5,12 +5,11 @@ import { ArrowBtns, ArrowSpan } from 'ui-kit/ArrowBtns';
 import { paginateHandler } from 'components/store/storeLayout/helpers';
 import { ProductFlex, ContentWrapper, BtnsWrapper } from './common';
 import { HeaderWrapper } from '../common';
-import { Product, ProductService } from 'swagger/services';
 import ArrowWhite from '../../../../assets/arrow_white.svg';
-
+import { Product, ProductService } from 'swagger/services';
 const WeRecomend = ({ product }) => {
   const [products, setProducts] = useState<Product[]>([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const response = (await ProductService.getProducts({
@@ -19,6 +18,7 @@ const WeRecomend = ({ product }) => {
       })) as unknown as { rows: Product[]; length: number };
 
       setProducts(response.rows.filter((item) => item.id != product.id));
+      setLoading(false);
     })();
   }, []);
   const [
@@ -45,12 +45,15 @@ const WeRecomend = ({ product }) => {
       >
         <h3>Рекомендуем также</h3>
       </HeaderWrapper>
+
       <ProductFlex
         width={widthOrHeight}
         widthRef={widthOrHeightRef}
         slideTo={slideTo}
         products={products}
+        loading={loading}
       />
+
       <BtnsWrapper>
         <ArrowBtns
           whileHover="hover"

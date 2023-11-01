@@ -42,6 +42,7 @@ export const updateAdvertisement = createAsyncThunk<
       return await AdvertisementService.updateAdvertisement({
         advertisementId: payload.id!,
         body: {
+          title: payload.title,
           description: payload.description,
         },
       });
@@ -62,6 +63,26 @@ export const fetchSlides = createAsyncThunk<
     return rejectWithValue(getErrorMassage(error.response.status));
   }
 });
+
+export const createSlide = createAsyncThunk<
+  Slide,
+  Slide,
+  { rejectValue: string }
+>(
+  'banners/createSlides',
+  async function (payload: Slide, { rejectWithValue }): Promise<any> {
+    try {
+      return await SlideService.createSlide({
+        body: {
+          image: payload.image,
+          link: payload.link,
+        },
+      });
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
 
 export const updateSlides = createAsyncThunk<
   Slide,
@@ -130,6 +151,14 @@ const bannersSlicer = createSlice({
         console.log('fulfilled');
       })
       .addCase(fetchSlides.rejected, handleError)
+      //createSlides
+      .addCase(createSlide.pending, handlePending)
+      .addCase(createSlide.fulfilled, (state, action) => {
+        state.saveLoading = false;
+        openSuccessNotification('Баннер успешно создан');
+        console.log('fulfilled');
+      })
+      .addCase(createSlide.rejected, handleChangeError)
       //updateSlides
       .addCase(updateSlides.pending, handlePending)
       .addCase(updateSlides.fulfilled, (state, action) => {

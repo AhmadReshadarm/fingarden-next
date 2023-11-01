@@ -1,7 +1,13 @@
 import { Refund } from '@a2seven/yoo-checkout';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { axiosInstance } from 'common/axios.instance';
-import { getErrorMassage, handleChangeError, handleChangePending, handleError, handlePending } from 'common/helpers';
+import {
+  getErrorMassage,
+  handleChangeError,
+  handleChangePending,
+  handleError,
+  handlePending,
+} from 'common/helpers';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
 import { TDeliveryInfo, TOrderInfo, TStoreCheckoutState } from 'redux/types';
 import { Checkout, CheckoutService } from 'swagger/services';
@@ -14,15 +20,15 @@ export const fetchCheckouts = createAsyncThunk<
   'checkout/fetchCheckouts',
   async function (_, { rejectWithValue }): Promise<any> {
     try {
-      const response = await CheckoutService.getCheckouts({ limit: '1000' }) as unknown as { rows: Checkout[] };
+      const response = (await CheckoutService.getCheckouts({
+        limit: '1000',
+      })) as unknown as { rows: Checkout[] };
       return response.rows;
     } catch (error: any) {
       return rejectWithValue(getErrorMassage(error.response.status));
     }
   },
 );
-
-
 
 export const cancelCheckout = createAsyncThunk<
   any,
@@ -72,20 +78,28 @@ const storeCheckoutSlicer = createSlice({
       .addCase(fetchCheckouts.pending, handlePending)
       .addCase(fetchCheckouts.fulfilled, (state, action) => {
         state.checkouts = action.payload;
+        state.deliveryInfo = action.payload[0].address;
         state.loading = false;
         console.log('fulfilled');
       })
-      .addCase(fetchCheckouts.rejected, handleError)
+      .addCase(fetchCheckouts.rejected, (state, action) => {
+        state.checkouts = initialState.checkouts;
+        state.loading = false;
+
+        console.log('rejected');
+      });
     builder
-      // fetchCheckouts
+      // cancelCheckout
       .addCase(cancelCheckout.pending, handleChangePending)
       .addCase(cancelCheckout.fulfilled, (state, action) => {
-        state.checkouts = state.checkouts.filter(checkout => checkout.paymentId !== action.payload.payment_id);
+        state.checkouts = state.checkouts.filter(
+          (checkout) => checkout.paymentId !== action.payload.payment_id,
+        );
         state.saveLoading = false;
         openSuccessNotification('Ваш Заказ успешно отменен');
         console.log('fulfilled');
       })
-      .addCase(cancelCheckout.rejected, handleChangeError)
+      .addCase(cancelCheckout.rejected, handleChangeError);
   },
 });
 

@@ -2,10 +2,12 @@ import { Breadcrumb, Button, Layout, Menu } from 'antd';
 import { Role } from 'common/enums/roles.enum';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import { useAppDispatch } from 'redux/hooks';
-import { User, UserService } from 'swagger/services';
-import { items } from './constants';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { session } from 'redux/slicers/authSlicer';
+import { Page } from 'routes/constants';
+import { navigateTo } from 'common/helpers';
+import { menueItems } from './constants';
 import {
   currentPath,
   getSelectedKeys,
@@ -14,42 +16,42 @@ import {
   handleSelect,
 } from './helpers';
 import styles from './layout.module.scss';
-
+import { TAuthState } from 'redux/types';
+import { getUserInfo } from 'common/helpers/jwtToken.helpers';
 const { Header, Content, Footer, Sider } = Layout;
 
 type Props = {
-  user: User | null;
+  // user: User | null;
   children: any;
 };
-
-const AdminLayout: React.FC<Props> = ({ user, children }) => {
+// user,
+const AdminLayout: React.FC<Props> = ({ children }) => {
   const dispatch = useAppDispatch();
   const [collapsed, setCollapsed] = useState(true);
   const router = useRouter();
   const date = new Date().getFullYear();
-  // useEffect(() => {
-  //   // console.log(router);
-  //   // console.log(router.pathname.substring(1).split('/'));
-  // }, [router]);
 
   const backRef: string = handleGetSecondHref(router);
+
+  const { user } = useAppSelector<TAuthState>((state) => state.auth);
+
+  // validate session
   useEffect(() => {
-    (async () => {
-      try {
-        const response: any = await UserService.findUserById({
-          userId: user?.id!,
-        });
-        if (response.user.role !== Role.Admin) {
-          router.push('/');
-          console.log('UnAuthorized');
-        }
-      } catch (error) {
-        if (error) {
-          router.push('/admin/login');
-        }
+    const fetchData = async () => {
+      const response = await dispatch(session());
+
+      if (response.payload.message == 'retrying') {
+        return;
       }
-    })();
-  });
+      if (
+        response.payload.user?.role !== Role.Admin &&
+        router.pathname.includes('/admin')
+      ) {
+        navigateTo(router, Page.ADMIN_LOGIN)();
+      }
+    };
+    fetchData();
+  }, [router]);
   return (
     <>
       <Layout style={{ minHeight: '100vh' }}>
@@ -68,11 +70,11 @@ const AdminLayout: React.FC<Props> = ({ user, children }) => {
             theme="dark"
             defaultSelectedKeys={getSelectedKeys(router.pathname)}
             mode="inline"
-            items={items}
+            items={menueItems}
           />
         </Sider>
         <Layout className="site-layout">
-          <Header className={styles['site-layout__header']}>
+          <Header id="page-top" className={styles['site-layout__header']}>
             {
               <div>
                 <span>{user?.email}</span>

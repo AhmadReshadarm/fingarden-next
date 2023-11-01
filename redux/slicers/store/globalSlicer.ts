@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { handlePaginationDataFormatter } from 'redux/helpers';
 import { TGlobalState } from 'redux/types';
 import {
   BasketDTO,
@@ -13,6 +14,8 @@ import {
   WishlistService,
   Tag,
   TagService,
+  NewsService,
+  NewsPosts,
 } from 'swagger/services';
 import {
   getErrorMassage,
@@ -122,6 +125,24 @@ export const fetchTags = createAsyncThunk<
   }
 });
 
+export const fetchNewsPost = createAsyncThunk<
+  NewsPosts,
+  undefined,
+  { rejectValue: string }
+>(
+  'global/fetchNewsPost',
+  async function (_, { rejectWithValue }): Promise<any> {
+    try {
+      const response = await NewsService.getNews({
+        showOnMain: true,
+      });
+      return response.rows;
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
+
 export const searchProducts = createAsyncThunk<
   Product[],
   { name?: string; parent?: string },
@@ -161,6 +182,7 @@ const initialState: TGlobalState = {
   products: [],
   brands: [],
   tags: [],
+  newsPosts: [],
   loading: false,
   productsLoading: false,
 };
@@ -231,6 +253,14 @@ const globalSlicer = createSlice({
         console.log('fulfilled');
       })
       .addCase(fetchTags.rejected, handleError)
+      //fetchNewsPost
+      .addCase(fetchNewsPost.pending, handlePending)
+      .addCase(fetchNewsPost.fulfilled, (state, action) => {
+        state.newsPosts = action.payload;
+        state.loading = false;
+        console.log('fulfilled');
+      })
+      .addCase(fetchNewsPost.rejected, handleError)
       //searchProducts
       .addCase(searchProducts.pending, handleProductsPending)
       .addCase(searchProducts.fulfilled, (state, action) => {

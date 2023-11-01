@@ -102,7 +102,7 @@ const FilterDropDownBtn = styled(motion.button)`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  border-radius: 15px;
+  border-radius: 3px;
   padding: 0 15px;
   gap: 20px;
   background-color: ${color.btnPrimary};
@@ -127,6 +127,7 @@ const FilterDropDownWrapper = styled(motion.div)`
   position: absolute;
   top: 70px;
   left: 0;
+  z-index: 2;
 `;
 
 const DropdownContentWrapper = styled.ul`

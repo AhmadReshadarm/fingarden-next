@@ -1,20 +1,21 @@
 import { ColumnsType } from 'antd/lib/table';
+import { OrderProduct } from 'swagger/services';
 import ActionButtons from '../generalComponents/ActionButtons';
 import { CheckoutsData } from './CheckoutsData.interface';
 import { handleDeleteCheckout, handleRedirectCheckout } from './helpers';
 
 interface CheckoutsTableData {
   id: string;
-  user: { firstName: string; email: string };
-  basket: { id: string };
-  address: { city: string; address: string };
+  user: { firstName: string; lastName: string };
+  basket: { orderProducts: OrderProduct[] };
+  address: { address: string; receiverPhone: string };
 }
-
+//  initialState.checkout.basket?.orderProducts[0].productSize
 const columns: ColumnsType<CheckoutsTableData> = [
   {
     title: 'Заказ №',
     dataIndex: 'id',
-    width: '10%',
+    width: '5%',
   },
   {
     title: 'Пользователь',
@@ -22,28 +23,61 @@ const columns: ColumnsType<CheckoutsTableData> = [
     render: (_, record) => {
       return (
         <p>
-          {record.user?.firstName}, {record.user.email}
+          {record.user?.firstName}, {record.user.lastName}
         </p>
       );
-    },
-    width: '25%',
-  },
-  {
-    title: 'Корзина',
-    dataIndex: 'basket',
-    render: (_, record) => {
-      return <p>Id: {record.basket.id}</p>;
     },
     width: '10%',
   },
   {
-    title: 'Адрес',
+    title: 'Цвет(ы)',
+    dataIndex: 'color',
+    render: (_, record) => {
+      return (
+        <ul>
+          {record.basket.orderProducts.map((variant, index) => {
+            return (
+              <li key={`color-${index}`}>
+                {variant.productVariant?.color!.name != ''
+                  ? `${index + 1}: ${variant.productVariant?.color!.name}`
+                  : ''}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    },
+    width: '10%',
+  },
+  {
+    title: 'размер',
+    dataIndex: 'size',
+    render: (_, record) => {
+      return (
+        <ul>
+          {record.basket.orderProducts.map((variant, index) => {
+            return (
+              <li key={`size-${index}`}>
+                {variant.productSize != ''
+                  ? `${index + 1}: ${variant.productSize}`
+                  : ''}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    },
+    width: '10%',
+  },
+  {
+    title: 'Адрес, Тел',
     dataIndex: 'address',
     render: (_, record) => {
       return (
-        <p>
-          Город: {record.address.city}, улица: {record.address.address}
-        </p>
+        <>
+          <p>Адрес: {record.address.address}</p>
+          <p>Тел: {record.address.receiverPhone}</p>
+        </>
       );
     },
     width: '20%',

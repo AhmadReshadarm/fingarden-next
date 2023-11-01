@@ -1,53 +1,31 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import TextField from '@mui/material/TextField';
 import color from '../../lib/ui.colors';
-import variants from '../../lib/variants';
-import isEmpty from 'validator/lib/isEmpty';
 import Link from 'next/link';
-import DiscountSVG from '../../../../assets/discount.svg';
-import ArrowRight from '../../../../assets/arrow_right.svg';
-import { Payment } from '@a2seven/yoo-checkout';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { TCartState, TStoreCheckoutState } from 'redux/types';
-import {
-  getDiscount,
-  getOldPrice,
-  getTotalPrice,
-  findTotalWheight,
-  getTotalPriceSuperUser,
-} from './helpers';
+import { getDiscount, getTotalPrice } from './helpers';
 import { formatNumber } from 'common/helpers/number.helper';
 import { NextRouter, useRouter } from 'next/router';
-import { setOrderInfo } from 'redux/slicers/store/checkoutSlicer';
 import { devices } from 'components/store/lib/Devices';
-import { axiosInstance } from 'common/axios.instance';
 import { AddressService, CheckoutService, CheckoutDTO } from 'swagger/services';
 import { createCart, fetchCart } from 'redux/slicers/store/cartSlicer';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
 import { openErrorNotification } from 'common/helpers';
 import { TAuthState } from 'redux/types';
 import { Role } from 'common/enums/roles.enum';
-import { Basket } from 'swagger/services';
+import DropDowns from './DropDowns';
 const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
   const dispatch = useAppDispatch();
-  const [discount, setDiscount] = useState('');
   const router = useRouter();
-  const [success, setSuccess] = useState(false);
-  const [promoMessage, setPromoMessage] = useState('');
-  const [promoInput, setPormoInput] = useState('');
   const { cart } = useAppSelector<TCartState>((state) => state.cart);
   const { deliveryInfo } = useAppSelector<TStoreCheckoutState>(
     (state) => state.storeCheckout,
   );
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
   const [withDelivery, setWithDelivery] = useState(true);
-  const [totalUI, setTotalUI] = useState(
-    user?.role === Role.SuperUser
-      ? getTotalPriceSuperUser(cart, withDelivery)
-      : getTotalPrice(cart, withDelivery, discount),
-  );
+  const [totalUI, setTotalUI] = useState(getTotalPrice(cart, withDelivery));
   const handlePayClick = (router: NextRouter) => async () => {
     setLoading(true);
     const payload = {
@@ -55,36 +33,26 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
       leaveNearDoor,
     };
 
-    // const response = await axiosInstance.post('/payments', {
-    //   value: `${Math.floor(
-    //     Number(getTotalPrice(cart, withDelivery, discount)),
-    //   )}.0`,
-    // });
-    // response.data.id &&
     if (deliveryInfo && payload && cart) {
       try {
         const responseAdress = await AddressService.createAddress({
           body: {
-            receiverName: deliveryInfo.fullName,
-            receiverPhone: deliveryInfo.phone,
+            receiverName: deliveryInfo.receiverName,
+            receiverPhone: deliveryInfo.receiverPhone,
             address: deliveryInfo.address,
             roomOrOffice: deliveryInfo.roomOrOffice,
             door: deliveryInfo.door,
             floor: deliveryInfo.floor,
             rignBell: deliveryInfo.rignBell,
-            zipCode: deliveryInfo.postCode,
+            zipCode: deliveryInfo.zipCode,
           },
         });
 
         await CheckoutService.createCheckout({
           body: {
-            // paymentId: response.data.id as string,
             address: responseAdress.id,
             basket: cart?.id,
-            totalAmount:
-              user?.role === Role.SuperUser
-                ? getTotalPriceSuperUser(cart, withDelivery)
-                : getTotalPrice(cart, withDelivery, discount),
+            totalAmount: getTotalPrice(cart, withDelivery),
             comment: payload.comment,
             leaveNearDoor: payload.leaveNearDoor,
           } as CheckoutDTO,
@@ -95,7 +63,6 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
         const basketId = localStorage.getItem('basketId') ?? '';
 
         dispatch(fetchCart(basketId));
-
         openSuccessNotification('Ваш Заказ успешно');
 
         router.push('/orders');
@@ -110,11 +77,7 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
   };
 
   useEffect(() => {
-    setTotalUI(
-      user?.role === Role.SuperUser
-        ? getTotalPriceSuperUser(cart, withDelivery)
-        : getTotalPrice(cart, withDelivery, discount),
-    );
+    setTotalUI(getTotalPrice(cart, withDelivery));
   });
   return (
     <Container>
@@ -122,24 +85,22 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
       <Wrapper>
         <Content>
           <ItemColumn>
-            <a>
-              <motion.button
-                whileHover="hover"
-                whileTap="tap"
-                variants={variants.boxShadow}
+            <span>
+              <button
                 onClick={handlePayClick(router)}
+                className="checkout-action-btn"
               >
                 Завершить мой заказ
-              </motion.button>
-            </a>
-            <span>
+              </button>
+            </span>
+            <span className="user-agreement-text">
               Нажимая на кнопку, вы соглашаетесь с{' '}
               <Link href="/privacy">
-                <a>Условиями обработки перс. данных</a>
+                <span>Политика безопасности</span>
               </Link>
               , а также с{' '}
-              <Link href="/policy">
-                <a>Условиями продажи</a>
+              <Link href="/user-agreement">
+                <span>Пользовательское соглашение</span>
               </Link>
             </span>
           </ItemColumn>
@@ -147,16 +108,14 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
             <ItemRow>
               <h3>Ваш заказ</h3>
               <span className="product-wheight">
-                {cart?.orderProducts?.length} товар(ов) •{' '}
-                {findTotalWheight(cart).totalWeight.toFixed(2)}{' '}
-                {findTotalWheight(cart).in == 'gram' ? 'гр' : 'кг'}
+                {cart?.orderProducts?.length} товар(ов) •
               </span>
             </ItemRow>
             {cart?.orderProducts?.map((product: any) => {
               return (
                 <ItemRow>
                   <span>{product.product?.name?.slice(0, 20)}..</span>
-                  <b>
+                  <p className="product-price-mobile-wrapper">
                     <span>{product!.qty} шт</span> *{'  '}
                     <span>
                       {user?.role === Role.SuperUser
@@ -173,7 +132,7 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
                         : product.productVariant?.price * product.qty}{' '}
                       ₽
                     </span>
-                  </b>
+                  </p>
                 </ItemRow>
               );
             })}
@@ -189,89 +148,15 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
                 </b>
               </ItemRow>
             )}
-            <ItemRow>
-              <label className="self-pick-up" htmlFor="self-pick-up">
-                <input
-                  type="checkbox"
-                  onClick={(e: any) =>
-                    setWithDelivery(e.target.checked ? false : true)
-                  }
-                  id="self-pick-up"
-                  title="Самовывоз?"
-                />
-                <span>Самовывоз?</span>
-              </label>
-            </ItemRow>
-            {withDelivery ? (
-              <ItemRow>
-                <span>Стоимость доставки</span>
-                <b>
-                  <span>{user?.role === Role.SuperUser ? '500' : '150'} ₽</span>
-                </b>
-              </ItemRow>
-            ) : (
-              ''
-            )}
           </ItemRowWrapper>
           <ItemRow>
             <h3 className="total">Итого</h3>
             <h3 className="total">{formatNumber(totalUI)} ₽</h3>
           </ItemRow>
         </Content>
+
+        <DropDowns />
       </Wrapper>
-      {user?.role === Role.SuperUser ? (
-        ''
-      ) : (
-        <Wrapper>
-          <ItemRow>
-            <span className="disount-svg">
-              <DiscountSVG />
-            </span>
-            <TextField
-              fullWidth
-              label="Промокод"
-              multiline
-              rows={1}
-              value={promoInput}
-              defaultValue=""
-              onChange={(e) => setPormoInput(e.target.value.toLowerCase())}
-            />
-            <motion.button
-              whileHover="hover"
-              whileTap="tap"
-              variants={variants.boxShadow}
-              disabled={isEmpty(promoInput) ? true : false}
-              style={{
-                backgroundColor: isEmpty(promoInput)
-                  ? color.textSecondary
-                  : color.btnPrimary,
-              }}
-              onClick={() => {
-                setDiscount(promoInput);
-                setSuccess(promoInput === 'wuluxeosen2022' ? true : false);
-                setPromoMessage(
-                  promoInput === 'wuluxeosen2022' ? 'Успешно' : 'Не успешно',
-                );
-                setTimeout(() => {
-                  setSuccess(false);
-                  setPromoMessage('');
-                }, 1000);
-              }}
-              className="promo-btn"
-            >
-              <ArrowRight />
-            </motion.button>
-          </ItemRow>
-          <span
-            className="promo-message"
-            style={{
-              color: success ? color.ok : color.hover,
-            }}
-          >
-            {promoMessage}
-          </span>
-        </Wrapper>
-      )}
     </Container>
   );
 };
@@ -286,7 +171,6 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   .total-header {
-    font-family: 'intro';
     color: ${color.textSecondary};
   }
 
@@ -305,11 +189,7 @@ const Wrapper = styled.div`
   border-radius: 20px;
   background-color: ${color.textPrimary};
   box-shadow: 0px 2px 6px ${color.boxShadow};
-  .promo-message {
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
-  }
+  gap: 20px;
 `;
 
 const Content = styled.div`
@@ -330,27 +210,35 @@ const ItemColumn = styled(motion.div)`
   gap: 10px;
   padding: 10px 0;
   border-bottom: 1px solid rgb(124 124 124 / 19%);
-  a {
+  span {
     width: 100%;
-    button {
+    .checkout-action-btn {
       width: 100%;
-      height: 50px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      border-radius: 15px;
-      background-color: ${color.ok};
-      color: ${color.textPrimary};
-      font-family: 'intro';
+      height: 40px;
+      border-radius: 3px;
+      background-color: ${color.btnSecondery};
+      cursor: pointer;
+      transition: 300ms;
+      &:hover {
+        background-color: ${color.btnPrimary};
+        color: ${color.textPrimary};
+        transform: scale(1.02);
+      }
+      &:active {
+        transform: scale(1);
+      }
+      span {
+        font-family: 'Jost';
+        font-size: 1rem;
+      }
     }
   }
-  span {
-    color: ${color.textSecondary};
+  .user-agreement-text {
+    width: 100%;
     a {
-      color: ${color.yellow};
+      color: ${color.hoverBtnBg};
       &:hover {
-        color: ${color.hover};
+        color: ${color.ok};
       }
     }
   }
@@ -395,25 +283,32 @@ const ItemRow = styled(motion.div)`
     color: ${color.textTertiary};
   }
   .total {
-    font-family: 'intro';
     font-size: 1.1rem;
   }
-  .disount-svg {
-    display: flex;
-    flex-direction: row;
-    justify-contetn: center;
-    align-items: center;
+  @media ${devices.laptopS} {
+    .product-price-mobile-wrapper {
+      width: 100%;
+      text-align: end;
+    }
   }
 
-  .promo-btn {
-    width: 50px;
-    min-width: 50px;
-    height: 55px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  @media ${devices.mobileL} {
+    .product-price-mobile-wrapper {
+      width: 100%;
+      text-align: end;
+    }
+  }
+  @media ${devices.mobileM} {
+    .product-price-mobile-wrapper {
+      width: 100%;
+      text-align: end;
+    }
+  }
+  @media ${devices.mobileS} {
+    .product-price-mobile-wrapper {
+      width: 100%;
+      text-align: end;
+    }
   }
 `;
 

@@ -47,13 +47,13 @@ const TagsPage = () => {
   return (
     <>
       <div className={styles.tagsHeader}>
-        <h1 className={styles.tagsHeader__title}>Теги</h1>
+        <h1 className={styles.tagsHeader__title}>Коллекция</h1>
         <Button
           className={styles.tagsHeader__createTagButton}
           type="primary"
           onClick={navigateTo(router, Page.ADMIN_CREATE_TAG)}
         >
-          Создать новый тег
+          Создать новый Коллекция
         </Button>
       </div>
       {isLoading ? (

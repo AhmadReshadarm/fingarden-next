@@ -86,6 +86,7 @@ const handleSignUp =
     lastName: string,
     email: string,
     password: string,
+    isSubscribed: boolean,
     paginate: any,
     dispatch: AppDispatch,
   ) =>
@@ -97,6 +98,7 @@ const handleSignUp =
         lastName,
         email,
         password,
+        isSubscribed,
       };
       const resp: any = await dispatch(signup(payload));
 

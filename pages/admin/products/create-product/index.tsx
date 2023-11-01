@@ -9,7 +9,7 @@ import {
   fetchCategories,
 } from 'redux/slicers/categoriesSlicer';
 import { clearColors, fetchColors } from 'redux/slicers/colorsSlicer';
-import { clearImageList } from 'redux/slicers/imagesSlicer';
+import { clearImageList, fetchImages } from 'redux/slicers/imagesSlicer';
 import { clearTags, fetchTags } from 'redux/slicers/tagsSlicer';
 import { clearSizes, fetchSizes } from 'redux/slicers/sizesSlicer';
 import { fetchProducts } from '../../../../redux/slicers/productsSlicer';
@@ -34,7 +34,6 @@ const CreateProduct = () => {
     dispatch(fetchBrands(basicRequestParams));
     dispatch(fetchTags(basicRequestParams));
     dispatch(fetchSizes(basicRequestParams));
-
     return () => {
       dispatch(clearColors());
       dispatch(clearCategories());

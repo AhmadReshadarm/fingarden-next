@@ -263,7 +263,44 @@ const SocialParent = styled(motion.div)`
   .share-btn-mobile {
     display: none;
   }
+
+  @media ${devices.laptopS} {
+    justify-content: flex-start;
+  }
+
   @media ${devices.mobileL} {
+    margin-bottom: -40px;
+    justify-content: space-between;
+    .share-btn-pc {
+      display: none;
+    }
+    .share-btn-mobile {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      color: ${color.yellow};
+      cursor: pointer;
+    }
+  }
+  @media ${devices.mobileM} {
+    margin-bottom: -40px;
+    justify-content: space-between;
+    .share-btn-pc {
+      display: none;
+    }
+    .share-btn-mobile {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      color: ${color.yellow};
+      cursor: pointer;
+    }
+  }
+  @media ${devices.mobileS} {
     margin-bottom: -40px;
     justify-content: space-between;
     .share-btn-pc {

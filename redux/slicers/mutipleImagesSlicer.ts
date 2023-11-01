@@ -17,6 +17,8 @@ export const createImage = createAsyncThunk<any, any, { rejectValue: string }>(
   ): Promise<any> {
     try {
       const formData = new FormData();
+      console.log(payload.file);
+
       formData.append('files', payload.file as any);
       const resp = await axiosInstance.post(
         '/images',

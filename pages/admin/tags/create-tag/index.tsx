@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { fetchTags } from '../../../../redux/slicers/tagsSlicer';
 
 const CreateTag = () => {
-  const title = 'Создание тега';
+  const title = 'Создание Коллекция';
   const isLoading = useAppSelector((state) => state.tags.loading);
   const isSaveLoading = useAppSelector((state) => state.tags.saveLoading);
 

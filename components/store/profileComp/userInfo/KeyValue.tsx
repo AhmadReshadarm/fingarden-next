@@ -71,11 +71,42 @@ const KeyValueWrapper = styled(motion.div)`
       }
     }
   }
+
   @media ${devices.mobileL} {
     gap: 10px;
     .edit-data {
       display: none;
     }
+    .key {
+      width: 100%;
+    }
+    .value {
+      width: 100%;
+    }
+  }
+  @media ${devices.mobileM} {
+    gap: 10px;
+    .edit-data {
+      display: none;
+    }
+    .key {
+      width: 100%;
+    }
+    .value {
+      width: 100%;
+    }
+  }
+  @media ${devices.mobileS} {
+    gap: 10px;
+    .edit-data {
+      display: none;
+    }
+  }
+  .key {
+    width: 100%;
+  }
+  .value {
+    width: 100%;
   }
 `;
 

@@ -7,8 +7,7 @@ import { Basket, OrderProduct, Product, Wishlist } from 'swagger/services';
 import CloseSVG from '../../../assets/close_black.svg';
 import { devices } from '../lib/Devices';
 import { Rating } from '@mui/material';
-import { useAppSelector, useAppDispatch } from 'redux/hooks';
-import { TAuthState } from 'redux/types';
+import { useAppDispatch } from 'redux/hooks';
 import { AppDispatch } from 'redux/store';
 import color from '../lib/ui.colors';
 import { TrigerhandleWishBtnClick } from '../storeLayout/utils/SearchBar/helpers';
@@ -29,7 +28,6 @@ type Props = {
 
 const CartItem: React.FC<Props> = ({ item, cart, onRemove, wishlist }) => {
   const dispatch = useAppDispatch();
-  // const wishlist: Wishlist = useAppSelector((state) => state.global.wishlist);
 
   const { name, url } = item.product!;
 
@@ -45,7 +43,6 @@ const CartItem: React.FC<Props> = ({ item, cart, onRemove, wishlist }) => {
     onRemove(product, dispatch, cart);
   };
 
-  const { user } = useAppSelector<TAuthState>((state) => state.auth);
   const [itemCounter, setItemCounter] = useState(item.qty!);
   return (
     <Item>
@@ -59,7 +56,7 @@ const CartItem: React.FC<Props> = ({ item, cart, onRemove, wishlist }) => {
             src={`/api/images/${images[0]}`}
             onError={({ currentTarget }) => {
               currentTarget.onerror = null;
-              currentTarget.src = '/assets/images/img_error.png';
+              currentTarget.src = '/img_not_found.png';
             }}
           />
           <div className="wishlist-btn-container">
@@ -99,7 +96,7 @@ const CartItem: React.FC<Props> = ({ item, cart, onRemove, wishlist }) => {
 
           <div className="item-action-btns-wrapper">
             <div className="in-cart-sign">
-              <span>уже в корзине</span>
+              <span>УЖЕ В КОРЗИНЕ</span>
               <img src="/icons/vector.png" alt="in cart sign" />
             </div>
             <ItemCounterWrapper onClick={(e) => e.preventDefault()}>
@@ -108,41 +105,56 @@ const CartItem: React.FC<Props> = ({ item, cart, onRemove, wishlist }) => {
                 whileHover="hover"
                 whileTap="tap"
                 variants={variants.boxShadow}
-                onClick={() =>
-                  setItemCounter((prev) => {
-                    if (prev == 1) return prev;
-                    const itemCounter = prev - 1;
+                onClick={
+                  () =>
                     handleItemCountChange(
-                      itemCounter,
+                      item.qty! - 1,
                       item.product!,
                       dispatch,
                       cart,
-                    );
+                    )
 
-                    return itemCounter;
-                  })
+                  // setItemCounter((prev) => {
+                  //   if (prev == 1) return prev;
+                  //   const itemCounter = prev - 1;
+                  //   handleItemCountChange(
+                  //     itemCounter,
+                  //     item.product!,
+                  //     dispatch,
+                  //     cart,
+                  //   );
+
+                  //   return itemCounter;
+                  // })
                 }
               >
                 <span>-</span>
               </motion.button>
-              <span>{itemCounter} шт</span>
+              <span>{item.qty} шт</span>
               <motion.button
                 className="right-btn"
                 whileHover="hover"
                 whileTap="tap"
                 variants={variants.boxShadow}
-                onClick={() =>
-                  setItemCounter((prev) => {
-                    const itemCounter = prev + 1;
+                onClick={
+                  () =>
                     handleItemCountChange(
-                      itemCounter,
+                      item.qty! + 1,
                       item.product!,
                       dispatch,
                       cart,
-                    );
+                    )
+                  // setItemCounter((prev) => {
+                  //   const itemCounter = prev + 1;
+                  //   handleItemCountChange(
+                  //     item.qty! + 1,
+                  //     item.product!,
+                  //     dispatch,
+                  //     cart,
+                  //   );
 
-                    return itemCounter;
-                  })
+                  //   return itemCounter;
+                  // })
                 }
               >
                 <span>+</span>
@@ -188,6 +200,27 @@ const Item = styled.li`
       cursor: pointer;
     }
   }
+  @media ${devices.laptopS} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
+
+  @media ${devices.mobileL} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
+  @media ${devices.mobileM} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
+  @media ${devices.mobileS} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -220,7 +253,7 @@ const ItemDetails = styled.div`
     h4 {
       text-align: left;
       font-family: 'Anticva';
-      font-size: 2.5rem;
+      font-size: 1.8rem;
       font-weight: 400;
       &:hover {
         text-decoration: underline 1px;
@@ -278,6 +311,64 @@ const ItemDetails = styled.div`
       justify-content: center;
       align-items: center;
       gap: 10px;
+    }
+  }
+
+  @media ${devices.laptopS} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      .in-cart-sign {
+        width: 100%;
+      }
+    }
+  }
+
+  @media ${devices.mobileL} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      .in-cart-sign {
+        width: 100%;
+      }
+    }
+  }
+  @media ${devices.mobileM} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      .in-cart-sign {
+        width: 100%;
+      }
+    }
+  }
+  @media ${devices.mobileS} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      .in-cart-sign {
+        width: 100%;
+      }
     }
   }
 `;

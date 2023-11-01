@@ -6,8 +6,8 @@ import CloseSVG from '../../../assets/close_black.svg';
 import MultipleImageUpload from '../generalComponents/MultipleImageUpload';
 import { InsertRowLeftOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import DatabaseImages from './databaseImages';
+import { useState } from 'react';
+import DatabaseImages from 'ui-kit/DatabaseImages';
 
 const { Option } = Select;
 
@@ -106,7 +106,13 @@ const ProductVariant: React.FC<Props> = ({
             Выбрать из базы данных
           </Button>
         </ButtonDevider>
-        {isOpen ? <DatabaseImages setOpen={setOpen} index={index} /> : ''}
+
+        <DatabaseImages
+          isProducts={true}
+          setOpen={setOpen}
+          isOpen={isOpen}
+          prodcutVariantIndex={index}
+        />
       </Form.Item>
     </div>
   );

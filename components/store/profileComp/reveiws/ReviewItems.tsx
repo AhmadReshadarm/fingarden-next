@@ -8,46 +8,53 @@ import DeleteSVG from '../../../../assets/close_black.svg';
 import Link from 'next/link';
 import AddReview from './AddReview';
 import { Review } from 'swagger/services';
+import { devices } from 'components/store/lib/Devices';
 
 type Props = {
   review: Review;
 };
 const ReviewsItems: React.FC<Props> = ({ review }) => {
   const [isOpen, setOpen] = useState(false);
-  const images = review.images?.split(', ');
+  const images = review.product?.productVariants![0].images?.split(', ');
 
   return (
-    <ReviewsItem>
-      <div className="review-info-wrapper">
-        <Link href={`/product/${review.product?.url}`}>
-          <a className="product-title">{review.product?.name}</a>
-        </Link>
-        <span>
-          <Rating value={review.rating} size="small" readOnly />
-        </span>
-        <span className="review-text">{review.text}</span>
-        <motion.button
-          whileHover="hover"
-          whileTap="tap"
-          variants={variants.boxShadow}
-          className="add-review-btn"
-          onClick={() => setOpen(true)}
-        >
-          Изменить отзыв
-        </motion.button>
-      </div>
-      <div className="product-image-wrapper">
-        <motion.span
-          custom={1.1}
-          whileHover="hover"
-          whileTap="tap"
-          variants={variants.grow}
-        >
-          <DeleteSVG />
-        </motion.span>
-        <img src={`/api/images/${images ? images[0] : ''}`} alt="" />
-      </div>
-      {isOpen ? <AddReview setOpen={setOpen} review={review} /> : ''}
+    <ReviewsItem
+      style={{ justifyContent: isOpen ? 'center' : 'space-between' }}
+    >
+      {isOpen ? (
+        <AddReview setOpen={setOpen} review={review} />
+      ) : (
+        <>
+          <div className="review-info-wrapper">
+            <Link href={`/product/${review.product?.url}`}>
+              <h1 className="product-title">{review.product?.name}</h1>
+            </Link>
+            <span>
+              <Rating value={review.rating} size="small" readOnly />
+            </span>
+            <span className="review-text">{review.text?.slice(0, 100)}</span>
+            <motion.button
+              whileHover="hover"
+              whileTap="tap"
+              variants={variants.boxShadow}
+              className="add-review-btn"
+              onClick={() => setOpen(true)}
+            >
+              Редактировать
+            </motion.button>
+          </div>
+          <div className="product-image-wrapper">
+            <img
+              src={`/api/images/${images ? images[0] : ''}`}
+              alt={review.product?.name}
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = '/img_not_found.png';
+              }}
+            />
+          </div>
+        </>
+      )}
     </ReviewsItem>
   );
 };
@@ -56,52 +63,105 @@ const ReviewsItem = styled(motion.li)`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0px 2px 6px ${color.boxShadowBtn};
+  background-color: ${color.bgProduct};
+  box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
   user-select: none;
   .review-info-wrapper {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
     .product-title {
-      color: ${color.yellow};
+      font-family: Anticva;
+      font-size: 1.5rem;
+      line-height: 2rem;
+      font-weight: 100;
       &:hover {
-        color: ${color.hover};
+        color: ${color.hoverBtnBg};
+        text-decoration: underline;
       }
     }
     .review-text {
       width: 80%;
     }
     .add-review-btn {
-      width: 130px;
-      height: 35px;
-      border-radius: 8px;
-      background-color: ${color.btnPrimary};
-      color: ${color.textPrimary};
+      width: 200px;
+      height: 40px;
+      border-radius: 3px;
+      background-color: ${color.btnSecondery};
       cursor: pointer;
+      transition: 300ms;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      &:hover {
+        background-color: ${color.btnPrimary};
+        color: ${color.textPrimary};
+        transform: scale(1.02);
+      }
+      &:active {
+        transform: scale(1);
+      }
     }
   }
   .product-image-wrapper {
-    width: 30%;
-    height: 180px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-
-    span {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+    width: 220px;
+    min-width: 220px;
+    height: 220px;
     img {
-      width: 50px;
+      border-radius: 5px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  @media ${devices.mobileL} {
+    flex-direction: column-reverse;
+    gap: 15px;
+    .review-info-wrapper {
+      align-items: center;
+      .product-title {
+        text-align: center;
+      }
+      .review-text {
+        width: 90%;
+        text-align: center;
+      }
+    }
+  }
+  @media ${devices.mobileM} {
+    flex-direction: column-reverse;
+    gap: 15px;
+    .review-info-wrapper {
+      align-items: center;
+      .product-title {
+        text-align: center;
+      }
+      .review-text {
+        width: 90%;
+        text-align: center;
+      }
+    }
+  }
+  @media ${devices.mobileS} {
+    flex-direction: column-reverse;
+    gap: 15px;
+    .review-info-wrapper {
+      align-items: center;
+      .product-title {
+        text-align: center;
+      }
+      .review-text {
+        width: 90%;
+        text-align: center;
+      }
     }
   }
 `;

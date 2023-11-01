@@ -22,6 +22,7 @@ import {
   Brand,
   Category,
   Color,
+  Image,
   ParameterProduct,
   Product,
   Size,
@@ -88,11 +89,32 @@ const ManageProductForm = ({
     EditorState.createEmpty(),
   );
 
+  const isJsonString = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
+
+  const isConvertable = (data) => {
+    if (typeof JSON.parse(data) == 'object') {
+      return true;
+    }
+    return false;
+  };
   useEffect(() => {
-    if (!isLoading && product) {
+    if (
+      !isLoading &&
+      product &&
+      isJsonString(product?.desc!) &&
+      isConvertable(product?.desc!) &&
+      product.desc !== ''
+    ) {
       setEditorState(
         EditorState.createWithContent(
-          convertFromRaw(JSON.parse(product?.desc!)),
+          convertFromRaw(JSON.parse(product.desc!)),
         ),
       );
     }
@@ -126,12 +148,6 @@ const ManageProductForm = ({
   const handleAddVariant = () => {
     setVariants((prev) => prev.concat({}));
   };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      return;
-    }
-  });
 
   return (
     <>
@@ -183,6 +199,7 @@ const ManageProductForm = ({
                   border: `1px solid ${color.textSecondary}`,
                   borderRadius: '5px',
                 }}
+                localization={{ locale: 'ru' }}
                 toolbar={{
                   fontFamily: {
                     options: ['Jost', 'Anticva'],

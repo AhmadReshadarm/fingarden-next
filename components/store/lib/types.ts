@@ -17,9 +17,9 @@ type styleProps = {
   width?: string;
   justifycontent?: string;
   display?: string;
-  topMobile?: string;
+  topmobile?: string;
   filterdropback?: string;
-  textColor?: string;
+  textcolor?: string;
 };
 
 export type { styleProps };

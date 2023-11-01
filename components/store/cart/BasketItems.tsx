@@ -21,7 +21,7 @@ const BasketItems: React.FC<Props> = ({}) => {
           <ItemsWrapper>
             <div className="action-btn-wrapper">
               <button onClick={() => handleRemoveClick(dispatch)}>
-                <span>очистить корзину</span>
+                <span>ОЧИСТИТЬ КОРЗИНУ</span>
               </button>
             </div>
             <CartBody>
@@ -65,19 +65,25 @@ const ItemsWrapper = styled.div`
     align-items: center;
     padding: 20px;
     button {
-      width: 150px;
+      width: 200px;
       height: 40px;
-      border-radius: 3px;
       background-color: ${color.btnSecondery};
       cursor: pointer;
       transition: 300ms;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3px;
       &:hover {
-        background-color: ${color.btnPrimary};
-        color: ${color.textPrimary};
+        background-color: ${color.searchBtnBg};
+
         transform: scale(1.02);
       }
       &:active {
         transform: scale(1);
+        background-color: ${color.btnPrimary};
+        color: ${color.textPrimary};
       }
       span {
         font-family: 'Jost';
@@ -107,7 +113,7 @@ const NoCartItem = styled.div`
   align-items: center;
   h2 {
     font-size: 3rem;
-    font-family: 'Anticva';
+    font-family: Anticva;
   }
 `;
 

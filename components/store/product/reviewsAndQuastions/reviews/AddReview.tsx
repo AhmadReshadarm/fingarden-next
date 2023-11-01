@@ -9,12 +9,13 @@ import { handleFileChange } from './helpers';
 import Upload from '../../../../../assets/upload.svg';
 import Delete from '../../../../../assets/delete.svg';
 import Share from '../../../../../assets/shareWhite.svg';
-import { getUserInfo } from 'common/helpers/jwtToken.helpers';
+import { TAuthState } from 'redux/types';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { clearImageList } from 'redux/slicers/imagesSlicer';
 import { Product } from 'swagger/services';
 import { AppDispatch } from 'redux/store';
 import { createReview } from 'redux/slicers/store/productInfoSlicer';
+import { openErrorNotification } from 'common/helpers';
 
 type Props = {
   product: Product | undefined;
@@ -26,11 +27,11 @@ const AddReview: React.FC<Props> = ({ product }) => {
   const [input, setInput] = useState('');
   const [success, setSuccess] = useState('');
   const inputRef = useRef<any>(null);
-  const user = getUserInfo();
   const imageList = useAppSelector<any[]>((state) => state.images.imageList);
-
-  const handleClick = (evt: any) => {
+  const { user } = useAppSelector<TAuthState>((state) => state.auth);
+  const handleClick = (evt: any, setUploadBtnAvailable) => {
     evt.preventDefault();
+    setUploadBtnAvailable(false);
     inputRef.current.click();
   };
 
@@ -49,6 +50,17 @@ const AddReview: React.FC<Props> = ({ product }) => {
     ) =>
     async (e) => {
       e.preventDefault();
+
+      if (rating < 1) {
+        openErrorNotification('Пожалуйста, дайте этому товару оценку');
+        return;
+      }
+      if (text.length > 300 || text.length === 0) {
+        openErrorNotification(
+          'Минимальное количество символов: 2, максимальное количество символов: 300.',
+        );
+        return;
+      }
       const payload = {
         rating,
         text,
@@ -57,7 +69,7 @@ const AddReview: React.FC<Props> = ({ product }) => {
         userId,
       };
       await dispatch(createReview(payload));
-      console.log(payload);
+
       setSuccess('Ваш отзыв опубликован');
       setTimeout(() => setSuccess(''), 2000);
     };
@@ -67,6 +79,7 @@ const AddReview: React.FC<Props> = ({ product }) => {
       dispatch(clearImageList());
     };
   }, []);
+  const [uploadBtnAvailable, setUploadBtnAvailable] = useState(true);
 
   return (
     <AddReviewContainer
@@ -76,7 +89,7 @@ const AddReview: React.FC<Props> = ({ product }) => {
       variants={variants.fadeOutSlideOut}
     >
       <StarsWrapper>
-        <span>Пожалуйста, оцените этот товар</span>
+        <span>Оцените этот товар</span>
         <Rating
           value={rate}
           size="medium"
@@ -86,7 +99,7 @@ const AddReview: React.FC<Props> = ({ product }) => {
         />
       </StarsWrapper>
       <form>
-        <span>Пожалуйста, напишите комментарий об этом товаре</span>
+        <span>Напишите комментарий об этом товаре</span>
         <TextField
           fullWidth
           label="Комментарий"
@@ -96,26 +109,35 @@ const AddReview: React.FC<Props> = ({ product }) => {
           defaultValue=""
           onChange={(e) => setInput(e.target.value)}
         />
-        <span>Пожалуйста, загрузите изображения товара</span>
+
+        <span>Загрузите изображения товара</span>
         <input
           ref={inputRef}
           type="file"
           name="img"
           multiple
+          max={4}
           accept="image/png, image/gif, image/jpeg"
-          onChange={(evt) => handleFileChange(evt, setSrc, dispatch)}
+          onClick={() => setUploadBtnAvailable(false)}
+          onChange={(evt) =>
+            handleFileChange(evt, setSrc, dispatch, setUploadBtnAvailable)
+          }
         />
-        <motion.button
-          whileHover="hover"
-          whileTap="tap"
-          variants={variants.boxShadow}
-          onClick={handleClick}
-        >
-          <span>Выберите изображения</span>
-          <span>
-            <Upload />
-          </span>
-        </motion.button>
+        {uploadBtnAvailable || src.length == 0 ? (
+          <motion.button
+            whileHover="hover"
+            whileTap="tap"
+            variants={variants.boxShadow}
+            onClick={(evt) => handleClick(evt, setUploadBtnAvailable)}
+          >
+            <span>Выберите изображения</span>
+            <span>
+              <Upload />
+            </span>
+          </motion.button>
+        ) : (
+          ''
+        )}
         <motion.button
           whileHover={{ boxShadow: '0px 0px 4px 2px rgba(0, 0, 0, 0.25)' }}
           whileTap={{ boxShadow: '0px 0px 0px 0px #ffffff' }}
@@ -144,7 +166,7 @@ const AddReview: React.FC<Props> = ({ product }) => {
         animate={success.length == 0 ? 'init' : 'animate'}
         variants={variants.fadeOutSlideOut}
       >
-        {success}
+        {/* {success} */}
       </motion.span>
       <PreviewWrapper style={{ display: src.length == 0 ? 'none' : 'grid' }}>
         {src.map((item, index) => {

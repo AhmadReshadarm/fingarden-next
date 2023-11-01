@@ -23,7 +23,6 @@ const handleFormSubmit =
     parameters: Parameter[],
   ) =>
   async (form) => {
-    console.log(form);
     if (router.query.id) {
       const payload = {
         ...form,

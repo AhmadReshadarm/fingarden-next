@@ -1,5 +1,4 @@
 import {
-  AppstoreAddOutlined,
   BgColorsOutlined,
   DesktopOutlined,
   HeatMapOutlined,
@@ -8,50 +7,42 @@ import {
   SkinOutlined,
   CommentOutlined,
   ReconciliationOutlined,
-  LineChartOutlined,
-  MinusOutlined,
   QuestionCircleOutlined,
   FundProjectionScreenOutlined,
+  PicLeftOutlined,
+  SettingOutlined,
+  UserOutlined,
+  IdcardOutlined,
 } from '@ant-design/icons';
 import { Page, paths } from 'routes/constants';
 
 import { getItem } from './helpers';
 import { PathWords, TMenuItem } from './types';
 
-export const items: TMenuItem[] = [
+export const menueItems: TMenuItem[] = [
   getItem('Категории', paths[Page.ADMIN_CATEGORIES], <PieChartOutlined />),
   getItem('Продукты', paths[Page.ADMIN_PRODUCTS], <DesktopOutlined />),
   getItem('Цвета', paths[Page.ADMIN_COLORS], <BgColorsOutlined />),
   getItem('Бренды', paths[Page.ADMIN_BRANDS], <HeatMapOutlined />),
-  getItem('Теги', paths[Page.ADMIN_TAGS], <TagsOutlined />),
+  getItem('Коллекция', paths[Page.ADMIN_TAGS], <TagsOutlined />),
   getItem('Размер', paths[Page.ADMIN_SIZES], <SkinOutlined />),
   getItem('Отзывы', paths[Page.ADMIN_REVIEWS], <CommentOutlined />),
   getItem('Вопросы', paths[Page.ADMIN_QUESTIONS], <QuestionCircleOutlined />),
   getItem('Заказы', paths[Page.ADMIN_CHECKOUTS], <ReconciliationOutlined />),
+  getItem('Новости', paths[Page.ADMIN_NEWS], <PicLeftOutlined />),
   getItem(
     'Баннеры',
     paths[Page.ADMIN_BANNERS],
     <FundProjectionScreenOutlined />,
   ),
-  // getItem('Аналитика', '', <LineChartOutlined />, [
-  //   getItem(
-  //     'Категории',
-  //     paths[Page.ADMIN_ANALYTICS_CATEGORIES],
-  //     <MinusOutlined />,
-  //   ),
-  //   getItem('Бренды', paths[Page.ADMIN_ANALYTICS_BRANDS], <MinusOutlined />),
-  //   getItem(
-  //     'Продукты',
-  //     paths[Page.ADMIN_ANALYTICS_PRODUCTS],
-  //     <MinusOutlined />,
-  //   ),
-  //   getItem(
-  //     'Пользователи',
-  //     paths[Page.ADMIN_ANALYTICS_USERS],
-  //     <MinusOutlined />,
-  //   ),
-  //   getItem('Динамика', paths[Page.ADMIN_ANALYTICS_DYNAMIC], <MinusOutlined />),
-  // ]),
+  getItem('Настройки', '', <SettingOutlined />, [
+    getItem('Пользователи', paths[Page.ADMIN_SETTINGS_USERS], <UserOutlined />),
+    getItem(
+      'Подписчики',
+      paths[Page.ADMIN_SETTINGS_SUBSCRIBERS],
+      <IdcardOutlined />,
+    ),
+  ]),
 ];
 
 export const pathWords: PathWords = {
@@ -67,21 +58,20 @@ export const pathWords: PathWords = {
   products: 'Продукты',
   'products/create-product': 'Создание продукта',
   'products/[id]': 'Редактирование продукта',
-  tags: 'Теги',
-  'tags/create-tag': 'Создание тега',
-  'tags/[id]': 'Редактирование тега',
+  tags: 'Коллекция',
+  'tags/create-tag': 'Создание Коллекция',
+  'tags/[id]': 'Редактирование Коллекция',
   sizes: 'Размер',
   'sizes/create-size': 'Создание размер',
   'sizes/[id]': 'Редактирование размер',
   reviews: 'Отзывы',
   questions: 'Вопросы',
   checkouts: 'Заказы',
-  analytics: 'Аналитика',
-  'analytics/categories': 'Категории',
-  'analytics/brands': 'Бренды',
-  'analytics/products': 'Продукты',
-  'analytics/users': 'Пользователи',
-  'analytics/dynamic': 'Динамика',
+  newsPosts: 'Новости',
+  'news/create-news': 'Создание Новости',
+  'news/[id]': 'Редактирование Новости',
+  settings: 'Настройки',
+  'settings/users': 'Пользователи',
   banners: 'Баннеры',
   'banners/update-banner': 'Обновление баннеров',
 };

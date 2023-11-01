@@ -14,7 +14,7 @@ import { handleAfterAuthorized } from './helpers';
 import { Profile } from './Profile';
 import { fetchUserById } from 'redux/slicers/authSlicer';
 import { getAccessToken } from 'common/helpers/jwtToken.helpers';
-
+import { session } from 'redux/slicers/authSlicer';
 const Authorize = () => {
   const [direction, authType, paginate] = UsePagination();
   const [isOpened, setIsOpened] = useState(false);
@@ -47,6 +47,9 @@ const Authorize = () => {
     if (accessToken && user?.id) dispatch(fetchUserById({ userId: user?.id! }));
   }, [isOpened]);
 
+  useEffect(() => {
+    dispatch(session());
+  }, [isOpened]);
   return (
     <>
       <AuthBtn
@@ -89,8 +92,8 @@ const PopupWrapper = styled(motion.div)`
   width: 400px;
   height: 412px;
   position: absolute;
-  top: 95px;
-  right: 10px;
+  top: 60px;
+  right: -90px;
   border-radius: 15px;
   display: flex;
   flex-direction: row;

@@ -11,16 +11,21 @@ import { InputsTooltip } from '../helpers';
 import { MAPBOX_TOKEN } from './constant';
 import Locate from '../../../../assets/geolocate.svg';
 import Close from '../../../../assets/close_black.svg';
+import { initialStateAdress } from './constant';
 
 const AutoFill = (props: any) => {
-  const { address, setAddress, setPostCode, setViewPort } = props;
-
+  const { address, setAddress, setPostCode, setViewPort, mapRef } = props;
+  const handleReset = () => {
+    setViewPort({ ...initialStateAdress });
+    mapRef.current.setCenter(initialStateAdress.center);
+    mapRef.current.setZoom(initialStateAdress.zoom);
+  };
   return (
     <>
       <TextAreaWrapper>
         <label htmlFor="address-autofill">
           <b>
-            <span>Ваш адресс</span>
+            <span>Ваш адрес</span>
             <span className="required">*</span>
           </b>
           <InputsTooltip
@@ -29,8 +34,11 @@ const AutoFill = (props: any) => {
             key="address-tip"
             title={
               <React.Fragment>
-                <span>Это поле обязательно к заполнению</span>
-                <span>Пример: МО, г. Люберцы, Октябрьский проспект 181</span>
+                <span>
+                  Пример: Санкт-Петербург, ТЦ Villa - ул. Савушкина д.119,
+                  корп.3, 2 этаж, В-59
+                </span>
+                <span>Или</span>
                 <span>
                   Определить местоположение с нажав на кнопку местоположения
                 </span>
@@ -46,10 +54,13 @@ const AutoFill = (props: any) => {
         {address != '' ? (
           <span
             className="address-clear-btn"
-            onClick={() => {
-              setAddress('');
-              setPostCode('');
-            }}
+            onClick={
+              () => handleReset()
+              //   {
+              //   setAddress('');
+              //   // setPostCode('');
+              // }
+            }
           >
             <Close />
           </span>
@@ -66,7 +77,7 @@ const AutoFill = (props: any) => {
           onChange={(e) => handleHiddenInputChange(e, setAddress)}
         />
       </TextAreaWrapper>
-      <AutoFillWrapper>
+      {/* <AutoFillWrapper>
         <AddressAutofill
           options={{
             language: 'ru',
@@ -89,7 +100,7 @@ const AutoFill = (props: any) => {
             autoComplete="address-line1"
           />
         </AddressAutofill>
-      </AutoFillWrapper>
+      </AutoFillWrapper> */}
     </>
   );
 };
@@ -123,9 +134,7 @@ const TextAreaWrapper = styled.div`
     align-items: center;
     gap: 10px;
     padding: 5px;
-    span {
-      font-family: 'intro';
-    }
+
     .tool-tip {
       width: 18px;
       height: 18px;

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Cart from 'components/store/cart';
 import { motion } from 'framer-motion';
 import variants from 'components/store/lib/variants';
+import { devices } from 'components/store/lib/Devices';
 const CardPage = () => {
   return (
     <Container
@@ -65,6 +66,15 @@ const BasketHeader = styled.div`
       }
     }
   }
+  @media ${devices.mobileL} {
+    width: 95%;
+  }
+  @media ${devices.mobileM} {
+    width: 95%;
+  }
+  @media ${devices.mobileS} {
+    width: 95%;
+  }
 `;
 
 const PageTitle = styled.div`
@@ -76,8 +86,9 @@ const PageTitle = styled.div`
   align-items: center;
   padding: 0 30px 0 0;
   h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-family: 'Anticva';
+    font-weight: 100;
   }
 `;
 

@@ -20,7 +20,7 @@ export const fetchReviews = createAsyncThunk<
     try {
       const response = await ReviewService.getReviews({
         showOnMain: true,
-        limit: '8',
+        limit: '1',
       });
 
       return response;

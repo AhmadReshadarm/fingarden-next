@@ -4,7 +4,7 @@ import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
 import { devices } from 'components/store/lib/Devices';
 import { getFlatVariantImages, ImageTooltip } from './helpers';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Color, ProductVariant } from 'swagger/services';
 import { useAppDispatch } from 'redux/hooks';
 import { setVariant } from 'redux/slicers/store/cartSlicer';
@@ -13,7 +13,8 @@ import { TAuthState } from 'redux/types';
 import { Role } from 'common/enums/roles.enum';
 
 type StyleProps = {
-  backgroundColor: string;
+  backgroundColor?: string;
+  width?: string;
 };
 
 type Props = {
@@ -53,25 +54,26 @@ const ColorPicker: React.FC<Props> = ({
     };
 
   const variantImages = getFlatVariantImages(productVariants);
-  useEffect(() => {
-    if (variantImages) {
-      localStorage.setItem(
-        'userChoice',
-        JSON.stringify(variantImages[0].color?.name),
-      );
-    }
-  }, []);
 
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   useEffect(() => {
-    if (variantColor?.url === '_' || variantColor?.name === '_') {
-      localStorage.removeItem('userChoice');
-    }
+    setWindowWidth(window.innerWidth);
+    const handleWindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
   });
   return (
     <ColorPickerContainer>
-      <ColorPickerNameWrapper
+      {/* <ColorPickerNameWrapper
         key="prices-product-page"
         custom={0.38}
         initial="init"
@@ -87,8 +89,8 @@ const ColorPicker: React.FC<Props> = ({
         ) : (
           ''
         )}
-      </ColorPickerNameWrapper>
-      <ColorPickerList>
+      </ColorPickerNameWrapper> */}
+      <ColorPickerList width={variantImages?.length! < 6 ? '60%' : '100%'}>
         {variantImages?.map((variant, colIndex) => (
           <ImageTooltip
             enterTouchDelay={0}
@@ -103,7 +105,11 @@ const ColorPicker: React.FC<Props> = ({
                     objectFit: 'contain',
                   }}
                   src={`/api/images/${variant.image}`}
-                  alt=""
+                  alt={`${variant.image}`}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null;
+                    currentTarget.src = '/img_not_found.png';
+                  }}
                 />
                 <hr
                   style={{
@@ -165,19 +171,18 @@ const ColorPicker: React.FC<Props> = ({
                 setSelectedIndex,
                 paginateImage,
               )}
-              style={{
-                border: `1px solid ${
-                  selectedIndex == colIndex ? color.yellow : color.textPrimary
-                }`,
-              }}
             >
               <img
                 style={{
-                  width: selectedIndex == colIndex ? '100%' : '50px',
-                  height: selectedIndex == colIndex ? '100%' : '50px',
+                  width: selectedIndex == colIndex ? '95%' : '100%',
+                  height: selectedIndex == colIndex ? '95%' : '100%',
                 }}
                 src={`/api/images/${variant.image}`}
-                alt=""
+                alt={variant.image}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null;
+                  currentTarget.src = '/img_not_found.png';
+                }}
               />
               {!variant.available ? <div></div> : ''}
             </ColorPickerItems>
@@ -204,52 +209,46 @@ const ColorPickerNameWrapper = styled(motion.div)`
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  span {
-    font-size: 0.8rem;
-    color: ${color.textTertiary};
-  }
 `;
 
 const ColorPickerList = styled.ul`
-  width: 100%;
+  width: ${(p: StyleProps) => p.width};
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-column-gap: 10px;
-  grid-row-gap: 10px;
   @media ${devices.laptopS} {
     grid-template-columns: repeat(4, 1fr);
   }
   @media ${devices.mobileL} {
     grid-template-columns: repeat(4, 1fr);
   }
+  @media ${devices.mobileM} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media ${devices.mobileS} {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const ColorPickerItems = styled(motion.li)`
-  width: 100%;
-  height: 60px;
+  max-width: 50px;
+  min-width: 50px;
+  height: 50px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   position: relative;
   border-radius: 5px;
-  background-color: #e5f2ff;
+
+  box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
   cursor: pointer;
   overflow: hidden;
   img {
     width: 50px;
     height: 50px;
     object-fit: cover;
-    border-radius: 10px;
-  }
-  div {
-    width: 100%;
-    height: 100%;
-    background-color: #ffffff96;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 5px;
+    border-radius: 3px;
   }
 `;
 
@@ -264,7 +263,8 @@ const ColorPickerPriceWrapper = styled.div`
 
 const ColorPickerSpan = styled.span`
   font-size: 1rem;
-  font-family: 'intro';
+  font-family: Anticva;
+
   &:nth-child(2) {
     font-size: 1rem;
     text-decoration: line-through;
@@ -277,13 +277,17 @@ const ColorWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  color: ${color.btnPrimary};
+  span {
+    font-size: 2rem;
+    font-weight: 200;
+    color: ${color.textTertiary};
+  }
 `;
 
 const ColorItem = styled.div`
   background-color: ${(props: StyleProps) => props.backgroundColor};
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
 `;
 

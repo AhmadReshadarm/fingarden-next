@@ -25,7 +25,7 @@ const InfoDelivery = () => {
       bg_color={color.textPrimary}
     >
       <Wrapper>
-        <Content
+        {/* <Content
           flex_direction="column"
           justify_content="flex-start"
           gap="30px"
@@ -97,7 +97,7 @@ const InfoDelivery = () => {
               <a style={{ color: color.yellow }}>help@wuluxe.ru</a>
             </Link>
           </span>
-        </Content>
+        </Content> */}
       </Wrapper>
     </Container>
   );

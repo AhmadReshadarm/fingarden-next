@@ -29,7 +29,7 @@ const AuthBtns = styled(motion.button)`
   justify-content: center;
   align-items: center;
   background-color: ${(p: styleProps) => p.bgcolor};
-  color: ${(p: styleProps) => p.textColor};
+  color: ${(p: styleProps) => p.textcolor};
   border-radius: 5px;
   font-family: 'intro';
 `;
@@ -48,10 +48,18 @@ const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align--items: center;
-  gap: 15px;
+  align-items: flex-start;
+  gap: 10px;
   h4 {
     font-size: 1rem;
+  }
+  .newsletter-wrapper {
+    padding: 5px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
   }
 `;
 
@@ -92,7 +100,7 @@ const AuthInput = styled(motion.input)`
   height: 50px;
   border-radius: 5px;
   padding: 0 10px;
-  font-size: 0.8rem;
+  font-size: 1rem;
   background: transparent;
   &::placeholder {
     color: ${color.bgSecondary};

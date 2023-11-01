@@ -1,15 +1,8 @@
 import { devices } from 'components/store/lib/Devices';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import styled from 'styled-components';
-import { Basket, Product, Wishlist } from 'swagger/services';
+import { Product } from 'swagger/services';
 import Loading from 'ui-kit/Loading';
-import {
-  checkIfItemInCart,
-  checkIfItemInWishlist,
-  getAnimationDelay,
-  handleCartBtnClick,
-  handleWishBtnClick,
-} from './helpers';
+import { getAnimationDelay } from './helpers';
 import ProductItem from './productItem';
 
 type Props = {
@@ -27,56 +20,48 @@ const ProductGrid: React.FC<Props> = ({
   children,
   loading,
 }) => {
-  const cart: Basket = useAppSelector((state) => state.cart.cart);
-  const wishlist: Wishlist = useAppSelector((state) => state.global.wishlist);
   const delay = getAnimationDelay(products.length);
-  const dispatch = useAppDispatch();
 
   return (
-    <Grid
-      laptopGridTemplateAreas={gridStyle?.laptopGridTemplateAreas}
-      laptopSGridTemplateAreas={gridStyle?.laptopSGridTemplateAreas}
-      laptopGridTemplateColumns={gridStyle?.laptopGridTemplateColumns}
-      laptopColumnGap={gridStyle?.laptopColumnGap}
-      laptopSColumnGap={gridStyle?.laptopSColumnGap}
-      style={gridStyle}
-    >
+    <>
       {!loading ? (
         <>
-          {children}
           {!!products.length ? (
-            products.map((product, index) => {
-              return (
-                <ProductItem
-                  key={`product-item-${index}`}
-                  product={product}
-                  custom={delay[index]}
-                  isInCart={checkIfItemInCart(product, cart)}
-                  isInWishlist={checkIfItemInWishlist(product, wishlist)}
-                  onCartBtnClick={handleCartBtnClick(
-                    product,
-                    dispatch,
-                    product.productVariants![0],
-                    cart,
-                  )}
-                  onWishBtnClick={handleWishBtnClick(
-                    product,
-                    dispatch,
-                    wishlist,
-                  )}
-                />
-              );
-            })
+            <Grid
+              laptopGridTemplateAreas={gridStyle?.laptopGridTemplateAreas}
+              laptopSGridTemplateAreas={gridStyle?.laptopSGridTemplateAreas}
+              laptopGridTemplateColumns={gridStyle?.laptopGridTemplateColumns}
+              laptopColumnGap={gridStyle?.laptopColumnGap}
+              laptopSColumnGap={gridStyle?.laptopSColumnGap}
+              style={gridStyle}
+            >
+              {children}
+
+              {products.map((product, index) => {
+                return (
+                  <ProductItem
+                    key={`product-item-${index}`}
+                    product={product}
+                    custom={delay[index]}
+                    name={
+                      product.sizes![0] == undefined
+                        ? ''
+                        : product.sizes![0].name!
+                    }
+                  />
+                );
+              })}
+            </Grid>
           ) : (
             <EmptyProductsTitle>
-              {emptyProductsTitle ?? 'Список продуктов пуст'}
+              <h3>{emptyProductsTitle ?? 'Список продуктов пуст'}</h3>
             </EmptyProductsTitle>
           )}
         </>
       ) : (
         <Loading />
       )}
-    </Grid>
+    </>
   );
 };
 
@@ -86,7 +71,7 @@ const Grid = styled.ul<any>`
   grid-template-columns: repeat(4, 1fr);
   column-gap: 50px;
   row-gap: 30px;
-
+  padding: 10px;
   @media ${devices.laptopM} {
     column-gap: ${(props) => props.laptopColumnGap ?? '90px'};
     grid-template-areas: ${(props) => props.laptopGridTemplateAreas ?? ''};
@@ -102,16 +87,37 @@ const Grid = styled.ul<any>`
   }
 
   @media ${devices.mobileL} {
-    // grid-template-columns: repeat(1, 0fr);
-    // grid-template-areas: 'subscribe' !important;
-    // justify-content: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+  @media ${devices.mobileM} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+  @media ${devices.mobileS} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
   }
 `;
 
-const EmptyProductsTitle = styled.h3`
-  white-space: nowrap;
+const EmptyProductsTitle = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 100px;
+  h3 {
+    font-size: 2rem;
+    font-family: 'Anticva';
+  }
 `;
 
 export default ProductGrid;

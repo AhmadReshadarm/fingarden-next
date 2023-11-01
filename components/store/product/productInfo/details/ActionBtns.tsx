@@ -1,42 +1,65 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { UserSelectWrapper } from './common';
+// import { UserSelectWrapper } from './common';
+
 import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
-import Cart from '../../../../../assets/added_to_cart.svg';
-import CartWhite from '../../../../../assets/cartWhiteEmpty.svg';
-import HeartWhite from '../../../../../assets/heartWhiteEmpty.svg';
-import HeartFull from '../../../../../assets/heartFullWhite.svg';
 import { OrderProduct, Product } from 'swagger/services';
 import ItemCounter from 'ui-kit/ItemCounter';
-import SwitchBtn from './SwitchBtn';
 import React from 'react';
 import Link from 'next/link';
 import { devices } from 'components/store/lib/Devices';
-
+import { useAppSelector } from 'redux/hooks';
+import { TCartState } from 'redux/types';
+import { openErrorNotification } from 'common/helpers';
+import { clearVariant, clearproductSize } from 'redux/slicers/store/cartSlicer';
 type Props = {
   orderProduct?: OrderProduct;
   isInCart: boolean;
-  isInWishlist: boolean;
   onCartBtnClick: () => void;
-  onWishBtnClick: (product: any) => void;
   onCountChange: (counter: number, product: Product) => void;
 };
 
 const ActionBtns: React.FC<Props> = ({
   orderProduct,
   isInCart,
-  isInWishlist,
   onCartBtnClick,
-  onWishBtnClick,
   onCountChange,
 }) => {
-  const handleCartClick = () => {
-    !isInCart ? onCartBtnClick() : '';
+  const { variant, productSize } = useAppSelector<TCartState>(
+    (state) => state.cart,
+  );
+
+  const handleAddToCartClick = () => {
+    if (variant == null) openErrorNotification('Выберите цвет');
+    if (productSize == '') openErrorNotification('Выберите размер');
+    if (variant !== null && productSize !== '' && !isInCart) {
+      onCartBtnClick();
+    }
+  };
+
+  const handleRemoveFromCartClick = () => {
+    onCartBtnClick();
+  };
+
+  const handleOneClickBuy = (evt) => {
+    if (variant == null || productSize == '') {
+      evt.preventDefault();
+    }
+    if (variant == null) openErrorNotification('Выберите цвет');
+    if (productSize == '') openErrorNotification('Выберите размер');
+    if (variant !== null && productSize !== '' && !isInCart) {
+      onCartBtnClick();
+    }
+  };
+
+  const handleGoToCart = () => {
+    clearVariant();
+    clearproductSize();
   };
 
   return (
-    <UserSelectWrapper margintop="-35px">
+    <ActionBtnContainer>
       <ActionBtnsWrapper
         key="action-btns-product-page"
         custom={0.3}
@@ -45,38 +68,37 @@ const ActionBtns: React.FC<Props> = ({
         exit={{ y: -20, opacity: 0, transition: { delay: 0.2 } }}
         variants={variants.fadInSlideUp}
       >
-        <SwitchBtn
-          defaultContent={
-            <React.Fragment>
-              <CartWhite />
-              <span>В корзину</span>
-            </React.Fragment>
-          }
-          activatedContent={
-            <React.Fragment>
-              <Cart />
-              <span>В корзине</span>
-            </React.Fragment>
-          }
-          active={isInCart}
-          onClick={handleCartClick}
-        />
-        <SwitchBtn
-          defaultContent={
-            <React.Fragment>
-              <HeartWhite />
-              <span>В избранное</span>
-            </React.Fragment>
-          }
-          activatedContent={
-            <React.Fragment>
-              <HeartFull />
-              <span>В избранном</span>
-            </React.Fragment>
-          }
-          active={isInWishlist}
-          onClick={onWishBtnClick}
-        />
+        <AddtoCartWrapper>
+          <motion.button
+            onClick={handleRemoveFromCartClick}
+            key={'basket-pressed'}
+            animate={isInCart ? 'animate' : 'exit'}
+            variants={variants.fadeOutSlideOut}
+            className="in-cart"
+          >
+            <span>уже в корзине</span>
+            <img src="/icons/vector.png" alt="in cart sign" />
+          </motion.button>
+          <motion.button
+            onClick={handleAddToCartClick}
+            key={'basket-normal'}
+            animate={isInCart ? 'exit' : 'animate'}
+            variants={variants.fadeOutSlideOut}
+            className="not-in-cart"
+          >
+            <span>В КОРЗИНУ</span>
+          </motion.button>
+        </AddtoCartWrapper>
+        <AddtoCartWrapper>
+          <Link href="/checkout">
+            <button
+              onClick={(evt) => handleOneClickBuy(evt)}
+              className="not-in-cart btn-secondery"
+            >
+              <span>КУПИТЬ В ОДИН КЛИК</span>
+            </button>
+          </Link>
+        </AddtoCartWrapper>
       </ActionBtnsWrapper>
       {!!orderProduct && (
         <CounterAndGotoCartWrapper
@@ -88,42 +110,33 @@ const ActionBtns: React.FC<Props> = ({
             product={orderProduct?.product!}
             onCountChange={onCountChange}
           />
-
           <Link href="/cart">
-            <GoToCartLink laptopSWidth={'150px!important'}>
-              <ActionBtn
-                whileHover="hover"
-                whileTap="tap"
-                variants={variants.boxShadow}
-              >
-                <span style={{ color: color.textPrimary }}>
-                  Перейти в корзину
-                </span>
-              </ActionBtn>
-            </GoToCartLink>
+            <AddtoCartWrapper>
+              <button onClick={handleGoToCart} className="in-cart">
+                <span>ПЕРЕЙТИ В КОРЗИНУ</span>
+              </button>
+            </AddtoCartWrapper>
           </Link>
         </CounterAndGotoCartWrapper>
       )}
-      <Link href="/checkout">
-        <a onClick={handleCartClick} style={{ justifySelf: 'flex-end' }}>
-          <ActionBtn
-            whileHover="hover"
-            whileTap="tap"
-            variants={variants.boxShadow}
-          >
-            Купить в один клик
-          </ActionBtn>
-        </a>
-      </Link>
-    </UserSelectWrapper>
+    </ActionBtnContainer>
   );
 };
+
+const ActionBtnContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+`;
 
 const ActionBtnsWrapper = styled(motion.div)`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 20px;
 `;
@@ -132,29 +145,83 @@ const CounterAndGotoCartWrapper = styled(motion.div)`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 20px;
   a {
     width: 170px;
     justify-self: flex-end;
   }
 `;
 
-const ActionBtn = styled(motion.button)<any>`
-  width: 100%;
-  height: 45px;
-  background: ${color.btnPrimary};
-  color: ${color.textPrimary};
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+const AddtoCartWrapper = styled.div`
+  width: 200px;
+  height: 40px;
   position: relative;
   overflow: hidden;
-`;
+  transition: 300ms;
+  &:hover {
+    transform: scale(1.02);
+  }
+  &:active {
+    transform: scale(1);
+  }
+  .in-cart {
+    border: 1px solid;
+    gap: 10px;
+    cursor: pointer;
 
-const GoToCartLink = styled.a<any>`
+    span {
+      font-size: 1rem;
+      font-weight: 300;
+    }
+  }
+  .not-in-cart {
+    background-color: ${color.btnPrimary};
+    color: ${color.textPrimary};
+    cursor: pointer;
+    span {
+      font-size: 1rem;
+      font-weight: 300;
+    }
+  }
+  .btn-secondery {
+    background-color: ${color.btnSecondery};
+    color: ${color.btnPrimary};
+    &:hover {
+      background-color: ${color.searchBtnBg};
+
+      transform: scale(1.02);
+    }
+    &:active {
+      transform: scale(1);
+      background-color: ${color.btnPrimary};
+      color: ${color.textPrimary};
+    }
+  }
+  button {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
   @media ${devices.laptopS} {
-    width: ${(props) => props.laptopSWidth ?? '100%'};
+    width: 100%;
+  }
+  @media ${devices.mobileL} {
+    width: 100%;
+  }
+  @media ${devices.mobileM} {
+    width: 100%;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
   }
 `;
 

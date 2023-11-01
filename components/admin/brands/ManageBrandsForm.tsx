@@ -1,21 +1,23 @@
 import { Button, Form, Input, Select, Spin, Switch } from 'antd';
+import { InsertRowLeftOutlined } from '@ant-design/icons';
 import { navigateTo } from 'common/helpers/navigateTo.helper';
 import { useRouter } from 'next/router';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import {
   clearImageList,
-  setDefaultImageList,
+  setDefaultSingleImageList,
 } from 'redux/slicers/imagesSlicer';
 import { Page } from 'routes/constants';
 import { Brand } from 'swagger/services';
-
+import styled from 'styled-components';
 import FormItem from '../generalComponents/FormItem';
 import ImageUpload from '../generalComponents/ImageUpload';
 import styles from './brands.module.scss';
 import { handleFormSubmitBrands } from './helpers';
 import { ManageBrandFields } from './ManageBrandsFields.enum';
-import {handleFalsyValuesCheck} from "../../../common/helpers/handleFalsyValuesCheck.helper";
+import { handleFalsyValuesCheck } from '../../../common/helpers/handleFalsyValuesCheck.helper';
+import DatabaseImages from 'ui-kit/DatabaseImages';
 
 const { Option } = Select;
 
@@ -46,20 +48,20 @@ const ManageBrandForm = ({
     showOnMain: brand?.showOnMain,
   };
 
-  const [name, setName] = useState<string>()
-  const [url, setUrl] = useState<string>()
+  const [name, setName] = useState<string>();
+  const [url, setUrl] = useState<string>();
 
   const imageList = useAppSelector((state) => state.images.imageList);
 
   useEffect(() => {
-    if(brand) {
-      setName(brand?.name)
-      setUrl(brand?.url)
+    if (brand) {
+      setName(brand?.name);
+      setUrl(brand?.url);
     }
 
     if (brand?.image) {
       dispatch(
-        setDefaultImageList({
+        setDefaultSingleImageList({
           name: brand.image,
           url: `/api/images/${brand?.image}`,
         }),
@@ -71,8 +73,8 @@ const ManageBrandForm = ({
     dispatch(clearImageList());
   }, []);
 
-  const isDisabled: boolean = handleFalsyValuesCheck(name, url, imageList)
-
+  const isDisabled: boolean = handleFalsyValuesCheck(name, url, imageList);
+  const [isOpen, setOpen] = useState(false);
   return (
     <>
       <div className={styles.createBrandHeader}>
@@ -92,16 +94,20 @@ const ManageBrandForm = ({
           <FormItem
             option={ManageBrandFields.Name}
             children={
-              <Input required={true} placeholder="Введите имя бренда"
-                     onChange={e => setName(e.target.value)}
+              <Input
+                required={true}
+                placeholder="Введите имя бренда"
+                onChange={(e) => setName(e.target.value)}
               />
             }
           />
           <FormItem
             option={ManageBrandFields.Url}
             children={
-              <Input required={true} placeholder="Введите URL бренда"
-                     onChange={e => setUrl(e.target.value)}
+              <Input
+                required={true}
+                placeholder="Введите URL бренда"
+                onChange={(e) => setUrl(e.target.value)}
               />
             }
           />
@@ -116,7 +122,27 @@ const ManageBrandForm = ({
           </Form.Item>
           <FormItem
             option={ManageBrandFields.Image}
-            children={<ImageUpload fileList={imageList} />}
+            children={
+              <>
+                <ImageUpload fileList={imageList} />
+                <ButtonDevider>
+                  {imageList.length < 1 && (
+                    <Button
+                      onClick={() => setOpen(true)}
+                      icon={<InsertRowLeftOutlined />}
+                    >
+                      Выбрать из базы данных
+                    </Button>
+                  )}
+                </ButtonDevider>
+
+                <DatabaseImages
+                  isProducts={false}
+                  setOpen={setOpen}
+                  isOpen={isOpen}
+                />
+              </>
+            }
           />
           <Form.Item className={styles.createBrandForm__buttonsStack}>
             <Button
@@ -140,5 +166,15 @@ const ManageBrandForm = ({
     </>
   );
 };
+
+const ButtonDevider = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 40px;
+  padding: 20px 0;
+`;
 
 export default ManageBrandForm;

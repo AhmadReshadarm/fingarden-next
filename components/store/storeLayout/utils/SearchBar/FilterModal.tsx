@@ -1,13 +1,12 @@
 import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
 import { devices } from 'components/store/lib/Devices';
-import { AnimatePresence, motion } from 'framer-motion';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { Dispatch, SetStateAction } from 'react';
 import { useAppSelector } from 'redux/hooks';
 import { TGlobalState } from 'redux/types';
 import styled from 'styled-components';
-import { Category, CategoryInTree } from 'swagger/services';
+import { CategoryInTree } from 'swagger/services';
 import CloseSVG from '../../../../../assets/close_black.svg';
 import { PopupDisplay } from '../../constants';
 import { handleMenuState } from '../../helpers';
@@ -19,18 +18,19 @@ type Props = {
   setIsOpened: Dispatch<SetStateAction<boolean>>;
   setDisplay: Dispatch<SetStateAction<PopupDisplay>>;
   menuNode: any;
+  selectedCategory: CategoryInTree;
 };
 
 const FilterModal: React.FC<Props> = ({
   isOpened,
   display,
   setSelectedCategory,
+  selectedCategory,
   setIsOpened,
   setDisplay,
   menuNode,
 }) => {
   const { categories } = useAppSelector<TGlobalState>((state) => state.global);
-
   const handleSelect = (category: CategoryInTree) => () => {
     setSelectedCategory(category);
     setIsOpened(false);
@@ -57,17 +57,11 @@ const FilterModal: React.FC<Props> = ({
           >
             <CloseSVG />
           </motion.button>
+          <h3 style={{ fontFamily: 'Anticva' }}>Искать в категории</h3>
           <ContentInner>
             {categories.map((category, index: any) => {
               return (
-                <motion.li
-                  initial="init"
-                  animate={isOpened ? 'animate' : 'exit'}
-                  custom={index * 0.15}
-                  variants={variants.fadInSlideUp}
-                  key={index}
-                  onClick={handleSelect(category)}
-                >
+                <Selection key={index} onClick={handleSelect(category)}>
                   {/* <span className="catalog-icon">
                     <img
                       src={`/api/images/${category.image}`}
@@ -78,7 +72,7 @@ const FilterModal: React.FC<Props> = ({
                   <span className="catalog-name">
                     {category.name?.toUpperCase()}
                   </span>
-                </motion.li>
+                </Selection>
               );
             })}
           </ContentInner>
@@ -95,8 +89,6 @@ const PopupContainer = styled.div`
   top: 0;
   left: 0;
   background-color: ${color.glassmorphismBg};
-  // backdrop-filter: blur(9px);
-  // -webkit-backdrop-filter: blur(9px);
   position: absolute;
   display: flex;
   flex-direction: row;
@@ -120,10 +112,11 @@ const Content = styled(motion.div)`
   background-color: ${color.textPrimary};
   border-radius: 15px;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   position: relative;
+  gap: 20px;
   button {
     position: absolute;
     top: 10px;
@@ -136,66 +129,94 @@ const Content = styled(motion.div)`
     justify-content: center;
     align-items: center;
   }
-  @media ${devices.mobileL} {
-    width: 485px;
-    min-height: 340px;
-    padding: 0;
+  @media ${devices.laptopS} {
+    padding: 15px;
+    border-radius: 5px;
     button {
-      top: -50px;
-      right: 0px;
-      background-color: ${color.textPrimary};
-      border-radius: 50%;
-      cursor: pointer;
-      width: 45px;
-      height: 45px;
+      top: -30px;
+      right: 0;
+    }
+  }
+  @media ${devices.mobileL} {
+    padding: 15px;
+    border-radius: 5px;
+    button {
+      top: -30px;
+      right: 0;
+    }
+  }
+  @media ${devices.mobileM} {
+    padding: 15px;
+    border-radius: 5px;
+    button {
+      top: -30px;
+      right: 0;
+    }
+  }
+  @media ${devices.mobileS} {
+    padding: 15px;
+    border-radius: 5px;
+    button {
+      top: -30px;
+      right: 0;
     }
   }
 `;
 
 const ContentInner = styled.ul`
   width: 100%;
-  height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
+`;
 
-  li {
+const Selection = styled.li`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 200ms;
+  box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
+  &:hover {
+    box-shadow: 0px 3px 8px 0px ${color.boxShadowBtn};
+  }
+  span {
+    width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    gap: 15px;
-    cursor: pointer;
-    padding: 5px 5px 5px 0;
-    .catalog-icon {
-      width: 25px;
-      height: 25px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .catalog-name {
-      white-space: nowrap;
-      font-size: 1.2rem;
-    }
-    &:hover {
-      color: ${color.hover};
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 1rem;
+    background: ${color.selected};
+    color: ${color.btnPrimary};
+  }
+  @media ${devices.laptopS} {
+    span {
+      font-size: 12px;
     }
   }
   @media ${devices.mobileL} {
-    width: 85%;
-    height: 95%;
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    span {
+      font-size: 12px;
+    }
+  }
+  @media ${devices.mobileM} {
+    span {
+      font-size: 10px;
+    }
+  }
+  @media ${devices.mobileS} {
+    span {
+      font-size: 8px;
+    }
   }
 `;
 

@@ -1,11 +1,8 @@
 import { Spin } from 'antd';
-import { useEffect, useState } from 'react';
 import { useAppSelector } from 'redux/hooks';
 import { Advertisement } from 'swagger/services';
 import styles from './index.module.scss';
-import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import DOMPurify from 'dompurify';
+import styled from 'styled-components';
 interface Props {
   isLoading: boolean;
 }
@@ -15,49 +12,55 @@ const AdvertisementTab = ({ isLoading }: Props) => {
     (state) => state.banners.advertisement,
   );
 
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(),
-  );
-
-  useEffect(() => {
-    if (!isLoading && data.length !== 0) {
-      setEditorState(
-        EditorState.createWithContent(
-          convertFromRaw(JSON.parse(data[0]?.description!)),
-        ),
-      );
-    }
-  }, [data]);
-
-  // _________________________ preview converter _______________________
-  const [convertedContent, setConvertedContent] = useState(null);
-  useEffect(() => {
-    const rawContentState = convertToRaw(editorState.getCurrentContent());
-    const htmlOutput = draftToHtml(rawContentState);
-    setConvertedContent(htmlOutput);
-  }, [editorState]);
-
-  function createMarkup(html) {
-    if (typeof window !== 'undefined') {
-      const domPurify = DOMPurify(window);
-      return {
-        __html: domPurify.sanitize(html),
-      };
-    }
-  }
-
   return (
     <>
       {isLoading ? (
         <Spin className={styles.spinner} size="large" />
       ) : (
-        <div
-          className="preview"
-          dangerouslySetInnerHTML={createMarkup(convertedContent)}
-        ></div>
+        <Wrapper>
+          <div className="title-wrapper">
+            <h1>{data[0].title}</h1>
+          </div>
+          <div className="description-wrapper">
+            <p>{data[0].description}</p>
+          </div>
+        </Wrapper>
       )}
     </>
   );
 };
+
+const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 50px;
+  .title-wrapper {
+    width: 65%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    h1 {
+      width: 100%;
+      text-align: left;
+      font-family: Anticva;
+    }
+  }
+  .description-wrapper {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    p {
+      width: 100%;
+      text-align: left;
+    }
+  }
+`;
 
 export default AdvertisementTab;

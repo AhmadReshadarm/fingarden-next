@@ -18,10 +18,10 @@ const Banners = () => {
   const dispatch = useAppDispatch();
   const { banner } = useAppSelector<THomePageState>((state) => state.homePage);
   const [loading, setLoading] = useState(true);
-  const [imageIndexForDots, setImageIndexForDots] = useState(0);
+
   useEffect(() => {
     (async () => {
-      await Promise.all([dispatch(fetchBanner()), dispatch(fetchBrands())]);
+      await dispatch(fetchBanner());
       setLoading(false);
     })();
   }, []);
@@ -36,35 +36,23 @@ const Banners = () => {
       flex_direction="row"
       justify_content="center"
       position="relative"
+      style={{ overflow: 'hidden' }}
     >
       <SliderContainer>
         {!loading ? (
           <>
-            <ImageBanner
-              slides={banner?.slides}
-              setImageIndexForDots={setImageIndexForDots}
-            />
+            <ImageBanner slides={banner?.slides} />
           </>
         ) : (
           <Loading />
         )}
       </SliderContainer>
       <SliderBgWrapper>
-        <div className="InnerWrapper">
-          <div className="right-side"></div>
-          <div className="left-side center-content-wrapper">
-            {banner?.slides.map((item, index) => {
-              return (
-                <span
-                  key={index}
-                  style={{
-                    backgroundColor:
-                      index == imageIndexForDots ? '#606060' : '#d0d3cb',
-                  }}
-                ></span>
-              );
-            })}
+        <div className="inner-wrapper">
+          <div className="right-side">
+            <div className="mobile-div"></div>
           </div>
+          <div className="left-side"></div>
           <div className="left-side"></div>
         </div>
       </SliderBgWrapper>
@@ -85,50 +73,70 @@ const SliderContainer = styled.div`
 
 const SliderBgWrapper = styled.div`
   width: 100%;
-  min-height: 600px;
-  height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   background: linear-gradient(
     to right,
     ${color.bgSecondary} 40%,
     ${color.bgPrimary}
   );
-  .InnerWrapper {
-    width: 100%;
+  .inner-wrapper {
     max-width: 1230px;
-    min-height: 550px;
-    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
-    div {
-      width: 100%;
-      min-height: 600px;
-      height: 100%;
+    justify-content: center;
+    @media ${devices.laptopM} {
+      max-width: 990px;
     }
-    .right-side: {
-      background-color: ${color.bgSecondary};
+    @media ${devices.laptopS} {
+      max-width: 728px;
     }
-    .left-side {
-      background-color: ${color.bgPrimary};
+    @media ${devices.mobileL} {
+      max-width: unset;
+      width: 95%;
     }
-    .center-content-wrapper {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 20px;
-      padding-bottom: 45px;
-      span {
-        padding: 3px;
-        border-radius: 50%;
-        background-color: #d0d3cb;
+  }
+  .right-side {
+    min-height: 600px;
+    width: 100%;
+    background: ${color.bgSecondary};
+    position: relative;
+    overflow: hidden;
+    .mobile-div {
+      display: none;
+      @media ${devices.laptopS} {
+        display: block;
+        min-height: 600px;
+        width: 100%;
+        background: ${color.bgPrimary};
+        position: absolute;
+        left: 55px;
       }
+      @media ${devices.mobileL} {
+        display: block;
+        min-height: 600px;
+        width: 100%;
+        background: ${color.bgPrimary};
+        position: absolute;
+        left: 55px;
+      }
+    }
+  }
+  .left-side {
+    min-height: 600px;
+    width: 100%;
+    background: ${color.bgPrimary};
+
+    @media ${devices.laptopS} {
+      display: none;
+    }
+    @media ${devices.mobileL} {
+      display: none;
     }
   }
 `;

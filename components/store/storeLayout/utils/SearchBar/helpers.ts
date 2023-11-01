@@ -9,6 +9,7 @@ import {
 import { AppDispatch } from 'redux/store';
 import { CategoryInTree } from 'swagger/services';
 import { Product } from 'swagger/services';
+import { PopupDisplay } from '../../constants';
 
 const handleSearchItemClick = (dispatch: AppDispatch) => () => {
   dispatch(clearSearchProducts());
@@ -48,25 +49,35 @@ const handleSearchFormSubmit =
     selectedCategory: CategoryInTree | undefined,
     searchQuery: string,
     router: NextRouter,
-    setFocused: Dispatch<SetStateAction<boolean>>,
+    setSearchActive: Dispatch<SetStateAction<boolean>>,
+    setSearchDisplay: Dispatch<SetStateAction<PopupDisplay>>,
+    dispatch: AppDispatch,
   ) =>
   (e) => {
-    if (searchQuery == '') return;
     e.preventDefault();
-    const query: { name: string; categories?: string } = {
-      name: searchQuery,
-    };
+    if (searchQuery == '') return;
 
-    if (selectedCategory) {
-      query.categories = selectedCategory?.url;
+    if (searchQuery !== '') {
+      const query: { name: string; categories?: string } = {
+        name: searchQuery,
+      };
+
+      if (selectedCategory) {
+        query.categories = selectedCategory?.url;
+      }
+      dispatch(clearSearchQuery());
+      dispatch(clearSearchProducts());
+
+      router.push({
+        pathname: '/catalog',
+        query,
+      });
+
+      setSearchActive(false);
+      setTimeout(() => {
+        setSearchDisplay(PopupDisplay.None);
+      }, 150);
     }
-
-    router.push({
-      pathname: '/catalog',
-      query,
-    });
-
-    setFocused(false);
   };
 
 const TrigerhandleWishBtnClick =

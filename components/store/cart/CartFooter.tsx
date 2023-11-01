@@ -7,6 +7,7 @@ import color from 'components/store/lib/ui.colors';
 import variants from '../lib/variants';
 import { useAppSelector } from 'redux/hooks';
 import { TAuthState } from 'redux/types';
+import { devices } from '../lib/Devices';
 
 type Props = {
   cart: Basket | null;
@@ -24,12 +25,12 @@ const CartFooter: React.FC<Props> = ({ cart }) => {
         <div className="footer-no-border"></div>
         <div className="footer-border"></div>
       </div>
-      <StoreLocationWrapper>
+      {/* <StoreLocationWrapper>
         <img src="/icons/location-basket.png" alt="fingarden location" />
         <span>
           Санкт-Петербург, <br /> ул. Заозерного д.10{' '}
         </span>
-      </StoreLocationWrapper>
+      </StoreLocationWrapper> */}
       <CheckoutBtnWrapper>
         <Link href={cart?.totalAmount == 0 ? '/cart' : '/checkout'}>
           <CheckoutBtn
@@ -38,6 +39,15 @@ const CartFooter: React.FC<Props> = ({ cart }) => {
             variants={variants.boxShadow}
           >
             сохранить изменения и продолжить
+          </CheckoutBtn>
+        </Link>
+        <Link href="/catalog?page=1">
+          <CheckoutBtn
+            whileHover="hover"
+            whileTap="tap"
+            variants={variants.boxShadow}
+          >
+            Продолжить покупки
           </CheckoutBtn>
         </Link>
       </CheckoutBtnWrapper>
@@ -80,6 +90,30 @@ const CartTotalPrice = styled.div`
   .total-text {
     font-weight: 300;
   }
+  @media ${devices.mobileL} {
+    .total-text {
+      font-size: 1.8rem;
+    }
+    span {
+      font-size: 1.8rem;
+    }
+  }
+  @media ${devices.mobileM} {
+    .total-text {
+      font-size: 1.8rem;
+    }
+    span {
+      font-size: 1.8rem;
+    }
+  }
+  @media ${devices.mobileS} {
+    .total-text {
+      font-size: 1.8rem;
+    }
+    span {
+      font-size: 1.8rem;
+    }
+  }
 `;
 
 const StoreLocationWrapper = styled.div`
@@ -104,6 +138,28 @@ const CheckoutBtnWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 30px;
+  gap: 50px;
+  @media ${devices.mobileL} {
+    flex-direction: column;
+    gap: 20px;
+    a {
+      width: 100%;
+    }
+  }
+  @media ${devices.mobileM} {
+    flex-direction: column;
+    gap: 20px;
+    a {
+      width: 100%;
+    }
+  }
+  @media ${devices.mobileS} {
+    flex-direction: column;
+    gap: 20px;
+    a {
+      width: 100%;
+    }
+  }
 `;
 
 const CheckoutBtn = styled(motion.button)`
@@ -113,6 +169,21 @@ const CheckoutBtn = styled(motion.button)`
   padding: 12px 81px;
   border-radius: 5px;
   cursor: pointer;
+  @media ${devices.mobileL} {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+  @media ${devices.mobileM} {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.8rem;
+  }
 `;
 
 export default CartFooter;

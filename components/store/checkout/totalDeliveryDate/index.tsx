@@ -14,7 +14,7 @@ const TotalDeliveryDate = (props: any) => {
     <Container>
       <div className="back-to-cart">
         <Link href="/cart">
-          <a>Вернуться в корзину</a>
+          <span>Вернуться в корзину</span>
         </Link>
         <h1>Оформление заказа</h1>
       </div>
@@ -44,13 +44,19 @@ const Container = styled.div`
   align-items: flex-start;
   gap: 20px;
   .back-to-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
     a {
       &:hover {
         color: ${color.hover};
       }
     }
     h1 {
-      font-family: 'intro';
+      font-family: Anticva;
+      font-size: 1.5rem;
     }
   }
 `;

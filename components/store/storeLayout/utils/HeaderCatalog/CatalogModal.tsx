@@ -10,9 +10,9 @@ import TagsModal from './Tagsmodal';
 //   handleSubCategoryHover,
 // } from './helpers';
 
-type Props = {};
+type Props = { setOnWhichNav: any };
 
-const CatalogModal: React.FC<Props> = () => {
+const CatalogModal: React.FC<Props> = ({ setOnWhichNav }) => {
   const { categories } = useAppSelector<TGlobalState>((state) => state.global);
 
   return (
@@ -21,7 +21,10 @@ const CatalogModal: React.FC<Props> = () => {
         return (
           <MainCatalogWrapper key={indexmain}>
             <div className="main-catagory">
-              <Link href={`/catalog?categories=${category.url}`}>
+              <Link
+                onClick={() => setOnWhichNav('')}
+                href={`/catalog?categories=${category.url}`}
+              >
                 <span>{category.name}</span>
               </Link>
             </div>
@@ -30,6 +33,7 @@ const CatalogModal: React.FC<Props> = () => {
                 return (
                   <SubCategoriesContainer key={index}>
                     <Link
+                      onClick={() => setOnWhichNav('')}
                       href={`/catalog?categories=${category.url}&subCategories=${subCategory.url}`}
                     >
                       <span className="sub-category">{subCategory.name}</span>
@@ -37,6 +41,7 @@ const CatalogModal: React.FC<Props> = () => {
                     <TagsModal
                       category={category.url!}
                       subCategory={subCategory.url!}
+                      setOnWhichNav={setOnWhichNav}
                     />
                   </SubCategoriesContainer>
                 );

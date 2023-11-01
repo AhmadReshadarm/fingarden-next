@@ -56,15 +56,15 @@ const socialTags = ({
 };
 
 const SEO = ({ product, images }) => {
-  const url = `https://wuluxe.ru/prodcut/${product?.url}`;
+  const url = `https://fingarden.ru/prodcut/${product?.url}`;
   const image: any = [];
   for (let i = 0; i < images?.length; i++) {
-    image.push(`https://wuluxe.ru/api/images/${images[i]}`);
+    image.push(`https://fingarden.ru/api/images/${images[i]}`);
   }
 
   return (
     <Head>
-      <title>{product?.name} | Wuluxe</title>
+      <title>{product?.name} | Fingarden</title>
       <meta name="robots" content="index, follow" />
       <meta name="title" content={product?.name} />
       <meta name="description" content={product?.shortDesc} />
@@ -96,8 +96,8 @@ const SEO = ({ product, images }) => {
             },
             aggregateRating: {
               '@type': 'AggregateRating',
-              ratingValue: product?.rating?.avg || 0,
-              reviewCount: product?.reviews?.length || 0,
+              ratingValue: product?.rating?.avg ?? 0,
+              reviewCount: product?.reviews?.length ?? 0,
             },
             offers: {
               '@type': 'Offer',

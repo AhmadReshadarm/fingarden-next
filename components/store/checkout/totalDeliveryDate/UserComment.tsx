@@ -5,7 +5,7 @@ import color from '../../lib/ui.colors';
 import TextField from '@mui/material/TextField';
 import variants from 'components/store/lib/variants';
 import Close from '../../../../assets/close_black.svg';
-
+import { devices } from 'components/store/lib/Devices';
 const UserCommment = (props: any) => {
   const { comment, setComment, setIsOpen } = props;
 
@@ -35,16 +35,13 @@ const UserCommment = (props: any) => {
             defaultValue=""
             onChange={(e: any) => setComment(e.target.value)}
           />
-          <motion.button
-            whileHover="hover"
-            whileTap="tap"
-            variants={variants.boxShadow}
+          <button
             onClick={() => {
               setIsOpen(false);
             }}
           >
             Сохранить комментарий
-          </motion.button>
+          </button>
         </CommentContent>
       </CommentWrapper>
     </CommentContainer>
@@ -80,6 +77,18 @@ const CommentWrapper = styled.div`
     right: 20px;
     cursor: pointer;
   }
+  @media ${devices.mobileL} {
+    width: 95%;
+    padding: 30px 10px;
+  }
+  @media ${devices.mobileM} {
+    width: 95%;
+    padding: 30px 10px;
+  }
+  @media ${devices.mobileS} {
+    width: 95%;
+    padding: 30px 10px;
+  }
 `;
 
 const CommentContent = styled.div`
@@ -87,7 +96,7 @@ const CommentContent = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
   gap: 30px;
   h2 {
@@ -103,12 +112,24 @@ const CommentContent = styled.div`
   }
   button {
     width: 100%;
-    height: 50px;
-    border-radius: 10px;
-    background-color: ${color.btnPrimary};
-    color: ${color.textPrimary};
+    height: 40px;
+    min-height: 40px;
+    border-radius: 3px;
+    background-color: ${color.btnSecondery};
     cursor: pointer;
-    font-family: 'intro';
+    transition: 300ms;
+    &:hover {
+      background-color: ${color.btnPrimary};
+      color: ${color.textPrimary};
+      transform: scale(1.02);
+    }
+    &:active {
+      transform: scale(1);
+    }
+    span {
+      font-family: 'Jost';
+      font-size: 1rem;
+    }
   }
 `;
 export default UserCommment;

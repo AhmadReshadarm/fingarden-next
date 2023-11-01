@@ -31,24 +31,27 @@ const ConfirmPsw = ({
   const dispatch = useAppDispatch();
   const [password, setPassword] = useState('');
   const [repeatPsw, setRepeatPsw] = useState('');
+  const [isSubscribed, setSbuscribed] = useState(true);
   const [confidentiality, setConfidentiality] = useState('password');
   const [secret, setSecret] = useState(0);
   const [[pswInput, repeatPswInput], setInputsErr] = useState([false, false]);
 
   return (
     <Content
-      drag="x"
+      // drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       custom={direction}
       variants={variants.authorizeSlideX}
       animate={authType == 'password' ? 'center' : 'enter'}
     >
       <FormWrapper
+        name="confirmPassword"
         onSubmit={handleSignUp(
           firstName,
           lastName,
           email,
           password,
+          isSubscribed,
           paginate,
           dispatch,
         )}
@@ -212,6 +215,13 @@ const ConfirmPsw = ({
           </ConfidentialityWrapper>
         </AuthInputsWrapper>
         <button type={'submit'} style={{ display: 'none' }}></button>
+        <div
+          onClick={() => setSbuscribed((prev) => !prev)}
+          className="newsletter-wrapper"
+        >
+          <input type="checkbox" name="newsletter" checked={isSubscribed} />
+          <label htmlFor="newsletter">Подписаться на новостную рассылку</label>
+        </div>
       </FormWrapper>
       <BtnsWrapper>
         <AuthBtns
@@ -231,7 +241,7 @@ const ConfirmPsw = ({
               ? true
               : false
           }
-          textColor={
+          textcolor={
             isEmpty(password) || isEmpty(repeatPsw) || repeatPsw !== password
               ? color.btnPrimary
               : color.textPrimary
@@ -241,6 +251,7 @@ const ConfirmPsw = ({
             lastName,
             email,
             password,
+            isSubscribed,
             paginate,
             dispatch,
           )}
@@ -255,7 +266,7 @@ const ConfirmPsw = ({
           whileTap={{ boxShadow: `0px 0px 0px 0px ${color.boxShadowBtn}` }}
           variants={variants.fadInSlideUp}
           bgcolor={color.btnPrimary}
-          textColor={color.textPrimary}
+          textcolor={color.textPrimary}
           onClick={() => {
             paginate(paginateTo.back, 'signup');
             setInputsErr([false, false]);

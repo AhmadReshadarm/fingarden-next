@@ -23,13 +23,13 @@ const ProductDetails = () => {
         viewport={{ once: true }}
         variants={variants.fadInSlideUp}
       >
-        <h3>Доставка курьером до {getFormatedDate()}</h3>
+        {/* <h3>Доставка курьером до {getFormatedDate()}</h3>
         <span>
           Склад Тренды {currentYear} (Московская обл.) •{' '}
           {cart?.orderProducts?.length} товар(ов) •{' '}
           {findTotalWheight(cart).totalWeight.toFixed(2)}{' '}
           {findTotalWheight(cart).in == 'gram' ? 'гр' : 'кг'}
-        </span>
+        </span> */}
       </ProudctHeaderWrapper>
       <ProductWrapper
         custom={0.2}

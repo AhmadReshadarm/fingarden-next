@@ -78,7 +78,10 @@ const Contianer = styled(motion.div)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
+  background: url(/auth_bg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 350px;
   @media ${devices.mobileL} {
     height: auto;
     padding: 30px 0;
@@ -94,7 +97,9 @@ const Wrapper = styled(motion.div)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: ${color.textPrimary};
+  background-color: ${color.glassmorphismBg};
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   box-shadow: 0px 2px 10px ${color.boxShadowBtn};
   overflow: hidden;
 `;

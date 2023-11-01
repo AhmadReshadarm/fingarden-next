@@ -79,7 +79,7 @@ const getFilters = ({
       },
     },
     {
-      title: 'Тип',
+      title: 'Коллекция',
       options: cloneDeep(tagOptions),
       type: FilterType.MULTIPLE_SELECTION,
       onChange: (selectedOptions: FilterOption[] | undefined) => {
@@ -118,7 +118,7 @@ const getFilters = ({
       },
     },
     {
-      title: 'Цена',
+      title: 'Ценовой диапазон',
       type: FilterType.RANGE,
       min: minPrice,
       max: maxPrice,

@@ -27,7 +27,7 @@ const Recomendation = ({ product }) => {
           flex_direction="column"
           justify_content="space-between"
           align_items="center"
-          gap="30px"
+          gap="130px"
         >
           <WeRecomend product={product} />
           <BuyTogether product={product} />

@@ -5,9 +5,9 @@ const content = {
     { text: 'Контакты', url: '/contacts' },
   ],
   services: [
-    { text: 'Гарантии', url: '/gurantee' },
+    { text: 'Гарантии', url: '/guarantee' },
     { text: 'Как купить', url: '/how-to-buy' },
-    { text: 'Доставка', url: 'delivery' },
+    { text: 'Доставка', url: '/delivery' },
     { text: 'Акции', url: '/discount' },
   ],
 };

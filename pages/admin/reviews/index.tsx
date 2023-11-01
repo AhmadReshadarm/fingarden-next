@@ -3,7 +3,7 @@ import { ColumnGroupType, ColumnType } from 'antd/lib/table/interface';
 import { AppContext } from 'common/context/AppContext';
 import { DataType } from 'common/interfaces/data-type.interface';
 import AdminLayout from 'components/admin/adminLayout/layout';
-import { getColumns } from 'components/admin/reviews/helpers';
+import { getColumns } from 'components/admin/reviews/constant';
 import { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 
@@ -27,13 +27,11 @@ const ReviewsPage = () => {
       id,
       rating,
       text,
-      product: product.name,
+      product: product,
       user,
       showOnMain,
     }),
   ) as unknown as DataType[];
-
-  console.log(dataSource);
 
   useEffect(() => {
     dispatch(

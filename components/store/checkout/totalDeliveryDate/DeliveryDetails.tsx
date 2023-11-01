@@ -8,7 +8,7 @@ import { devices } from 'components/store/lib/Devices';
 const DeliveryDetails = (props: any) => {
   return (
     <Container>
-      <h3 className="header-delivery">ДОСТАВКА Wuluxe</h3>
+      <h3 className="header-delivery">ДОСТАВКА Fingarden</h3>
       <Wrapper>
         <UserDetails {...props} />
       </Wrapper>
@@ -30,7 +30,8 @@ const Container = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    font-family: 'intro';
+
+    font-weight: 300;
     color: ${color.textSecondary};
   }
 

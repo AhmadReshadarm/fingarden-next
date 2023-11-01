@@ -11,16 +11,9 @@ import Comment from '../../../../assets/comment.svg';
 import UserCommment from './UserComment';
 import { useAppSelector } from 'redux/hooks';
 import { TStoreCheckoutState } from 'redux/types';
+import { devices } from 'components/store/lib/Devices';
 const UserDetails = (props: any) => {
-  const {
-    setStep,
-    setHasAddress,
-    setBacktoFinal,
-    leaveNearDoor,
-    setLeaveNearDoor,
-    setComment,
-    comment,
-  } = props;
+  const { setStep, setHasAddress, setBacktoFinal } = props;
   const { deliveryInfo } = useAppSelector<TStoreCheckoutState>(
     (state) => state.storeCheckout,
   );
@@ -32,18 +25,6 @@ const UserDetails = (props: any) => {
     setHasAddress(false);
     setBacktoFinal(true);
   };
-
-  const selectedSize: any = localStorage.getItem('selectedSize');
-  useEffect(() => {
-    if (selectedSize && isOpen === false)
-      setComment(`${comment}  ${isOpen ? '' : JSON.parse(selectedSize)}`);
-  }, [isOpen]);
-  useEffect(() => {
-    if (selectedSize)
-      setComment(
-        `${comment} ${isOpen ? '' : 'Размер:' + JSON.parse(selectedSize)}`,
-      );
-  }, []);
 
   return (
     <>
@@ -76,8 +57,8 @@ const UserDetails = (props: any) => {
           <Avatar />
         </span>
         <div className="user-comment-wrapper">
-          <span>{deliveryInfo?.fullName}</span>
-          <span>{deliveryInfo?.phone}</span>
+          <span>{deliveryInfo?.receiverName}</span>
+          <span>{deliveryInfo?.receiverPhone}</span>
         </div>
         <span>
           <ArrowGray />
@@ -100,7 +81,7 @@ const UserDetails = (props: any) => {
           <ArrowGray />
         </span>
       </Wrapper>
-      <Wrapper
+      {/* <Wrapper
         custom={0.3}
         initial="init"
         animate="animate"
@@ -134,7 +115,7 @@ const UserDetails = (props: any) => {
             <span className="tool-tip">?</span>
           </DeliveryTooltip>
         </span>
-      </Wrapper>
+      </Wrapper> */}
       {isOpen ? <UserCommment setIsOpen={setIsOpen} {...props} /> : ''}
     </>
   );
@@ -202,6 +183,13 @@ const Wrapper = styled(motion.div)`
     align-items: center;
     font-size: 1.1rem;
     font-weight: 700;
+  }
+
+  @media ${devices.mobileL} {
+    .user-comment-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 `;
 

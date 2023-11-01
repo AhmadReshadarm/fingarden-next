@@ -7,8 +7,13 @@ import Link from 'next/link';
 type Props = {
   category: string;
   subCategory: string;
+  setOnWhichNav: any;
 };
-const TagsModal: React.FC<Props> = ({ category, subCategory }) => {
+const TagsModal: React.FC<Props> = ({
+  category,
+  subCategory,
+  setOnWhichNav,
+}) => {
   const { tags } = useAppSelector<TGlobalState>((state) => state.global);
 
   return (
@@ -16,9 +21,11 @@ const TagsModal: React.FC<Props> = ({ category, subCategory }) => {
       {tags.map((tag, index) => {
         return (
           <Link
+            key={index}
+            onClick={() => setOnWhichNav('')}
             href={`/catalog?categories=${category}&subCategories=${subCategory}&tags=${tag.url}`}
           >
-            <span key={index}>
+            <span>
               {tag.products?.find((product: Product) => {
                 return product.category?.url === subCategory;
               })

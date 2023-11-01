@@ -5,6 +5,7 @@ import {
   handlePending,
   handleError,
   handleChangeError,
+  openErrorNotification,
 } from '../../common/helpers';
 import { PayloadSize } from 'common/interfaces/payload-sizes.interface';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
@@ -160,7 +161,11 @@ const sizesSlicer = createSlice({
         openSuccessNotification('Размер успешно удален');
         console.log('fulfilled');
       })
-      .addCase(deleteSize.rejected, handleChangeError);
+      .addCase(deleteSize.rejected, () => {
+        openErrorNotification(
+          'Удалить невозможно, В файле есть дополнительные данные',
+        );
+      });
   },
 });
 

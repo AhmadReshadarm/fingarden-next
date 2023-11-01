@@ -91,10 +91,12 @@ const handleFormSubmitProduct =
     variantsLength: number,
   ) =>
   async (form) => {
-    form = {
-      ...form,
-      desc: JSON.stringify(form.desc),
-    };
+    if (typeof form.desc !== 'string') {
+      form = {
+        ...form,
+        desc: JSON.stringify(form.desc),
+      };
+    }
 
     const convertedForm = handleDataConvertation(
       form,

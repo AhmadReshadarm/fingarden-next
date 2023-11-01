@@ -4,16 +4,15 @@ import { Rating } from '@mui/material';
 import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
 import { getTotalReviewsNumber, progressBarCalc } from './helpers';
-import { useAppSelector } from 'redux/hooks';
-import { TProductInfoState } from 'redux/types';
 import React from 'react';
+import { TProductInfoState } from 'redux/types';
+import { useAppSelector } from 'redux/hooks';
 
 const Stars = () => {
   const { product }: TProductInfoState = useAppSelector(
     (state) => state.productInfo,
   );
   const totalReviews = getTotalReviewsNumber(product?.rating);
-
   return (
     <>
       {!!product?.rating && (

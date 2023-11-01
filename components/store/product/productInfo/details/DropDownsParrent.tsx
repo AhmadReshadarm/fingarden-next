@@ -3,19 +3,20 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
-import Arrow from '../../../../../assets/arrow.svg';
+import Arrow from '../../../../../assets/arrow_black.svg';
 
 type Props = {
   title: string;
+  borderBottom?: string;
   children: JSX.Element | JSX.Element[] | string | string[];
 };
 
-const InfoDropdown = ({ title, children }: Props) => {
+const InfoDropdown = ({ title, children, borderBottom }: Props) => {
   const [openInfo, setOpenInfo] = useState(false);
   const [displayInfo, setDisplayInfo] = useState('none');
 
   return (
-    <InfoWrappers>
+    <InfoWrappers style={{ border: borderBottom }}>
       <InfoBtnWrappers
         onClick={() => {
           setOpenInfo(!openInfo);
@@ -72,8 +73,7 @@ const InfoBtnWrappers = styled.div`
   cursor: pointer;
   h2 {
     font-size: 1rem;
-    font-family: 'intro';
-    margin: 0;
+    font-family: Anticva;
   }
   span {
     transform: rotate(90deg);

@@ -1,59 +1,60 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { motion } from 'framer-motion';
 import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Size } from 'swagger/services';
-
+import { devices } from 'components/store/lib/Devices';
+import {
+  setproductSize,
+  clearproductSize,
+} from 'redux/slicers/store/cartSlicer';
+import { useAppDispatch } from 'redux/hooks';
 type Props = {
-  sizeIsOpen: boolean;
-  setOpen: any;
   sizes?: Size[];
-  setSelectedSize: any;
 };
 
-const SizePicker: React.FC<Props> = ({
-  sizeIsOpen,
-  sizes,
-  setSelectedSize,
-  setOpen,
-}) => {
-  const handleSelectedSize = (
-    setSelectedSize,
-    index,
-    setOpen,
-    selectedSize,
-  ) => {
+const SizePicker: React.FC<Props> = ({ sizes }) => {
+  const dispatch = useAppDispatch();
+  const handleSelectedSize = (setSelectedSize, index, productSize) => {
     setSelectedSize(index);
-    setOpen(false);
-    localStorage.setItem('selectedSize', JSON.stringify(selectedSize));
+    dispatch(setproductSize(productSize));
   };
-  useEffect(() => {
-    if (sizes) {
-      localStorage.setItem('selectedSize', JSON.stringify(sizes[0].name ?? ''));
-    }
-  }, []);
+
+  const handleSelectedSizeClear = (setSelectedSize) => {
+    setSelectedSize(null);
+    dispatch(clearproductSize());
+  };
+
+  const [selectedSize, setSelectedSize] = useState(null);
+
   return (
-    <Container
-      animate={sizeIsOpen ? 'animate' : 'init'}
-      custom={0.03}
-      variants={variants.fadInSlideUp}
-      style={{ display: sizeIsOpen ? 'flex' : 'none' }}
-    >
+    <Container>
       <Wrapper>
-        {sizes?.map((item, index) => {
+        {sizes?.map((productSize, index) => {
           return (
-            <li
+            <Selection
               onClick={() =>
-                handleSelectedSize(setSelectedSize, index, setOpen, item.name)
+                handleSelectedSize(setSelectedSize, index, productSize.name)
               }
               key={index}
+              selected={selectedSize == index ? true : false}
             >
-              {item.name}
-            </li>
+              <span>{productSize.name}</span>
+            </Selection>
           );
         })}
       </Wrapper>
+      {selectedSize !== null ? (
+        <span
+          onClick={() => handleSelectedSizeClear(setSelectedSize)}
+          className="clear-product-size"
+        >
+          Очистить
+        </span>
+      ) : (
+        ''
+      )}
     </Container>
   );
 };
@@ -64,33 +65,85 @@ const Container = styled(motion.div)`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  background-color: ${color.textPrimary};
-  border-radius: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  box-shadow: 0px 2px 6px ${color.boxShadowBtn};
-  z-index: 9;
+  gap: 10px;
+  position: relative;
+  .clear-product-size {
+    position: absolute;
+    left: 0;
+    bottom: -35px;
+    color: ${color.textSecondary};
+    transition: 200ms;
+    padding: 5px;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 `;
 
 const Wrapper = styled.ul`
-  width: 100%;
-  height: 300px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 10px;
+  @media ${devices.laptopS} {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media ${devices.mobileL} {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media ${devices.mobileM} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media ${devices.mobileS} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  li {
+  }
+`;
+
+const Selection = styled.li<{
+  selected: boolean;
+}>`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 15px;
-  overflow-y: scroll;
-  li {
-    width: 100%;
-    padding: 20px;
-    font-family: 'intro';
-    &:hover {
-      background-color: ${color.textSecondary};
-      color: ${color.textPrimary};
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 200ms;
+  padding: 3px;
+  box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
+  &:hover {
+    box-shadow: 0px 8px 14px 0px ${color.boxShadowBtn};
+  }
+  &:active {
+    box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
+  }
+  ${(props) => {
+    if (props.selected) {
+      return css`
+        box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
+      `;
     }
+  }}
+
+  span {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    font-size: 1rem;
+    white-space: nowrap;
+    padding: 5px;
+    ${(props) => {
+      if (props.selected) {
+        return css`
+          background: ${color.selected};
+          color: ${color.btnPrimary};
+        `;
+      }
+    }}
   }
 `;
 

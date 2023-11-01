@@ -10,7 +10,7 @@ import {
 } from '../../../redux/slicers/tagsSlicer';
 
 const EditTag = () => {
-  const title = 'Редактирование тегов';
+  const title = 'Редактирование Коллекция';
   const router = useRouter();
   const tags = useAppSelector((state) => state.tags.tags);
   const filteredTags = tags.filter((tag) => tag.id !== Number(router.query.id));

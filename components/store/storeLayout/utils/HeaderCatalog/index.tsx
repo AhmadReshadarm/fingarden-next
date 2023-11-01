@@ -21,7 +21,7 @@ const HeaderCatalog: React.FC<Props> = ({ onWhichNav, setOnWhichNav }) => {
       }
       onMouseLeave={() => setOnWhichNav('')}
     >
-      <CatalogModal />
+      <CatalogModal setOnWhichNav={setOnWhichNav} />
     </CatalogWrapper>
   );
 };

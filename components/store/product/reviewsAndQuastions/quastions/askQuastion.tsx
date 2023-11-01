@@ -11,7 +11,6 @@ import { createQuestion } from 'redux/slicers/store/productInfoSlicer';
 const AskQuastion = ({ userId, productId }) => {
   const dispatch = useAppDispatch();
   const [input, setInput] = useState('');
-  const [success, setSuccess] = useState('');
 
   const handleAskQuestion = () => async (e) => {
     e.preventDefault();
@@ -22,11 +21,7 @@ const AskQuastion = ({ userId, productId }) => {
         userId,
       }),
     );
-    setSuccess('Мы получили ваш вопрос');
-    setTimeout(() => {
-      setSuccess('');
-      setInput('');
-    }, 2000);
+    setInput('');
   };
 
   return (
@@ -62,14 +57,6 @@ const AskQuastion = ({ userId, productId }) => {
           </span>
         </motion.button>
       </form>
-      <motion.span
-        className="success-review"
-        custom={0}
-        animate={success.length == 0 ? 'init' : 'animate'}
-        variants={variants.fadeOutSlideOut}
-      >
-        {success}
-      </motion.span>
     </AddReviewContainer>
   );
 };

@@ -5,6 +5,7 @@ import {
   handlePending,
   handleError,
   handleChangeError,
+  openErrorNotification,
 } from '../../common/helpers';
 import { PayloadCategory } from 'common/interfaces/payload-category.interface';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
@@ -80,12 +81,8 @@ export const editCategory = createAsyncThunk<
       return await CategoryService.updateCategory({
         categoryId: payload.id as string,
         body: {
-          name: payload.name,
-          desc: payload.desc,
-          url: payload.url,
-          image: payload.image,
+          ...payload,
           parentId: payload.parent,
-          parameters: payload.parameters,
         },
       });
     } catch (error: any) {
@@ -179,7 +176,11 @@ const categoriesSlicer = createSlice({
         openSuccessNotification('Категория успешно удалена');
         console.log('fulfilled');
       })
-      .addCase(deleteCategory.rejected, handleChangeError);
+      .addCase(deleteCategory.rejected, () => {
+        openErrorNotification(
+          'Удалить невозможно, В файле есть дополнительные данные',
+        );
+      });
   },
 });
 

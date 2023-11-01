@@ -24,9 +24,7 @@ export const columns: ColumnsType<Brand> = [
           />
         );
       }
-      return (
-        <img src={'/assets/images/no_photo.png'} className={styles.image} />
-      );
+      return <img src="/img_not_found.png" className={styles.image} />;
     },
     width: '15%',
   },

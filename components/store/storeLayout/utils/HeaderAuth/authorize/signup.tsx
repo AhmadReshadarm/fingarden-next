@@ -52,13 +52,13 @@ const SignUp: React.FC<Props> = ({
   return (
     <>
       <Content
-        drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         custom={direction}
         variants={variants.authorizeSlideX}
         animate={authType == 'signup' ? 'center' : 'enter'}
       >
         <FormWrapper
+          name="singup"
           onSubmit={(e) => {
             e.preventDefault();
             paginate(paginateTo.forward, 'password');
@@ -94,7 +94,7 @@ const SignUp: React.FC<Props> = ({
                   isEmpty(name) && nameInput ? 'Не может быть пустым' : 'Имя'
                 }
                 type="text"
-                id="signup-name"
+                // id="signup-name"
                 value={name}
                 style={{
                   fontSize: '0.78rem',
@@ -239,7 +239,7 @@ const SignUp: React.FC<Props> = ({
                 ? true
                 : false
             }
-            textColor={
+            textcolor={
               isEmpty(email) ||
               isEmpty(name) ||
               isEmpty(lastName) ||
@@ -259,7 +259,7 @@ const SignUp: React.FC<Props> = ({
             whileTap={{ boxShadow: `0px 0px 0px 0px ${color.boxShadowBtn}` }}
             variants={variants.fadInSlideUp}
             bgcolor={color.btnPrimary}
-            textColor={color.textPrimary}
+            textcolor={color.textPrimary}
             onClick={() => {
               dispatch(clearServerErr());
               setInputsErr([false, false, false]);

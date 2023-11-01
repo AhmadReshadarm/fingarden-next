@@ -4,8 +4,7 @@ import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
 import Like from '../../../../assets/like.svg';
 import { styleProps } from 'components/store/lib/types';
-import { Review } from 'swagger/services';
-import { AppDispatch } from 'redux/store';
+import { devices } from 'components/store/lib/Devices';
 
 type Props = {
   bgColor: string;
@@ -79,6 +78,16 @@ const LikeDisLikeWrapper = styled(motion.div)`
     svg {
       transform: rotate(180deg);
     }
+  }
+  @media ${devices.mobileL} {
+    justify-content: flex-end;
+  }
+  @media ${devices.mobileM} {
+    justify-content: flex-end;
+  }
+
+  @media ${devices.mobileS} {
+    justify-content: flex-end;
   }
 `;
 

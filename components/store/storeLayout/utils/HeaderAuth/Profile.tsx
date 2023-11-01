@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import styled from 'styled-components';
 import ReviewsSVG from '../../../../../assets/reviews.svg';
+import BasketNormalSVG from '../../../../../assets/basket_normal.svg';
 import SettingskSVG from '../../../../../assets/settings.svg';
-import QuestionsSVG from '../../../../../assets/quastions_profile.svg';
 import variants from 'components/store/lib/variants';
 import { handleMenuState } from '../../helpers';
 import { handleLogout } from './authorize/helpers';
@@ -49,8 +49,17 @@ const Profile: React.FC<Props> = ({
           <Link legacyBehavior href="/profile">
             <span>
               <motion.img
-                src={`https://avatars.dicebear.com/api/micah/${user?.id}.svg?facialHairProbability=0&mouth[]=smile&scale=100&hair[]=fonze,full,pixie`}
+                src={
+                  user?.image
+                    ? `/api/images/${user.image}`
+                    : `https://api.dicebear.com/7.x/micah/svg?radius=50&backgroundColor=ECEEE7&seed=${user?.firstName}`
+                }
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null;
+                  currentTarget.src = `https://api.dicebear.com/7.x/micah/svg?radius=50&backgroundColor=ECEEE7&seed=${user?.firstName}`;
+                }}
                 alt="profile"
+                className="user-profile-image"
               />
             </span>
           </Link>
@@ -81,6 +90,20 @@ const Profile: React.FC<Props> = ({
             <span>Мои отзывы</span>
           </AuthDevider>
         </Link>
+        <Link href="/orders">
+          <AuthDevider
+            whileHover="hover"
+            whileTap="tap"
+            custom={1.04}
+            variants={variants.grow}
+            onClick={handleMenuState(setIsOpened, setDisplay)}
+          >
+            <span style={{ width: '35px', height: '35px' }}>
+              <BasketNormalSVG />
+            </span>
+            <span>Мои заказы</span>
+          </AuthDevider>
+        </Link>
         <Link href="/profile#settings">
           <AuthDevider
             whileHover="hover"
@@ -91,18 +114,6 @@ const Profile: React.FC<Props> = ({
           >
             <SettingskSVG />
             <span>Настройки</span>
-          </AuthDevider>
-        </Link>
-        <Link href="/profile#questions">
-          <AuthDevider
-            whileHover="hover"
-            whileTap="tap"
-            custom={1.04}
-            variants={variants.grow}
-            onClick={handleMenuState(setIsOpened, setDisplay)}
-          >
-            <QuestionsSVG />
-            <span>Вопросы</span>
           </AuthDevider>
         </Link>
       </div>
@@ -151,6 +162,7 @@ const AuthDevider = styled(motion.div)`
 const AuthBtns = styled(motion.button)<any>`
   width: ${(p: StyleProps) => p.width}%;
   height: 40px;
+  min-height: 40px;
   background: ${color.btnPrimary};
   color: ${color.textPrimary};
   border: none;
@@ -171,10 +183,11 @@ const ProfileWrapper = styled.div`
   justify-content: center;
   align-items: center;
   user-select: none;
-  img {
+  .user-profile-image {
     width: 80px;
     height: 80px;
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 

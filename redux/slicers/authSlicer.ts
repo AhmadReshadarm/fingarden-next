@@ -3,13 +3,18 @@ import { HttpStatus } from 'common/enums/httpStatus.enum';
 import { Role } from 'common/enums/roles.enum';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
 import { openErrorNotification } from 'common/helpers';
-import { TAuthState } from 'redux/types';
-import { AuthService, User, UserService } from 'swagger/services';
+import { TAuthState, TUsersQuary } from 'redux/types';
 import {
-  getErrorMassage,
-  handlePending,
-  handleError,
-} from '../../common/helpers';
+  AuthService,
+  User,
+  UserHelpDiskService,
+  UserService,
+  UsersResponses,
+  UserVerificationService,
+} from 'swagger/services';
+import { getErrorMassage, handleError, handlePending } from 'common/helpers';
+import { getUserInfo } from 'common/helpers/jwtToken.helpers';
+import { handlePaginationDataFormatter } from 'redux/helpers';
 
 export const signin = createAsyncThunk<
   { user: User; accessToken: string; refreshToken: string },
@@ -62,6 +67,7 @@ export const signup = createAsyncThunk<
     lastName: string;
     email: string;
     password: string;
+    isSubscribed: boolean;
   },
   { rejectValue: string }
 >('auth/signup', async function (payload, { rejectWithValue }): Promise<any> {
@@ -77,12 +83,12 @@ export const signup = createAsyncThunk<
   }
 });
 
-export const authorizeUser = createAsyncThunk<
+export const verifyUserEmailByToken = createAsyncThunk<
   { user: User; accessToken: string; refreshToken: string },
   string,
   { rejectValue: string }
 >(
-  'auth/authorizeUser',
+  'auth/verifyUserEmailByToken',
   async function (token, { rejectWithValue }): Promise<any> {
     try {
       const repsonse = await AuthService.confirmEmailByToken({
@@ -91,7 +97,22 @@ export const authorizeUser = createAsyncThunk<
 
       return repsonse;
     } catch (error: any) {
-      return rejectWithValue(error.response.status);
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
+
+export const sendVerificationToken = createAsyncThunk<
+  undefined,
+  undefined,
+  { rejectValue: string }
+>(
+  'auth/sendVerificationToken',
+  async function (_, { rejectWithValue }): Promise<any> {
+    try {
+      await UserVerificationService.sendVerificationEmail();
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
     }
   },
 );
@@ -113,7 +134,28 @@ export const resetPswByToken = createAsyncThunk<
 
       return repsonse;
     } catch (error: any) {
-      return rejectWithValue(error.response.status);
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
+
+export const sendResetPasswordToken = createAsyncThunk<
+  { user: User; accessToken: string; refreshToken: string },
+  {
+    email: string;
+  },
+  { rejectValue: string }
+>(
+  'auth/sendResetPasswordToken',
+  async function (payload, { rejectWithValue }): Promise<any> {
+    try {
+      const repsonse = await AuthService.sendRestPasswordToken({
+        body: payload,
+      });
+
+      return repsonse;
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
     }
   },
 );
@@ -138,10 +180,101 @@ export const fetchUserById = createAsyncThunk<
   },
 );
 
+export const updateUserById = createAsyncThunk<
+  User,
+  { userId: string; user: User },
+  { rejectValue: string }
+>(
+  'auth/updateUserById',
+  async function (payload, { rejectWithValue }): Promise<any> {
+    try {
+      const response = await UserService.updateUser({
+        userId: payload.userId,
+        body: { ...payload.user },
+      });
+      return response.user;
+    } catch (error: any) {
+      return rejectWithValue(error.response.status);
+    }
+  },
+);
+
+export const session = createAsyncThunk<
+  any,
+  undefined,
+  { rejectValue: string }
+>('auth/session', async function (_, { rejectWithValue }): Promise<any> {
+  try {
+    const response = await getUserInfo();
+
+    // if (response.message == 'rejected') {
+    //   return { user: null };
+    // }
+
+    return { message: response.message, user: response.user };
+  } catch (error: any) {
+    return rejectWithValue(getErrorMassage(error.response.status));
+  }
+});
+
+export const userHelpDisk = createAsyncThunk<
+  { user: User },
+  { email: string; text: string },
+  { rejectValue: string }
+>(
+  'auth/userHelpDisk',
+  async function (payload, { rejectWithValue }): Promise<any> {
+    try {
+      await UserHelpDiskService.sendMassege({ body: payload });
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
+
+export const fetchUsers = createAsyncThunk<
+  UsersResponses,
+  TUsersQuary,
+  { rejectValue: string }
+>(
+  'auth/fetchUsers',
+  async function (payload, { rejectWithValue }): Promise<any> {
+    try {
+      return await UserService.getUsers(payload);
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
+
+export const createUser = createAsyncThunk<User, User, { rejectValue: string }>(
+  'auth/createUser',
+  async function (payload, { rejectWithValue }): Promise<any> {
+    try {
+      return await UserService.createUser({ body: payload });
+    } catch (error: any) {
+      return rejectWithValue(getErrorMassage(error.response.status));
+    }
+  },
+);
+
+export const deleteUser = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>('auth/deleteUser', async function (id, { rejectWithValue }): Promise<any> {
+  try {
+    return await UserService.deleteUser({ userId: id });
+  } catch (error: any) {
+    return rejectWithValue(getErrorMassage(error.response.status));
+  }
+});
+
 const initialState: TAuthState = {
   user: null,
   loading: false,
   serverErr: undefined,
+  users: [],
 };
 
 const authSlicer = createSlice({
@@ -158,6 +291,9 @@ const authSlicer = createSlice({
     },
     clearServerErr(state: TAuthState) {
       state.serverErr = undefined;
+    },
+    clearUsers(state: TAuthState) {
+      state.users = [];
     },
   },
   extraReducers: (builder) => {
@@ -215,8 +351,8 @@ const authSlicer = createSlice({
         },
       )
       //authorize user
-      .addCase(authorizeUser.pending, handlePending)
-      .addCase(authorizeUser.fulfilled, (state, action) => {
+      .addCase(verifyUserEmailByToken.pending, handlePending)
+      .addCase(verifyUserEmailByToken.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.loading = false;
         localStorage.setItem('accessToken', action.payload.accessToken);
@@ -225,14 +361,18 @@ const authSlicer = createSlice({
         state.serverErr = undefined;
         console.log('fulfilled');
       })
-      .addCase(
-        authorizeUser.rejected,
-        (state, action: PayloadAction<any, any, any, any>) => {
-          state.loading = false;
-          state.serverErr = action.payload;
-          console.log('rejected');
-        },
-      )
+      .addCase(verifyUserEmailByToken.rejected, handleError)
+      //send reset verification token
+      .addCase(sendVerificationToken.pending, handlePending)
+      .addCase(sendVerificationToken.fulfilled, (state, action) => {
+        state.loading = false;
+        openSuccessNotification(
+          'Мы отправили вам электронное письмо. Пожалуйста, нажмите ссылку «Подтвердить Email»',
+        );
+        state.serverErr = undefined;
+        console.log('fulfilled');
+      })
+      .addCase(sendVerificationToken.rejected, handleError)
       //reset password by token
       .addCase(resetPswByToken.pending, handlePending)
       .addCase(resetPswByToken.fulfilled, (state, action) => {
@@ -244,15 +384,19 @@ const authSlicer = createSlice({
         state.serverErr = undefined;
         console.log('fulfilled');
       })
-      .addCase(
-        resetPswByToken.rejected,
-        (state, action: PayloadAction<any, any, any, any>) => {
-          state.loading = false;
-          state.serverErr = action.payload;
-          console.log('rejected');
-        },
-      )
-      //check for token session
+      .addCase(resetPswByToken.rejected, handleError)
+      //send reset password token to email
+      .addCase(sendResetPasswordToken.pending, handlePending)
+      .addCase(sendResetPasswordToken.fulfilled, (state, action) => {
+        state.loading = false;
+        openSuccessNotification(
+          'Мы отправили вам электронное письмо. Пожалуйста, нажмите ссылку «сбросить пароль», чтобы сбросить пароль.',
+        );
+        state.serverErr = undefined;
+        console.log('fulfilled');
+      })
+      .addCase(sendResetPasswordToken.rejected, handleError)
+      //get user by id
       .addCase(fetchUserById.pending, handlePending)
       .addCase(fetchUserById.fulfilled, (state, action) => {
         state.user = action.payload.user;
@@ -269,10 +413,87 @@ const authSlicer = createSlice({
           state.loading = false;
           console.log('rejected');
         },
-      );
+      )
+      //get updateUserById
+      .addCase(updateUserById.pending, handlePending)
+      .addCase(updateUserById.fulfilled, (state, action) => {
+        openSuccessNotification('Информация о пользователе обновлена');
+        state.user = action.payload;
+        state.loading = false;
+        state.serverErr = undefined;
+        console.log('fulfilled');
+      })
+      .addCase(
+        updateUserById.rejected,
+        (state, action: PayloadAction<any, any, any, any>) => {
+          openErrorNotification(getErrorMassage(action.payload));
+          state.loading = false;
+          console.log('rejected');
+        },
+      )
+      //check for token session
+      .addCase(session.pending, handlePending)
+      .addCase(session.fulfilled, (state, action) => {
+        if (action.payload.message == 'fulfilled') {
+          state.user = action.payload.user;
+          state.loading = false;
+          console.log('fulfilled');
+          return;
+        }
+        if (action.payload.message == 'retrying') {
+          state.loading = false;
+          console.log('fulfilled');
+          return;
+        }
+        if (action.payload.message == 'rejected') {
+          state.user = null;
+          state.loading = false;
+          console.log('fulfilled');
+        }
+      })
+      .addCase(session.rejected, handleError)
+      //send email to admin about an error by users
+      .addCase(userHelpDisk.pending, handlePending)
+      .addCase(userHelpDisk.fulfilled, (state, action) => {
+        openSuccessNotification(
+          'Мы получили ваше сообщение и свяжемся с вами как можно скорее',
+        );
+        state.loading = false;
+        console.log('fulfilled');
+      })
+      .addCase(userHelpDisk.rejected, handleError)
+      //fetchUsers
+      .addCase(fetchUsers.pending, handlePending)
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.users = handlePaginationDataFormatter(action);
+        state.loading = false;
+        console.log('fulfilled');
+      })
+      .addCase(fetchUsers.rejected, handleError)
+      //createUser
+      .addCase(createUser.pending, handlePending)
+      .addCase(createUser.fulfilled, (state, action) => {
+        // state.users = handlePaginationDataFormatter(action);
+        console.log(action.payload);
+        openSuccessNotification('Пользователь успешно создан');
+        state.loading = false;
+        console.log('fulfilled');
+      })
+      .addCase(createUser.rejected, handleError)
+      //deleteUser
+      .addCase(deleteUser.pending, handlePending)
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        // state.users = handlePaginationDataFormatter(action);
+        console.log(action.payload);
+        openSuccessNotification('Пользователь успешно удален');
+        state.loading = false;
+        console.log('fulfilled');
+      })
+      .addCase(deleteUser.rejected, handleError);
   },
 });
 
-export const { signout, setUser, clearServerErr } = authSlicer.actions;
+export const { signout, setUser, clearServerErr, clearUsers } =
+  authSlicer.actions;
 
 export default authSlicer.reducer;

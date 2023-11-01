@@ -23,6 +23,13 @@ import {
   Size,
   User,
   Wishlist,
+  NewsPosts,
+  News,
+  ProductResponse,
+  BrandResponse,
+  CategoryResponse,
+  SubscribersResponse,
+  Rating,
 } from 'swagger/services';
 
 type TCategoryState = {
@@ -36,6 +43,18 @@ type TAuthState = {
   user: User | null;
   serverErr?: number;
   loading: boolean;
+  users: User[];
+};
+
+type TUsersQuary = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  isVerified?: boolean;
+  role?: string;
+  sortBy?: string;
+  offset?: string;
+  limit?: string;
 };
 
 type TColorState = {
@@ -62,10 +81,14 @@ type TProductState = {
 interface SlideImage {
   name?: string;
   uid?: number;
+  url?: string;
 }
 
 type TImageState = {
   imageList: (Image | SlideImage)[];
+  imageListInDB?: Image[];
+  singleImage?: string;
+  paginationLength?: number;
   loading: boolean;
 };
 
@@ -95,10 +118,43 @@ interface TSizeState {
   saveLoading: boolean;
 }
 
+interface TNewsState {
+  newsPosts: News[];
+  news: News | null;
+  loading: boolean;
+  saveLoading: boolean;
+  newsLenght: number;
+}
+
+interface TSubscribers {
+  Subscribers: SubscribersResponse[];
+  Subscriber: SubscribersResponse | null;
+  loading: boolean;
+  saveLoading: boolean;
+  SubscriberLenght: number;
+}
+
+interface MailOptionsDTO {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+interface TNewsRequest {
+  limit: string;
+  offset: string;
+  skip?: string;
+  title?: string;
+  showOnMain?: boolean;
+  sortBy?: string;
+  orderBy?: string;
+}
+
 type TReviewState = {
   reviews: Review[];
   loading: boolean;
   saveLoading: boolean;
+  reviewsLenght: number;
 };
 
 type TGlobalState = {
@@ -107,14 +163,22 @@ type TGlobalState = {
   categories: CategoryInTree[];
   brands: Brand[];
   tags: Tag[];
+  newsPosts: NewsPosts;
   products: Product[];
   loading: boolean;
   productsLoading: boolean;
 };
 
+type ImageDTO = {
+  products?: ProductResponse;
+  brands?: BrandResponse;
+  categories?: CategoryResponse;
+};
+
 type TCartState = {
   cart: Basket | null;
   variant: ProductVariant | null;
+  productSize: string;
   loading: boolean;
   countLoading: boolean;
 };
@@ -150,6 +214,7 @@ type TCatalogState = {
 };
 
 type TCheckoutState = {
+  checkout: Checkout;
   checkouts: Checkout[];
   loading: boolean;
   saveLoading: boolean;
@@ -185,6 +250,7 @@ interface FetchPayload {
   limit: string;
   offset: string;
   available?: boolean;
+  showOnMain?: boolean;
 }
 
 interface RequestResponse {
@@ -196,7 +262,8 @@ interface RequestResponse {
     | Product[]
     | Review[]
     | Tag[]
-    | User[];
+    | User[]
+    | Image[];
   length: number;
 }
 
@@ -212,15 +279,28 @@ type THomePageState = {
   loading: boolean;
 };
 
+// type TDeliveryInfo = {
+//   address: string;
+//   fullName: string;
+//   phone: string;
+//   floor: string;
+//   door: string;
+//   roomOrOffice: string;
+//   postCode: string;
+//   rignBell: string;
+// };
+
 type TDeliveryInfo = {
-  address: string;
-  fullName: string;
-  phone: string;
-  floor: string;
-  door: string;
-  roomOrOffice: string;
-  postCode: string;
-  rignBell: string;
+  id?: string;
+  userId?: string;
+  receiverName?: string;
+  receiverPhone?: string;
+  address?: string;
+  roomOrOffice?: string;
+  door?: string;
+  floor?: string;
+  rignBell?: string;
+  zipCode?: string;
 };
 
 type TOrderInfo = {
@@ -232,7 +312,7 @@ type TStoreCheckoutState = {
   checkouts: Checkout[];
   loading: boolean;
   saveLoading: boolean;
-  deliveryInfo: TDeliveryInfo | null;
+  deliveryInfo?: TDeliveryInfo | null;
   orderInfo: TOrderInfo | null;
 };
 
@@ -255,6 +335,7 @@ type TProfileState = {
 export type {
   TCategoryState,
   TAuthState,
+  TUsersQuary,
   TColorState,
   TBrandState,
   TProductState,
@@ -282,4 +363,9 @@ export type {
   TWishlistState,
   TProductReviewsState,
   TProfileState,
+  TNewsState,
+  TNewsRequest,
+  ImageDTO,
+  TSubscribers,
+  MailOptionsDTO,
 };

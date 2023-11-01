@@ -114,7 +114,7 @@ const Changepsw = (props: any) => {
               value={oldPsw}
               style={{
                 border: `solid 1px ${
-                  isEmpty(psw) && pswInput ? color.hover : color.btnPrimary
+                  isEmpty(psw) && pswInput ? color.hover : color.btnSecondery
                 }`,
               }}
               onChange={(e) => {
@@ -197,7 +197,7 @@ const Changepsw = (props: any) => {
               value={psw}
               style={{
                 border: `solid 1px ${
-                  isEmpty(psw) && pswInput ? color.hover : color.btnPrimary
+                  isEmpty(psw) && pswInput ? color.hover : color.btnSecondery
                 }`,
               }}
               onChange={(e) => {
@@ -275,10 +275,10 @@ const Changepsw = (props: any) => {
               id="signup-psw-repeat"
               value={repeatPsw}
               style={{
-                border: `solid 1px ${
+                border: `solid 1px  ${
                   isEmpty(repeatPsw) && repeatPswInput
                     ? color.hover
-                    : color.btnPrimary
+                    : color.btnSecondery
                 }`,
               }}
               onChange={(e) => {
@@ -324,21 +324,6 @@ const Changepsw = (props: any) => {
         </FormWrapper>
 
         <AuthBtns
-          initial="init"
-          whileInView="animate"
-          viewport={{ once: true }}
-          custom={0.05}
-          whileHover={{ boxShadow: `0px 0px 4px 2px ${color.boxShadowBtn}` }}
-          whileTap={{ boxShadow: `0px 0px 0px 0px ${color.boxShadowBtn}` }}
-          variants={variants.fadInSlideUp}
-          bgcolor={
-            isEmpty(oldPsw) ||
-            isEmpty(psw) ||
-            isEmpty(repeatPsw) ||
-            repeatPsw !== psw
-              ? color.textSecondary
-              : color.btnPrimary
-          }
           disabled={
             isEmpty(oldPsw) ||
             isEmpty(psw) ||
@@ -368,48 +353,72 @@ const Wrapper = styled.form`
   gap: 20px;
   user-select: none;
   .errors {
-    font-family: 'intro';
     color: ${color.hover};
     font-size: 1rem;
   }
   .success {
-    font-family: 'intro';
     color: ${color.ok};
     font-size: 1rem;
   }
+  @media ${devices.mobileL} {
+    align-items: center;
+  }
+  @media ${devices.mobileM} {
+    align-items: center;
+  }
+  @media ${devices.mobileS} {
+    align-items: center;
+  }
 `;
 
-const AuthBtns = styled(motion.button)`
-  width: 100%;
-  height: 50px;
-  display: flex;
-  flex-direcion: row;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(p: styleProps) => p.bgcolor};
-  color: ${color.textPrimary};
-  border-radius: 15px;
-  font-family: 'intro';
+const AuthBtns = styled.button`
+  width: 200px;
+  height: 40px;
+  border-radius: 3px;
+  background-color: ${color.btnSecondery};
+  cursor: pointer;
+  transition: 300ms;
+  &:hover {
+    background-color: ${color.btnPrimary};
+    color: ${color.textPrimary};
+    transform: scale(1.02);
+  }
+  &:active {
+    transform: scale(1);
+  }
+  span {
+    font-family: 'Jost';
+    font-size: 1rem;
+  }
+  @media ${devices.mobileL} {
+    width: 100%;
+  }
+  @media ${devices.mobileM} {
+    width: 100%;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
+  }
 `;
 
 const FormWrapper = styled.form`
-  width: 100%;
+  width: 250px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   gap: 15px;
   h4 {
     font-size: 1rem;
   }
-  @media ${devices.laptopM} {
-    flex-direction: column;
-  }
-  @media ${devices.laptopS} {
-    flex-direction: column;
-  }
   @media ${devices.mobileL} {
-    flex-direction: column;
+    width: 100%;
+  }
+  @media ${devices.mobileM} {
+    width: 100%;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
   }
 `;
 
@@ -418,7 +427,7 @@ const AuthInputsWrapper = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   gap: 5px;
   position: relative;
   label {
@@ -428,9 +437,7 @@ const AuthInputsWrapper = styled(motion.div)`
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    span {
-      font-family: 'intro';
-    }
+
     .tool-tip {
       width: 18px;
       height: 18px;
@@ -449,12 +456,23 @@ const AuthInputsWrapper = styled(motion.div)`
 `;
 
 const AuthInput = styled(motion.input)`
-  width: 100%;
-  height: 50px;
-  border-radius: 10px;
+  width: 200px;
+  height: 40px;
+  border-radius: 5px;
   padding: 0 10px;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 300;
+  background-color: ${color.btnSecondery};
+  border: none;
+  @media ${devices.mobileL} {
+    width: 100%;
+  }
+  @media ${devices.mobileM} {
+    width: 100%;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
+  }
 `;
 const ConfidentialityWrapper = styled.div`
   width: 40px;

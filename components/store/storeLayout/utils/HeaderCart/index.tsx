@@ -136,8 +136,8 @@ const PopupWrapper = styled(motion.div)`
   width: 450px;
   height: 350px;
   position: absolute;
-  top: 95px;
-  right: 10px;
+  top: 60px;
+  right: 0;
   border-radius: 15px;
   display: flex;
   flex-direction: row;
@@ -216,7 +216,7 @@ const ActionBtns = styled(motion.button)`
   background: ${color.btnPrimary};
   color: ${color.textPrimary};
   border: none;
-  border-radius: 10px;
+  border-radius: 3px;
   display: flex;
   flex-direction: row;
   justify-content: center;

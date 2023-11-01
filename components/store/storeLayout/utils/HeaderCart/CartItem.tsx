@@ -28,7 +28,7 @@ const CartItem: React.FC<Props> = ({ item, onRemove, onCountChange }) => {
   const images = getProductVariantsImages(item.product?.productVariants);
 
   return (
-    <Link href="/">
+    <Link href={`/product/${item.product?.url}`}>
       <Item>
         <motion.img
           whileHover="hover"
@@ -38,7 +38,7 @@ const CartItem: React.FC<Props> = ({ item, onRemove, onCountChange }) => {
           src={`/api/images/${images[0]}`}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
-            currentTarget.src = '/assets/images/no_photo.png';
+            currentTarget.src = '/img_not_found.png';
           }}
         />
         <ItemDetails>

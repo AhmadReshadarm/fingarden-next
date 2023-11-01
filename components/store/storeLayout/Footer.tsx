@@ -11,8 +11,12 @@ import TelegraSVG from '../../../assets/telegramcolored.svg';
 import WhatsappSVG from '../../../assets/whatsappcolored.svg';
 import CloseSVg from '../../../assets/close_black.svg';
 import { handleCookiesClick, acceptedCookies } from './helpers';
+import { content } from './utils/ExtraNav/helpers';
 import { useEffect, useState } from 'react';
+import { useAppSelector } from 'redux/hooks';
+import { TGlobalState } from 'redux/types';
 const Footer = (): JSX.Element => {
+  const { categories } = useAppSelector<TGlobalState>((state) => state.global);
   const copyRighYear = new Date().getFullYear();
   const [isOpen, setOpen] = useState(true);
 
@@ -30,182 +34,101 @@ const Footer = (): JSX.Element => {
         exit="end"
         flex_direction="row"
         justify_content="space-evenly"
-        padding="85px 0"
-        bg_color="#f5f1f1"
+        padding="100px 0"
+        bg_color={color.bgFooter}
       >
-        <Wrapper>
-          <Content
-            flex_direction="column"
-            justify_content="center"
-            align_items="space-between"
-            gap="25px"
-          >
-            <Grid>
-              {/* <Sections_wrapper>
-                <Sections_header>Персональная информация</Sections_header>
-                <Sections_content>
-                  <Sections_item>
-                    <Link href="/catalog">
-                      <a>
-                        <span>Категории</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/profile">
-                      <a>
-                        <span>Личный кабинет</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/wishlist">
-                      <a>
-                        <span>Избранное</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/orders">
-                      <a>
-                        <span>Заказы</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/cart">
-                      <a>
-                        <span>Корзина</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                </Sections_content>
-              </Sections_wrapper>
-              <Sections_wrapper>
-                <Sections_header>Дополнительная информация</Sections_header>
-                <Sections_content>
-                  <Sections_item>
-                    <Link href="/privacy">
-                      <a>
-                        <span>Политика безопасности</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/policy">
-                      <a>
-                        <span>Условия соглашения</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/info-delivery">
-                      <a>
-                        <span>Информация о доставке</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/info-refund">
-                      <a>
-                        <span>Информация о возврате</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Link href="/rekvizity-ep-d">
-                      <a>
-                        <span>Реквизиты</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                </Sections_content>
-              </Sections_wrapper>
-              <Sections_wrapper>
-                <Sections_header>Контактные данные</Sections_header>
-                <Sections_content>
-                  <Sections_item>
-                    <Image width="20" height="14" src="/icons/phone.svg" />
-                    <Link href="tel:+79855675947">
-                      <a>
-                        <span>+7 (985) 567-59-47</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Image width="20" height="14" src="/icons/mail.svg" />
-                    <Link href="mailto:info@wuluxe.ru">
-                      <a>
-                        <span>info@wuluxe.ru</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                  <Sections_item>
-                    <Image
-                      width="20"
-                      height="14"
-                      src="/icons/location-black.svg"
-                    />
-                    <Link href="/address-contact-us">
-                      <a>
-                        <span>МО, г. Люберцы, Октябрьский проспект 181</span>
-                      </a>
-                    </Link>
-                  </Sections_item>
-                </Sections_content>
-              </Sections_wrapper>
-              <Sections_wrapper>
-                <Sections_header>Способы оплаты</Sections_header>
-                <Sections_content>
-                  <Sections_item>
-                    <Image width="100" height="30" src="/icons/cart-visa.png" />
-                    <Image
-                      width="54"
-                      height="33"
-                      src="/icons/cart-master.png"
-                    />
-                    <Image width="110" height="35" src="/icons/cart-mir.png" />
-                  </Sections_item>
-                  <Sections_item>
-                    <span style={{ padding: '5px 0' }}>
-                      Вы также можете оплатить покупки наличными при получении
-                    </span>
-                  </Sections_item>
-                  <span>
-                    <b>Присоединяйтесь к нашим социальным сетям</b>
-                  </span>
-                  <SocialWrapper>
-                    <Link href="https://vk.com/wuluxe">
-                      <a target="_blank" rel="noopener noreferrer">
-                        <span>
-                          <VKSVG />
-                        </span>
-                      </a>
-                    </Link>
-                    <Link href="https://t.me/wuluxe">
-                      <a target="_blank" rel="noopener noreferrer">
-                        <span>
-                          <TelegraSVG />
-                        </span>
-                      </a>
-                    </Link>
-                    <Link href="https://wa.me/+79855675947">
-                      <a target="_blank" rel="noopener noreferrer">
-                        <span>
-                          <WhatsappSVG />
-                        </span>
-                      </a>
-                    </Link>
-                  </SocialWrapper>
-                  <Link href="/copyright-terms">
-                    <a id="copyright">
-                      © {copyRighYear} «Wuluxe». Все права защищены.
-                    </a>
+        <Wrapper
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <FooterContentWrapper>
+            <FooterTopContentWrapper>
+              <FooterLeftContentWrapper>
+                <div className="footer-columns-wrapper">
+                  <span className="columns-header">Каталог </span>
+                  {categories.map((category, index) => {
+                    return (
+                      <Link
+                        key={`${category.url}-${index}`}
+                        href={`/catalog?categories=${category.url}`}
+                      >
+                        <span>{category.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+                <div className="footer-columns-wrapper">
+                  <span className="columns-header">Услуги</span>
+                  {content.services.map((service, index) => {
+                    return (
+                      <Link
+                        key={`${service.url}-${index}`}
+                        href={`${service.url}`}
+                      >
+                        <span>{service.text}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+                <div className="footer-columns-wrapper">
+                  <span className="columns-header">О нас</span>
+                  {content.aboutUs.map((service, index) => {
+                    return (
+                      <Link
+                        key={`${service.url}-${index}`}
+                        href={`${service.url}`}
+                      >
+                        <span>{service.text}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </FooterLeftContentWrapper>
+              <FooterRightContentWrapper>
+                <div className="right-column-content">
+                  <img src="/icons/call_phone_dark.png" alt="call fingarden" />
+                  <Link href="tel:+78124253130">
+                    <span>+7 812 425 31 30</span>
                   </Link>
-                </Sections_content>
-              </Sections_wrapper> */}
-            </Grid>
-          </Content>
+                </div>
+                <div className="right-column-content">
+                  <img
+                    src="/icons/work_hours_dark.png"
+                    alt="fingarden work hours"
+                  />
+                  <span>Пн-Все 10.00-22.00</span>
+                </div>
+                <div className="right-column-content">
+                  <img
+                    src="/icons/location_dark.png"
+                    alt="fingarden location"
+                  />
+                  <span>
+                    Санкт-Петербург, ТЦ Villa ул. Савушкина д.119, корп.3, 2
+                    этаж, В-59
+                  </span>
+                </div>
+              </FooterRightContentWrapper>
+            </FooterTopContentWrapper>
+            <FooterBottomContentWrapper>
+              <div className="bottom-left-wrapper">
+                <Link href="/user-agreement">
+                  <span>Пользовательское соглашение</span>
+                </Link>
+                <Link href="/privacy">
+                  <span>Политика безопасности</span>
+                </Link>
+              </div>
+              <div className="bottom-right-wrapper">
+                <span>
+                  Fingarden. All rights reserved. Все права защищены ©{' '}
+                  {copyRighYear}
+                </span>
+              </div>
+            </FooterBottomContentWrapper>
+          </FooterContentWrapper>
         </Wrapper>
       </Container>
       <CookiesNotification style={{ display: isOpen ? 'flex' : 'none' }}>
@@ -215,108 +138,193 @@ const Footer = (): JSX.Element => {
               setOpen(false);
               localStorage.setItem('agree-cookies', '0');
             }}
+            className="close-btn-wrapper"
           >
             <CloseSVg />
           </span>
         </div>
         <div className="notification-cookies">
           <span>
-            Нажимая «Принять все файлы cookie», вы соглашаетесь, что Wuluxe
-            может сохранять файлы cookie на вашем устройстве и раскрывать
-            информацию в соответствии с нашей{' '}
-            {/* <Link href="/privacy#cookies" legacyBehavior>
-              <a style={{ color: color.yellow }}>
-                Политикой использования файлов cookie.
-              </a>
-            </Link> */}
+            При нажимая «Принять все файлы cookie», вы соглашаетесь, что
+            Fingarden может сохранять файлы cookie на вашем устройстве и
+            раскрывать информацию в соответствии с нашей{' '}
+            <Link style={{ color: color.hoverBtnBg }} href="/privacy#cookies">
+              <span>Политикой использования файлов cookie.</span>
+            </Link>
           </span>
-          <motion.button
-            whileHover="hover"
-            whileTap="tap"
-            variants={variants.boxShadow}
+          <button
             className="accept-cookies"
             onClick={() => handleCookiesClick(setOpen)}
           >
             Принять все файлы cookie
-          </motion.button>
+          </button>
         </div>
       </CookiesNotification>
     </>
   );
 };
 
-const Grid = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  justify-content: space-between;
-  align-items: flex-start;
-
-  @media ${devices.mobileL} {
-    gap: 15px;
-    grid-template-columns: repeat(2, 1fr);
-  }
-`;
-
-const Sections_wrapper = styled.div`
+const FooterContentWrapper = styled.div`
+  width: 90%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  place-items: space-between;
-  gap: 15px;
-`;
-
-const Sections_header = styled.h3`
-  font-size: 1.1rem;
-  display: inline-block;
-`;
-
-const Sections_content = styled.ul`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  place-items: space-between;
-  gap: 5px;
-  #copyright {
-    color: ${color.textSecondary}!important;
-    &:hover {
-      color: ${color.hover}!important;
-    }
-  }
-`;
-
-const Sections_item = styled.li`
-  font-size: 1rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 10px;
-  align-self: flex-start;
-  a {
-    padding: 5px 5px 5px 0;
-  }
-  a:hover {
-    color: ${color.hover};
-  }
-`;
-
-const SocialWrapper = styled.li`
-  display: flex;
-  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 20px;
-  padding: 10px 0;
-  a {
+  gap: 50px;
+`;
+
+const FooterTopContentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  @media ${devices.laptopS} {
+    flex-direction: column;
+    gap: 30px;
+  }
+  @media ${devices.mobileL} {
+    flex-direction: column;
+    gap: 30px;
+  }
+  @media ${devices.mobileM} {
+    flex-direction: column;
+    gap: 30px;
+  }
+  @media ${devices.mobileS} {
+    flex-direction: column;
+    gap: 30px;
+  }
+`;
+
+const FooterLeftContentWrapper = styled.div`
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 100px;
+  .footer-columns-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 5px;
+    .columns-header {
+      font-weight: 700;
+      padding: 0 0 25px 0;
+    }
+  }
+  @media ${devices.laptopS} {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media ${devices.mobileL} {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media ${devices.mobileM} {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+const FooterRightContentWrapper = styled.div`
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-item: flex-start;
+  gap: 30px;
+  .right-column-content {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    span {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
+    gap: 10px;
+  }
+  @media ${devices.laptopS} {
+    width: 100%;
+  }
+  @media ${devices.mobileL} {
+    width: 100%;
+  }
+  @media ${devices.mobileM} {
+    width: 100%;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
+  }
+`;
+
+const FooterBottomContentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  .bottom-left-wrapper {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .bottom-right-wrapper {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  @media ${devices.laptopS} {
+    flex-direction: column;
+    gap: 30px;
+    .bottom-left-wrapper {
+      width: 100%;
+    }
+    .bottom-right-wrapper {
+      width: 100%;
+    }
+  }
+  @media ${devices.mobileL} {
+    flex-direction: column;
+    gap: 30px;
+    .bottom-left-wrapper {
+      width: 100%;
+    }
+    .bottom-right-wrapper {
+      width: 100%;
+    }
+  }
+  @media ${devices.mobileM} {
+    flex-direction: column;
+    gap: 30px;
+    .bottom-left-wrapper {
+      width: 100%;
+    }
+    .bottom-right-wrapper {
+      width: 100%;
+    }
+  }
+  @media ${devices.mobileS} {
+    flex-direction: column;
+    gap: 30px;
+    .bottom-left-wrapper {
+      width: 100%;
+    }
+    .bottom-right-wrapper {
+      width: 100%;
     }
   }
 `;
@@ -331,7 +339,6 @@ const CookiesNotification = styled.div`
   justify-content: flex-start;
   align-items: center;
   z-index: 99999;
-  box-shadow: 0 -1px 3px -2px #000;
   padding: 0 0 20px 0;
   .close-cookies {
     width: 100%;
@@ -339,13 +346,18 @@ const CookiesNotification = styled.div`
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    span {
+    padding: 10px 10px 0 0;
+    .close-btn-wrapper {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
       padding: 10px;
       cursor: pointer;
+      transition: 300ms;
+      &:hover {
+        transform: scale(1.2);
+      }
     }
   }
   .notification-cookies {
@@ -356,17 +368,28 @@ const CookiesNotification = styled.div`
     align-items: center;
     gap: 30px;
     .accept-cookies {
+      width: 270px;
+      height: 40px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3px;
+      background-color: ${color.btnSecondery};
       cursor: pointer;
-      padding: 15px;
-      border-radius: 10px;
-      background-color: ${color.btnPrimary};
-      color: ${color.textPrimary};
-      white-space: nowrap;
-    }
-  }
-  @media ${devices.laptopM} {
-    .notification-cookies {
-      flex-direction: column;
+      transition: 300ms;
+      &:hover {
+        background-color: ${color.btnPrimary};
+        color: ${color.textPrimary};
+        transform: scale(1.02);
+      }
+      &:active {
+        transform: scale(1);
+      }
+      span {
+        font-family: 'Jost';
+        font-size: 1rem;
+      }
     }
   }
   @media ${devices.laptopS} {
@@ -375,6 +398,16 @@ const CookiesNotification = styled.div`
     }
   }
   @media ${devices.mobileL} {
+    .notification-cookies {
+      flex-direction: column;
+    }
+  }
+  @media ${devices.mobileM} {
+    .notification-cookies {
+      flex-direction: column;
+    }
+  }
+  @media ${devices.mobileS} {
     .notification-cookies {
       flex-direction: column;
     }

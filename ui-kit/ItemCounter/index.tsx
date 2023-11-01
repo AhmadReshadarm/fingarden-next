@@ -10,7 +10,10 @@ import {
 import { Product } from 'swagger/services';
 import { useAppSelector } from 'redux/hooks';
 import { TAuthState } from 'redux/types';
+import { handleItemCountChange } from 'common/helpers/cart.helper';
 import { Role } from 'common/enums/roles.enum';
+import { useAppDispatch } from 'redux/hooks';
+import { TCartState } from 'redux/types';
 type Props = {
   qty: number;
   product: Product;
@@ -24,26 +27,31 @@ const ItemCounter: React.FC<Props> = ({
   onCountChange,
 }) => {
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
-  const [itemCounter, setItemCounter] = useState(
-    qty < 10 && user?.role === Role.SuperUser ? 10 : qty,
-  );
-
+  const [itemCounter, setItemCounter] = useState(qty);
+  const dispatch = useAppDispatch();
+  const { cart, loading } = useAppSelector<TCartState>((state) => state.cart);
   return (
     <ItemCounterWrapper onClick={(e) => e.preventDefault()}>
       <motion.button
         whileHover="hover"
         whileTap="tap"
         variants={variants.boxShadow}
-        onClick={decreaseCounter(product, setItemCounter, onCountChange, user!)}
+        // onClick={decreaseCounter(product, setItemCounter, onCountChange, user!)}
+        onClick={() =>
+          handleItemCountChange(qty! - 1, product, dispatch, cart!)
+        }
       >
         -
       </motion.button>
-      <span>{itemCounter}</span>
+      <span>{qty}</span>
       <motion.button
         whileHover="hover"
         whileTap="tap"
         variants={variants.boxShadow}
-        onClick={increaseCounter(product, setItemCounter, onCountChange)}
+        // onClick={increaseCounter(product, setItemCounter, onCountChange)}
+        onClick={() =>
+          handleItemCountChange(qty! + 1, product, dispatch, cart!)
+        }
       >
         +
       </motion.button>

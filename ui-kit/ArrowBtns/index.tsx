@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { styleProps } from 'components/store/lib/types';
 import { devices } from 'components/store/lib/Devices';
+import color from 'components/store/lib/ui.colors';
 const ArrowBtns = styled(motion.button)`
   width: 35px;
   height: 35px;
@@ -21,10 +22,8 @@ const ArrowBtns = styled(motion.button)`
   align-items: center;
   cursor: pointer;
   overflow: hidden;
-  @media ${devices.mobileL} {
-    width: 45px;
-    height: 45px;
-    top: ${(p: styleProps) => p.topMobile};
+  &:hover {
+    background-color: ${color.btnPrimary};
   }
 `;
 

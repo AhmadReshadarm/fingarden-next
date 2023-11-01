@@ -4,7 +4,11 @@ import { motion } from 'framer-motion';
 import { useEffect, useState, useCallback } from 'react';
 import { outsideClickListner } from 'components/store/storeLayout/helpers';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { changeSearchQuery } from 'redux/slicers/store/globalSlicer';
+import {
+  changeSearchQuery,
+  clearSearchQuery,
+  clearSearchProducts,
+} from 'redux/slicers/store/globalSlicer';
 import { TGlobalState } from 'redux/types';
 import styled from 'styled-components';
 import { CategoryInTree } from 'swagger/services';
@@ -15,19 +19,14 @@ import { handleSearchQueryChange, handleSearchFormSubmit } from './helpers';
 import SearchItem from './SearchItem';
 import { useRouter } from 'next/router';
 import Loading from 'ui-kit/Loading';
-import { devices } from 'components/store/lib/Devices';
 import { styleProps } from 'components/store/lib/types';
-
-// type StyleProps = {
-//   padding?: string ;
-//   boxShadow?: string;
-// };
 
 type Props = {
   isSearchActive: boolean;
   setSearchActive: any;
   searchWrapperNode: any;
   isSearchFormVisiable: string;
+  setSearchDisplay: any;
 };
 
 const SearchBar: React.FC<Props> = ({
@@ -35,13 +34,13 @@ const SearchBar: React.FC<Props> = ({
   setSearchActive,
   searchWrapperNode,
   isSearchFormVisiable,
+  setSearchDisplay,
 }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { searchQuery, products, productsLoading } =
     useAppSelector<TGlobalState>((state) => state.global);
   const [selectedCategory, setSelectedCategory] = useState<CategoryInTree>();
-  // const [focused, setFocused] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [display, setDisplay] = useState(PopupDisplay.None);
   const [menuRef, setMenuRef] = useState(null);
@@ -80,6 +79,7 @@ const SearchBar: React.FC<Props> = ({
       className="blure"
     >
       <SearchForm
+        name="search"
         animate={isSearchActive ? 'animate' : 'exit'}
         custom={0.2}
         variants={variants.fadInSlideUp}
@@ -88,6 +88,8 @@ const SearchBar: React.FC<Props> = ({
           searchQuery,
           router,
           setSearchActive,
+          setSearchDisplay,
+          dispatch,
         )}
       >
         <FilterBtn
@@ -105,7 +107,7 @@ const SearchBar: React.FC<Props> = ({
           value={searchQuery}
           autoFocus
         />
-        <SearchBtn type={'submit'}>
+        <SearchBtn onClick={() => {}} type={'submit'}>
           <span>ПОИСК</span>
         </SearchBtn>
       </SearchForm>
@@ -113,6 +115,7 @@ const SearchBar: React.FC<Props> = ({
         isOpened={isOpened}
         display={display}
         setSelectedCategory={setSelectedCategory}
+        selectedCategory={selectedCategory!}
         setIsOpened={setIsOpened}
         setDisplay={setDisplay}
         menuNode={menuNode}
@@ -181,13 +184,6 @@ const SearchForm = styled(motion.form)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
-  @media ${devices.laptopM} {
-    max-width: 990px;
-  }
-  @media ${devices.laptopS} {
-    max-width: 728px;
-  }
 `;
 
 const SearchFieldInput = styled(motion.input)`
@@ -202,33 +198,18 @@ const SearchFieldInput = styled(motion.input)`
   padding: ${(p: styleProps) => p.padding};
   background-color: transparent;
   margin-left: -35px;
-  @media ${devices.laptopM} {
-    max-width: 325px;
-  }
-
-  @media ${devices.laptopS} {
-    max-width: 325px;
-  }
-
-  // @media ${devices.mobileL} {
-  //   width: 100%;
-  //   height: 40px;
-  // }
 `;
 
 const SearchBtn = styled(motion.button)`
   cursor: pointer;
   background: ${color.btnPrimary};
-  width: 150px;
-  height: 45px;
-  border-radius: 10px;
+  width: 200px;
+  height: 40px;
+  border-radius: 5px;
   margin-left: -10px;
+  margin-bottom: -5px;
   span {
     color: ${color.textPrimary};
-  }
-
-  @media ${devices.mobileL} {
-    height: 40px;
   }
 `;
 
@@ -239,18 +220,6 @@ const ResultsWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
-  // @media ${devices.laptopM} {
-  //   max-width: 341px;
-  // }
-
-  // @media ${devices.laptopS} {
-  //   max-width: 341px;
-  // }
-
-  // @media ${devices.mobileL} {
-  //   width: calc(100% + 16px);
-  // }
 `;
 
 const ResultsContent = styled.ul`

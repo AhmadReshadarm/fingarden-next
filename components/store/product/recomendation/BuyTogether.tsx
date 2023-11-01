@@ -10,7 +10,7 @@ import ArrowWhite from '../../../../assets/arrow_white.svg';
 
 const BuyTogether = ({ product }) => {
   const [products, setProducts] = useState<Product[]>([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const response = (await ProductService.getProducts({
@@ -19,6 +19,7 @@ const BuyTogether = ({ product }) => {
         tags: product?.tags?.map((tag: any) => tag.url),
       })) as unknown as { rows: Product[]; length: number };
       setProducts(response.rows.filter((item) => item.id != product.id));
+      setLoading(false);
     })();
   }, []);
   const [
@@ -50,6 +51,7 @@ const BuyTogether = ({ product }) => {
         widthRef={widthOrHeightRef}
         slideTo={slideTo}
         products={products}
+        loading={loading}
       />
       <BtnsWrapper>
         <ArrowBtns

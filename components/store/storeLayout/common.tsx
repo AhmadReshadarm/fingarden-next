@@ -30,6 +30,12 @@ const Btns = styled(motion.button)`
   span {
     width: 100%;
     height: 100%;
+    .user-profile-image {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
   }
 `;
 
@@ -52,13 +58,27 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: ${(p: props) => p.gap};
-
-  @media ${devices.laptopM} {
-    max-width: 990px;
-  }
+  align-items: center;
 
   @media ${devices.laptopS} {
-    max-width: 728px;
+    max-width: unset;
+    width: 95%;
+    flex-direction: ${(p?: props) => p?.flex_direction};
+  }
+  @media ${devices.mobileL} {
+    max-width: unset;
+    width: 95%;
+    flex-direction: ${(p?: props) => p?.flex_direction};
+  }
+  @media ${devices.mobileM} {
+    max-width: unset;
+    width: 95%;
+    flex-direction: ${(p?: props) => p?.flex_direction};
+  }
+  @media ${devices.mobileS} {
+    max-width: unset;
+    width: 95%;
+    flex-direction: ${(p?: props) => p?.flex_direction};
   }
 `;
 

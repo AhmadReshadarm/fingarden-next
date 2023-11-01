@@ -31,7 +31,6 @@ const Authorization: React.FC<Props> = ({
   return (
     <>
       <Content
-        drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         custom={direction}
         variants={variants.authorizeSlideX}
@@ -56,7 +55,7 @@ const Authorization: React.FC<Props> = ({
             whileTap="tap"
             variants={variants.boxShadow}
             bgcolor={color.btnPrimary}
-            textColor={color.textPrimary}
+            textcolor={color.textPrimary}
             onClick={() => paginate(paginateTo.forward, 'signin')}
           >
             Войти
@@ -67,7 +66,7 @@ const Authorization: React.FC<Props> = ({
             whileTap="tap"
             variants={variants.boxShadow}
             bgcolor={color.btnPrimary}
-            textColor={color.textPrimary}
+            textcolor={color.textPrimary}
             onClick={() => paginate(paginateTo.forward, 'signup')}
           >
             Зарегистрироваться

@@ -48,13 +48,13 @@ const SignIn: React.FC<Props> = ({
 
   return (
     <Content
-      drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       custom={direction}
       variants={variants.authorizeSlideX}
       animate={authType == 'signin' ? 'center' : 'enter'}
     >
       <FormWrapper
+        name="signin"
         onSubmit={handleSignIn({
           email,
           password,
@@ -104,9 +104,6 @@ const SignIn: React.FC<Props> = ({
             </InputsTooltip>
             <span style={{ color: color.hover }}>
               {serverErr == 400 ? 'Неверный эл. адрес' : ''}
-            </span>
-            <span style={{ color: color.hover }}>
-              {serverErr == 403 ? 'не подтверждено' : ''}
             </span>
           </label>
           <AuthInput
@@ -227,7 +224,7 @@ const SignIn: React.FC<Props> = ({
               ? true
               : false
           }
-          textColor={
+          textcolor={
             isEmpty(email) || isEmpty(password) || !isEmail(email)
               ? color.btnPrimary
               : color.textPrimary
@@ -249,7 +246,7 @@ const SignIn: React.FC<Props> = ({
           whileTap={{ boxShadow: `0px 0px 0px 0px ${color.boxShadowBtn}` }}
           variants={variants.fadInSlideUp}
           bgcolor={color.btnPrimary}
-          textColor={color.textPrimary}
+          textcolor={color.textPrimary}
           onClick={() => handleBack(paginate, setEmailErr, setPswErr, dispatch)}
         >
           Назад

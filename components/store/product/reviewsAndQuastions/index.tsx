@@ -15,10 +15,10 @@ import { a11yProps } from './helpers';
 import Reviews from './reviews';
 import Quastions from './quastions';
 import { HeaderWrapper } from '../common';
-import { useAppDispatch } from 'redux/hooks';
+import { useAppSelector } from 'redux/hooks';
 import { Product } from 'swagger/services';
-import { getUserInfo } from 'common/helpers/jwtToken.helpers';
-
+// import { getUserInfo } from 'common/helpers/jwtToken.helpers';
+import { TAuthState } from 'redux/types';
 type Props = {
   reviewRef: MutableRefObject<null>;
   questionRef: MutableRefObject<null>;
@@ -29,13 +29,11 @@ const ReveiwsAndQuastions: React.FC<Props> = ({
   questionRef,
   product,
 }) => {
-  const dispatch = useAppDispatch();
   const [tab, setTab] = useState(0);
-  const user = getUserInfo();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
-
+  const { user } = useAppSelector<TAuthState>((state) => state.auth);
   return (
     <Container
       id="reveiws-quastions"
@@ -106,8 +104,8 @@ const ReveiwsAndQuastions: React.FC<Props> = ({
 
 const TotalReviews = styled.span`
   position: absolute;
-  top: -10px;
-  left: 325px;
+  top: -12px;
+  left: 330px;
   color: ${color.textSecondary};
   font-family: intro;
   font-size: 1rem;

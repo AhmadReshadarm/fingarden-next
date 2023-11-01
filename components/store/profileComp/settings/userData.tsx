@@ -129,96 +129,6 @@ const UserData = (props: any) => {
             />
           </InputsWrapper>
         </InputsDvider>
-        {/* <InputsWrapper>
-          <label htmlFor="user-phonenumber">
-            <b>
-              <span>Телефон</span>
-              <span className="required">*</span>
-            </b>
-            <InputsTooltip
-              enterTouchDelay={0}
-              leaveTouchDelay={5000}
-              key="phonenumber-tip"
-              title={
-                <React.Fragment>
-                  <span>Это поле обязательно к заполнению</span>
-                </React.Fragment>
-              }
-            >
-              <span className="tool-tip">?</span>
-            </InputsTooltip>
-          </label>
-          <AuthInput
-            whileHover="hover"
-            whileTap="tap"
-            variants={variants.boxShadow}
-            placeholder={phoneNumberInput ? 'не может быть пустым' : 'Телефон'}
-            type="text"
-            id="user-phonenumber"
-            value={phoneNumber}
-            style={{
-              border: `solid 1px ${
-                isEmpty(phoneNumber) && phoneNumberInput
-                  ? color.hover
-                  : color.btnPrimary
-              }`,
-            }}
-            onChange={(e) => {
-              setPhoneNumber(e.target.value);
-              setInputsErr([
-                firstNameInput ? true : false,
-                lastNameInput ? true : false,
-                true,
-                addressInput ? true : false,
-              ]);
-            }}
-          />
-        </InputsWrapper> */}
-        {/* <InputsWrapper>
-          <label htmlFor="user-address">
-            <b>
-              <span>Адресс</span>
-              <span className="required">*</span>
-            </b>
-            <InputsTooltip
-              enterTouchDelay={0}
-              leaveTouchDelay={5000}
-              key="address-tip"
-              title={
-                <React.Fragment>
-                  <span>Это поле обязательно к заполнению</span>
-                </React.Fragment>
-              }
-            >
-              <span className="tool-tip">?</span>
-            </InputsTooltip>
-          </label>
-          <AuthInput
-            whileHover="hover"
-            whileTap="tap"
-            variants={variants.boxShadow}
-            placeholder={addressInput ? 'не может быть пустым' : 'Адресс'}
-            type="text"
-            id="user-address"
-            value={address}
-            style={{
-              border: `solid 1px ${
-                isEmpty(address) && addressInput
-                  ? color.hover
-                  : color.btnPrimary
-              }`,
-            }}
-            onChange={(e) => {
-              setAddress(e.target.value);
-              setInputsErr([
-                firstNameInput ? true : false,
-                lastNameInput ? true : false,
-                phoneNumberInput ? true : false,
-                true,
-              ]);
-            }}
-          />
-        </InputsWrapper> */}
         <SaveBtn
           style={{
             backgroundColor:
@@ -261,7 +171,7 @@ const UserData = (props: any) => {
 };
 
 const UserDataContainer = styled(motion.form)`
-  width: 500px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

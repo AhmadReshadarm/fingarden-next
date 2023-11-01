@@ -1,3 +1,4 @@
+import color from './ui.colors';
 const variants = {
   fadInOut: {
     start: {
@@ -27,7 +28,7 @@ const variants = {
   },
   boxShadow: {
     hover: {
-      boxShadow: '0px 0px 4px 2px rgba(0, 0, 0, 0.25)',
+      boxShadow: `0px 5px 10px 0px ${color.boxShadowBtn}`,
 
       transition: { duration: 0.2 },
     },
@@ -51,7 +52,7 @@ const variants = {
   },
   fadeOutSlideOut: {
     init: {
-      y: -25,
+      y: -30,
       opacity: 0,
     },
     animate: {
@@ -59,7 +60,7 @@ const variants = {
       opacity: 1,
     },
     exit: {
-      y: -25,
+      y: -30,
       opacity: 0,
     },
   },

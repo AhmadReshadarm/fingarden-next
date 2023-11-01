@@ -48,10 +48,7 @@ export const columns: ColumnsType<Product> = [
                   );
                 }
                 return (
-                  <img
-                    src={'/assets/images/no_photo.png'}
-                    className={styles.image}
-                  />
+                  <img src="/img_not_found.png" className={styles.image} />
                 );
               })}
             </Carousel>

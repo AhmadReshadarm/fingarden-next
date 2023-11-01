@@ -2,74 +2,107 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import { Btns } from './common';
 import color from '../lib/ui.colors';
-import HomeSVG from '../../../assets/home.svg';
-import CatalogSVG from '../../../assets/catalog.svg';
-import OrderSVG from '../../../assets/order.svg';
-import WishListSVG from '../../../assets/wishlist.svg';
-import CartSVG from '../../../assets/cart.svg';
+import HomeSVG from '../../../assets/home_state_normal.svg';
+import HomePressedSVG from '../../../assets/home_state_pressed.svg';
+import CatalogSVG from '../../../assets/catelog_state_normal.svg';
+import CatalogPressedSVG from '../../../assets/catelog_state_pressed_mobile.svg';
+import WishListSVG from '../../../assets/wihslist_state_normal.svg';
+import WishListPressedSVG from '../../../assets/wishlist_state_pressed.svg';
+import CartSVG from '../../../assets/basket_state_normal.svg';
+import CartPressedSVG from '../../../assets/basket_state_pressed_mobile.svg';
 import { devices } from '../lib/Devices';
 import { TCartState } from 'redux/types';
 import { useAppSelector } from 'redux/hooks';
+import { TWishlistState } from 'redux/types';
+import { useRouter } from 'next/router';
 
 const NavWrapMobile = () => {
   const { cart } = useAppSelector<TCartState>((state) => state.cart);
+  const { wishlist }: TWishlistState = useAppSelector(
+    (state) => state.wishlist,
+  );
+  const router = useRouter();
+
   return (
     <NavWrap>
       <Link href="/">
-        <a style={{ alignSelf: 'flex-end' }}>
-          <Btns>
-            <span>
-              <HomeSVG />
-            </span>
-            <span>Главная</span>
-          </Btns>
-        </a>
+        <span>
+          {router.pathname == '/' ? (
+            <Btns>
+              <span>
+                <HomePressedSVG />
+              </span>
+            </Btns>
+          ) : (
+            <Btns>
+              <span>
+                <HomeSVG />
+              </span>
+            </Btns>
+          )}
+        </span>
       </Link>
       <Link href="/catalog">
-        <a style={{ alignSelf: 'flex-end' }}>
-          <Btns>
-            <span>
-              <CatalogSVG />
-            </span>
-            <span>Каталог</span>
-          </Btns>
-        </a>
+        <span>
+          {router.pathname == '/catalog' ? (
+            <Btns>
+              <span>
+                <CatalogPressedSVG />
+              </span>
+            </Btns>
+          ) : (
+            <Btns>
+              <span>
+                <CatalogSVG />
+              </span>
+            </Btns>
+          )}
+        </span>
       </Link>
-      <Link href="/orders">
-        <a style={{ alignSelf: 'flex-end' }}>
-          <Btns>
-            <span>
-              <OrderSVG />
-            </span>
-            <span> Заказы</span>
-          </Btns>
-        </a>
-      </Link>
-      <Link href="/wishlist">
-        <a style={{ alignSelf: 'flex-end' }}>
-          <Btns>
-            <span>
-              <WishListSVG />
-            </span>
-            <span>Избранное</span>
-          </Btns>
-        </a>
-      </Link>
-      <CartWrapper>
+      <ParentWrapper>
+        {!!wishlist?.items?.length && (
+          <Counter>{wishlist?.items?.length}</Counter>
+        )}
+        <Link href="/wishlist">
+          <span>
+            {router.pathname == '/wishlist' ? (
+              <Btns>
+                <span>
+                  <WishListPressedSVG />
+                </span>
+              </Btns>
+            ) : (
+              <Btns>
+                <span>
+                  <WishListSVG />
+                </span>
+              </Btns>
+            )}
+          </span>
+        </Link>
+      </ParentWrapper>
+      <ParentWrapper>
         {!!cart?.orderProducts?.length && (
           <Counter>{cart?.orderProducts?.length}</Counter>
         )}
         <Link href="/cart">
-          <a style={{ alignSelf: 'flex-end' }}>
-            <Btns>
-              <span>
-                <CartSVG />
-              </span>
-              <span>Корзина</span>
-            </Btns>
-          </a>
+          <span>
+            {router.pathname == '/cart' ? (
+              <Btns>
+                <span>
+                  <CartPressedSVG />
+                </span>
+              </Btns>
+            ) : (
+              <Btns>
+                <span>
+                  <CartSVG />
+                </span>
+              </Btns>
+            )}
+          </span>
         </Link>
-      </CartWrapper>
+      </ParentWrapper>
     </NavWrap>
   );
 };
@@ -77,30 +110,44 @@ const NavWrapMobile = () => {
 const NavWrap = styled.div`
   display: none;
   position: fixed;
-  bottom: -1px;
+  bottom: 0;
   z-index: 1000;
   width: 100vw;
-  background: #fff;
+  min-height: 60px;
+  max-height: 60px;
+  height: 100%;
+  background-color: ${color.glassmorphismSeconderBG};
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  padding: 10px 10px;
-  box-shadow: 0px 2px 6px #00000017;
-
+  padding: 0 20px;
+  @media ${devices.laptopS} {
+    display: flex;
+  }
   @media ${devices.mobileL} {
+    display: flex;
+  }
+  @media ${devices.mobileM} {
+    display: flex;
+  }
+  @media ${devices.mobileS} {
     display: flex;
   }
 `;
 
-const CartWrapper = styled.div`
+const ParentWrapper = styled.div`
   position: relative;
 `;
 const Counter = styled.span`
   position: absolute;
   top: -10px;
-  right: 10px;
+  right: -10px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: ${color.rating};
+  background-color: ${color.hoverBtnBg};
   color: ${color.textPrimary};
   display: flex;
   flex-direction: row;

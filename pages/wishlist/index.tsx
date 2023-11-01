@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Wishlist from 'components/store/wishlist';
 import { motion } from 'framer-motion';
 import variants from 'components/store/lib/variants';
+import { devices } from 'components/store/lib/Devices';
 const WishlistPage = () => {
   return (
     <Container
@@ -39,7 +40,6 @@ const Container = styled(motion.div)`
 
 const BasketHeader = styled.div`
   width: 100%;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -67,6 +67,15 @@ const BasketHeader = styled.div`
       }
     }
   }
+  @media ${devices.mobileL} {
+    width: 95%;
+  }
+  @media ${devices.mobileM} {
+    width: 95%;
+  }
+  @media ${devices.mobileS} {
+    width: 95%;
+  }
 `;
 
 const PageTitle = styled.div`
@@ -78,8 +87,9 @@ const PageTitle = styled.div`
   align-items: center;
   padding: 0 30px 0 0;
   h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-family: 'Anticva';
+    font-weight: 100;
   }
 `;
 

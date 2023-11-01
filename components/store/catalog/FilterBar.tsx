@@ -25,8 +25,7 @@ import { FilterOption } from 'ui-kit/FilterCheckbox/types';
 import { convertQueryParams, getFiltersConfig } from './helpers';
 import { devices } from '../lib/Devices';
 import color from '../lib/ui.colors';
-import ArrowRightSVG from '../../../assets/arrowGray.svg';
-import CloseSVG from '../../../assets/close.svg';
+import CloseSVG from '../../../assets/close_black.svg';
 
 type Props = {
   categories: Category[];
@@ -38,6 +37,7 @@ type Props = {
   priceRange: PriceRange;
   expanded: any;
   handleExpantionChange: any;
+  setSelectedCategory: any;
 };
 
 const FilterBar: React.FC<Props> = ({
@@ -50,6 +50,7 @@ const FilterBar: React.FC<Props> = ({
   priceRange,
   expanded,
   handleExpantionChange,
+  setSelectedCategory,
 }) => {
   const router = useRouter();
   const filters = convertQueryParams(router.query);
@@ -65,7 +66,7 @@ const FilterBar: React.FC<Props> = ({
       sizes,
     }),
   );
-  // const [expanded, setExpanded] = useState(false);
+
   const [localFilters, setLocalFilters] = useState(getFilters(filtersConfig));
 
   const handleResetFilters = () => {
@@ -75,10 +76,6 @@ const FilterBar: React.FC<Props> = ({
   const hanldeResetBtnClick = () => {
     handleResetFilters();
   };
-
-  // const handleExpantionChange = () => {
-  //   setExpanded((prev) => !prev);
-  // };
 
   useEffect(() => {
     const filters = convertQueryParams(getQueryParams(window.location.search));
@@ -100,6 +97,16 @@ const FilterBar: React.FC<Props> = ({
     setLocalFilters(getFilters(filtersConfig));
   }, [filtersConfig]);
   // useEffect(() => handleExpantionChange(), []);
+
+  useEffect(() => {
+    const checkedCategory = localFilters[0].options?.find(
+      (checked) => checked.checked,
+    );
+    const selectedCategory = categories.find(
+      (category) => category.url === checkedCategory?.url,
+    );
+    setSelectedCategory(selectedCategory);
+  }, [categories, subCategories, brands, colors, priceRange, tags, sizes]);
 
   return (
     <FilterBarContent expanded={expanded}>
@@ -156,31 +163,12 @@ const FilterBar: React.FC<Props> = ({
                 />
               )),
         )}
-        <ResetButton
-          initial="init"
-          whileInView="animate"
-          custom={0.2}
-          viewport={{ once: true }}
-          variants={variants.fadInSlideUp}
-          onClick={hanldeResetBtnClick}
-        >
-          <span>Сбросить</span>
-          <img src="assets/images/reset-icon.png" />
+        <ResetButton onClick={hanldeResetBtnClick}>
+          <span>Сбросить фильтры</span>
         </ResetButton>
       </FiltersWrapper>
-      {/* {!expanded && (
-        <ShowBtn onClick={handleExpantionChange}>
-          <ArrowRightSVG />
-        </ShowBtn>
-      )} */}
-      <CloseBtn
-        whileInView="hover"
-        whileTap="tap"
-        variants={variants.boxShadow}
-        onClick={handleExpantionChange}
-        title="Закрыть фильтры"
-      >
-        <span>Закрыть фильтры</span>
+      <CloseBtn onClick={handleExpantionChange} title="Закрыть фильтры">
+        <span>Сохранить и Закрыть</span>
         <span>
           <CloseSVG />
         </span>
@@ -190,16 +178,21 @@ const FilterBar: React.FC<Props> = ({
 };
 
 const FilterBarContent = styled.div<any>`
-  min-width: 272px;
-
+  min-width: 250px;
+  max-width: 250px;
+  width: 100%;
+  padding: 20px 0 0 0;
   @media ${devices.laptopS} {
     min-width: 220px;
   }
 
   @media ${devices.mobileL} {
+    max-width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
     position: fixed;
     z-index: 1000;
-    background: #fff;
+    background: ${color.textPrimary};
     top: 0;
     left: 0;
     bottom: 0;
@@ -207,61 +200,101 @@ const FilterBarContent = styled.div<any>`
     display: block;
     transform: translate(-100%, 0);
     transition: all 0.3s;
-    // overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    transform: ${(props) =>
+      !props.expanded ? 'translate(-100%, 0)' : 'translate(0, 0)'};
+  }
+  @media ${devices.mobileM} {
+    max-width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+    position: fixed;
+    z-index: 1000;
+    background: ${color.textPrimary};
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    display: block;
+    transform: translate(-100%, 0);
+    transition: all 0.3s;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    transform: ${(props) =>
+      !props.expanded ? 'translate(-100%, 0)' : 'translate(0, 0)'};
+  }
+  @media ${devices.mobileS} {
+    max-width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+    position: fixed;
+    z-index: 1000;
+    background: ${color.textPrimary};
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    display: block;
+    transform: translate(-100%, 0);
+    transition: all 0.3s;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
     transform: ${(props) =>
       !props.expanded ? 'translate(-100%, 0)' : 'translate(0, 0)'};
   }
 `;
 
 const FiltersWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   @media ${devices.mobileL} {
-    overflow-y: auto;
-    height: 100vh;
+    padding: 20px;
+  }
+  @media ${devices.mobileM} {
+    padding: 20px;
+  }
+  @media ${devices.mobileS} {
     padding: 20px;
   }
 `;
 
-const ResetButton = styled(motion.button)`
-  background: #000;
-  color: #fff;
-  padding: 8.5px 17px;
-  border-radius: 4px;
-  max-width: 142px;
-  display: block;
-  margin: 25px auto 0;
-  cursor: pointer;
-
-  span {
-    font-size 16px;
-    margin-right: 7px;
-  }
-`;
-
-const ShowBtn = styled.button`
-  background: #000;
-  width: 40px;
+const ResetButton = styled.button`
+  width: 100%;
   height: 40px;
-  border-radius: 50%;
   display: flex;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
-  position: absolute;
-  right: -30px;
-  top: calc(50vh - 20px);
-  display: none;
+  align-items: center;
+  border-radius: 3px;
+  background-color: ${color.btnSecondery};
+  cursor: pointer;
+  transition: 300ms;
+  margin-top: 30px;
+  &:hover {
+    background-color: ${color.searchBtnBg};
 
-  svg {
-    transform: scale(2.5);
-    margin-right: -5px;
-    cursor: pointer;
+    transform: scale(1.02);
   }
-
-  @media ${devices.mobileL} {
-    display: flex;
+  &:active {
+    transform: scale(1);
+    background-color: ${color.btnPrimary};
+    color: ${color.textPrimary};
+  }
+  span {
+    font-family: 'Jost';
+    font-size: 1rem;
   }
 `;
 
-const CloseBtn = styled(motion.button)`
+const CloseBtn = styled.button`
   display: none;
   position: absolute;
   right: 20px;
@@ -271,17 +304,30 @@ const CloseBtn = styled(motion.button)`
   justify-content: center;
   align-items: center;
   gap: 10px;
-  background-color: ${color.btnPrimary};
+  background-color: ${color.btnSecondery};
   padding: 10px;
-  border-radius: 15px;
+  border-radius: 3px;
   span {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+  }
+  &:hover {
+    background-color: ${color.btnPrimary};
     color: ${color.textPrimary};
+    transform: scale(1.02);
+  }
+  &:active {
+    transform: scale(1);
   }
   @media ${devices.mobileL} {
+    display: flex;
+  }
+  @media ${devices.mobileM} {
+    display: flex;
+  }
+  @media ${devices.mobileS} {
     display: flex;
   }
 `;

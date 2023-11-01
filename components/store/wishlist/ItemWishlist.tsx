@@ -41,7 +41,7 @@ const ItemWishlist: React.FC<Props> = ({ product, index, wishlist }) => {
             src={`/api/images/${images[0]}`}
             onError={({ currentTarget }) => {
               currentTarget.onerror = null;
-              currentTarget.src = '/assets/images/img_error.png';
+              currentTarget.src = '/img_not_found.png';
             }}
           />
         </ImageWrapper>
@@ -77,7 +77,7 @@ const ItemWishlist: React.FC<Props> = ({ product, index, wishlist }) => {
                 variants={variants.fadeOutSlideOut}
                 className="in-cart"
               >
-                <span>уже в корзине</span>
+                <span>УЖЕ В КОРЗИНЕ</span>
                 <img src="/icons/vector.png" alt="in cart sign" />
               </motion.button>
               <motion.button
@@ -86,7 +86,7 @@ const ItemWishlist: React.FC<Props> = ({ product, index, wishlist }) => {
                 variants={variants.fadeOutSlideOut}
                 className="not-in-cart"
               >
-                <span>в корзину</span>
+                <span>В КОРЗИНУ</span>
               </motion.button>
             </div>
           </div>
@@ -132,6 +132,27 @@ const Item = styled.li`
       cursor: pointer;
     }
   }
+  @media ${devices.laptopS} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
+
+  @media ${devices.mobileL} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
+  @media ${devices.mobileM} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
+  @media ${devices.mobileS} {
+    .item-container {
+      flex-direction: column;
+    }
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -148,8 +169,6 @@ const ImageWrapper = styled.div`
     bottom: 20px;
     left: 20px;
   }
-  @media ${devices.mobileL} {
-  }
 `;
 
 const ItemDetails = styled.div`
@@ -164,7 +183,7 @@ const ItemDetails = styled.div`
     h4 {
       text-align: left;
       font-family: 'Anticva';
-      font-size: 2.5rem;
+      font-size: 1.8rem;
       font-weight: 400;
       &:hover {
         text-decoration: underline 1px;
@@ -243,6 +262,55 @@ const ItemDetails = styled.div`
         flex-direction: row;
         justify-content: center;
         align-items: center;
+      }
+    }
+  }
+  @media ${devices.laptopS} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      .in-cart-sign {
+        width: 100%;
+      }
+    }
+  }
+
+  @media ${devices.mobileL} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      .in-cart-sign {
+        width: 100%;
+      }
+    }
+  }
+  @media ${devices.mobileM} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      .in-cart-sign {
+        width: 100%;
+      }
+    }
+  }
+  @media ${devices.mobileS} {
+    .product-title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .item-action-btns-wrapper {
+      .in-cart-sign {
+        width: 100%;
       }
     }
   }

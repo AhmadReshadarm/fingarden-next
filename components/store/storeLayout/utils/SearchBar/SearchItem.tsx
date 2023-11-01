@@ -88,6 +88,11 @@ const SearchItem: React.FC<Props> = ({ product, index }) => {
           <img
             onClick={handleSearchItemClick(dispatch)}
             src={`/api/images/${images[0]}`}
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null;
+              currentTarget.src = '/img_not_found.png';
+              currentTarget.className = 'image-on-error';
+            }}
             alt={product.name}
           />
         </ItemImageAndBtnWrapper>
@@ -106,19 +111,25 @@ const CardItemContainer = styled(motion.li)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: ${presets.boxShadow};
-  -webkit-box-shadow: ${presets.boxShadow};
-  -moz-box-shadow: ${presets.boxShadow};
+  box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
   border-radius: 10px;
   background-color: ${color.bgPrimary};
   overflow: hidden;
   @media ${devices.laptopS} {
-    width: 220px;
-  }
-
-  @media ${devices.mobileL} {
-    width: 100%;
     min-width: 300px;
+  }
+  @media (min-width: 550px) and (max-width: 768px) {
+    min-width: 225px !important;
+    width: 225px !important;
+  }
+  @media ${devices.mobileL} {
+    min-width: 280px;
+  }
+  @media ${devices.mobileM} {
+    min-width: 250px;
+  }
+  @media ${devices.mobileS} {
+    min-width: 190px;
   }
 `;
 
@@ -126,9 +137,19 @@ const ItemImageAndBtnWrapper = styled.div`
   width: 100%;
   height: 75%;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+  }
+  .image-on-error {
+    width: 200px;
+    height: 200px;
     object-fit: cover;
   }
   .ItemPriceWrapper {
@@ -161,18 +182,6 @@ const ItemActionBtnsWrapper = styled.div`
   align-items: center;
   gap: 10px;
   padding: 0 20px;
-`;
-
-const ItemActionBtnIconsWrapper = styled(motion.span)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 `;
 
 const ItemTitelWrapper = styled.span`

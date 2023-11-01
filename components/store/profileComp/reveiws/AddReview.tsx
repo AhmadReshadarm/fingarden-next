@@ -13,10 +13,10 @@ import Delete from '../../../../assets/delete.svg';
 import Share from '../../../../assets/shareWhite.svg';
 import CloseSVG from '../../../../assets/close_black.svg';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { updateReview } from 'redux/slicers/store/productInfoSlicer';
+import { updateReview } from 'redux/slicers/store/profileSlicer';
 import { AppDispatch } from 'redux/store';
 import { clearImageList } from 'redux/slicers/imagesSlicer';
-import { getUserInfo } from 'common/helpers/jwtToken.helpers';
+// import { getUserInfo } from 'common/helpers/jwtToken.helpers';
 import { Review } from 'swagger/services';
 import { fetchUserReviews } from 'redux/slicers/store/profileSlicer';
 
@@ -28,7 +28,7 @@ const AddReview = ({ setOpen, review }) => {
   const [success, setSuccess] = useState('');
   const inputRef = useRef<any>(null);
   const imageList = useAppSelector<any[]>((state) => state.images.imageList);
-  const user = getUserInfo();
+  // const user = getUserInfo();
 
   const handleClick = (evt: any) => {
     evt.preventDefault();
@@ -53,11 +53,11 @@ const AddReview = ({ setOpen, review }) => {
         ...review,
         rating,
         text,
-        images: images.join(', '),
+        // images: images.join(', '),
       };
       await dispatch(updateReview({ reviewId: review.id!, payload }));
       setSuccess('Ваш отзыв опубликован');
-      dispatch(fetchUserReviews(user?.id!));
+      // dispatch(fetchUserReviews(user?.id!));
       setTimeout(() => {
         setSuccess('');
         setOpen(false);
@@ -102,7 +102,7 @@ const AddReview = ({ setOpen, review }) => {
             defaultValue=""
             onChange={(e) => setInput(e.target.value)}
           />
-          <span>Пожалуйста, загрузите изображения товара</span>
+          {/* <span>Пожалуйста, загрузите изображения товара</span>
           <input
             ref={inputRef}
             type="file"
@@ -120,7 +120,7 @@ const AddReview = ({ setOpen, review }) => {
             <span>
               <Upload />
             </span>
-          </motion.button>
+          </motion.button> */}
           <motion.button
             whileHover={{ boxShadow: '0px 0px 4px 2px rgba(0, 0, 0, 0.25)' }}
             whileTap={{ boxShadow: '0px 0px 0px 0px #ffffff' }}
@@ -245,6 +245,24 @@ const AddReviewContainer = styled(motion.div)`
   }
   @media ${devices.mobileL} {
     width: 90%;
+    .close-btn {
+      top: -20px;
+      right: 10px;
+    }
+  }
+  @media ${devices.mobileM} {
+    width: 90%;
+    .close-btn {
+      top: -20px;
+      right: 10px;
+    }
+  }
+  @media ${devices.mobileS} {
+    width: 90%;
+    .close-btn {
+      top: -20px;
+      right: 10px;
+    }
   }
 `;
 

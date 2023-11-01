@@ -11,31 +11,35 @@ const Footer = () => {
     <Container>
       <Wrapper>
         <Link href="/copyright-terms">
-          <a>
-            <span>© {copyRighYear} «Wuluxe». Все права защищены.</span>
-          </a>
+          <span>© {copyRighYear} «Fingarden». Все права защищены.</span>
         </Link>
         <SocialWrapper>
-          <Link href="https://vk.com/wuluxe">
-            <a target="_blank" rel="noopener noreferrer">
-              <span>
-                <VKSVG />
-              </span>
-            </a>
+          <Link
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://vk.com/fingarden"
+          >
+            <span>
+              <VKSVG />
+            </span>
           </Link>
-          <Link href="https://t.me/wuluxe">
-            <a target="_blank" rel="noopener noreferrer">
-              <span>
-                <TelegraSVG />
-              </span>
-            </a>
+          <Link
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://t.me/fingarden"
+          >
+            <span>
+              <TelegraSVG />
+            </span>
           </Link>
-          <Link href="https://wa.me/+79855675947">
-            <a target="_blank" rel="noopener noreferrer">
-              <span>
-                <WhatsappSVG />
-              </span>
-            </a>
+          <Link
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://wa.me/+79313539004"
+          >
+            <span>
+              <WhatsappSVG />
+            </span>
           </Link>
         </SocialWrapper>
       </Wrapper>
@@ -63,7 +67,7 @@ const Wrapper = styled.div`
   span {
     color: ${color.textPrimary};
     &:hover {
-      color: ${color.yellow};
+      color: ${color.hoverBtnBg};
     }
   }
 `;

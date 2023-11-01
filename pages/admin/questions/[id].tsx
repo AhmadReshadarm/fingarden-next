@@ -1,6 +1,5 @@
 import AdminLayout from 'components/admin/adminLayout/layout';
 import { devices } from 'components/store/lib/Devices';
-import AskQuastion from 'components/store/product/reviewsAndQuastions/quastions/askQuastion';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
@@ -8,7 +7,6 @@ import { fetchProduct } from 'redux/slicers/store/productInfoSlicer';
 import { TProductInfoState } from 'redux/types';
 import styled from 'styled-components';
 import QuastionList from '../../../components/store/product/reviewsAndQuastions/quastions/Quastions';
-import { getUserInfo } from 'common/helpers/jwtToken.helpers';
 
 const ProductQuestionsPage = () => {
   const { product } = useAppSelector<TProductInfoState>(

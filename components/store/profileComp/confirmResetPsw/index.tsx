@@ -4,15 +4,16 @@ import color from 'components/store/lib/ui.colors';
 import variants from 'components/store/lib/variants';
 import { devices } from 'components/store/lib/Devices';
 import isEmpty from 'validator/lib/isEmpty';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { InputsTooltip } from 'components/store/checkout/helpers';
 import PswShow from '../../../../assets/pswshow.svg';
 import PswHide from '../../../../assets/pswhide.svg';
 import { handleResetClick } from './helpers';
 import { useRouter } from 'next/router';
 import { useAppDispatch } from 'redux/hooks';
+import { openErrorNotification } from 'common/helpers';
+import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
 const ConfirmResetPsw = () => {
-  const [serverResponse, setServerResponse] = useState(undefined);
   const [psw, setPsw] = useState('');
   const [repeatPsw, setRepeatPsw] = useState('');
   const [pswErr, setPswErr] = useState(false);
@@ -22,62 +23,13 @@ const ConfirmResetPsw = () => {
   const [secret, setSecret] = useState(0);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (isCap) openErrorNotification('Включен Капс лок (Caps Lock on)');
+    if (!isCap) openSuccessNotification('Капс лок выключен (Caps Lock off)');
+  }, [isCap]);
   return (
     <Wrapper>
       <Title>Сбросить пароль</Title>
-      <ErrorsWrapper>
-        {isCap ? <ServerErrResponses>Капслок включен</ServerErrResponses> : ''}
-        {repeatPsw !== psw ? (
-          <ServerErrResponses>пароль не подходит</ServerErrResponses>
-        ) : (
-          ''
-        )}
-        {serverResponse == 500 ? (
-          <ServerErrResponses>
-            Нам очень жаль 😔, что-то пошло не так с нашим сервером
-          </ServerErrResponses>
-        ) : (
-          ''
-        )}
-        {serverResponse == 429 ? (
-          <ServerErrResponses>
-            Слишком много запросов 🚦, повторите попытку через 24 часа.
-          </ServerErrResponses>
-        ) : (
-          ''
-        )}
-        {serverResponse == 401 ? (
-          <ServerErrResponses>
-            Неавторизованный: токен не найден
-          </ServerErrResponses>
-        ) : (
-          ''
-        )}
-        {serverResponse == 403 ? (
-          <ServerErrResponses>
-            Токен просрочен или недействителен
-          </ServerErrResponses>
-        ) : (
-          ''
-        )}
-        {serverResponse == 409 ? (
-          <ServerErrResponses>
-            Нельзя использовать тот же пароль, что и предыдущий
-          </ServerErrResponses>
-        ) : (
-          ''
-        )}
-        {serverResponse == 408 ? (
-          <ServerErrResponses>Срок действия токена истек</ServerErrResponses>
-        ) : (
-          ''
-        )}
-        {serverResponse == 200 ? (
-          <ServerSuccessResponse>Ваш пароль был изменен </ServerSuccessResponse>
-        ) : (
-          ''
-        )}
-      </ErrorsWrapper>
       <AuthInputsWrapper>
         <label htmlFor="signin-psw">
           <b>
@@ -98,20 +50,19 @@ const ConfirmResetPsw = () => {
           </InputsTooltip>
         </label>
         <AuthInput
-          whileHover="hover"
-          whileTap="tap"
-          variants={variants.boxShadow}
           placeholder={pswErr ? 'Пароль не может быть пустым' : 'Пароль'}
           type={confidentiality}
           id="signin-psw"
           value={psw}
           style={{
-            border: `solid 1px ${pswErr ? color.hover : color.btnPrimary}`,
+            border:
+              isEmpty(repeatPsw) && repeatErr
+                ? `solid 1px ${color.hover}`
+                : 'none',
           }}
           onChange={(e) => {
             setPsw(e.target.value);
             setPswErr(isEmpty(e.target.value) ? true : false);
-            setServerResponse(undefined);
           }}
           onKeyUp={(e) => setCap(e.getModifierState('CapsLock') ? true : false)}
         />
@@ -165,9 +116,6 @@ const ConfirmResetPsw = () => {
           </InputsTooltip>
         </label>
         <AuthInput
-          whileHover="hover"
-          whileTap="tap"
-          variants={variants.boxShadow}
           placeholder={
             isEmpty(repeatPsw) && repeatErr
               ? 'Пароль не может быть пустым'
@@ -177,14 +125,14 @@ const ConfirmResetPsw = () => {
           id="signup-psw-repeat"
           value={repeatPsw}
           style={{
-            border: `solid 1px ${
-              isEmpty(repeatPsw) && repeatErr ? color.hover : color.btnPrimary
-            }`,
+            border:
+              isEmpty(repeatPsw) && repeatErr
+                ? `solid 1px ${color.hover}`
+                : `none`,
           }}
           onChange={(e) => {
             setRepeatPsw(e.target.value);
             setrepeatErr(isEmpty(e.target.value) ? true : false);
-            setServerResponse(undefined);
           }}
           onKeyUp={(e) => setCap(e.getModifierState('CapsLock') ? true : false)}
         />
@@ -216,9 +164,6 @@ const ConfirmResetPsw = () => {
         </ConfidentialityWrapper>
       </AuthInputsWrapper>
       <ActionBtn
-        whileHover="hover"
-        whileTap="tap"
-        variants={variants.boxShadow}
         style={{
           backgroundColor:
             isEmpty(psw) || isEmpty(repeatPsw) || psw != repeatPsw
@@ -230,7 +175,7 @@ const ConfirmResetPsw = () => {
         }
         onClick={(e) => {
           e.preventDefault();
-          handleResetClick(psw, router, setServerResponse, dispatch);
+          handleResetClick(psw, router, dispatch);
         }}
       >
         Изменить пароль
@@ -240,45 +185,25 @@ const ConfirmResetPsw = () => {
 };
 
 const Title = styled.h2`
-  font-family: 'intro';
   font-size: 1.5rem;
 `;
 
-const ServerErrResponses = styled.span`
-  color: ${color.hover};
-  font-size: 1.2rem;
-  text-align: start;
-`;
-const ServerSuccessResponse = styled.span`
-  color: ${color.ok};
-  font-size: 1.2rem;
-  text-align: start;
-  a {
-    color: ${color.ok};
-    &:hover {
-      color: ${color.btnPrimary};
-    }
-  }
-`;
-
-const Wrapper = styled.form`
-width:500px;
-display:flex;
-flex-direction:column;
-justify-content:flex-start
-align-items:flex-start;
-gap:30px;
- @media ${devices.mobileL} {
+const Wrapper = styled.div`
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  @media ${devices.mobileL} {
     width: 100%;
   }
-`;
-
-const ErrorsWrapper = styled.div`
-width:100%;
-display:flex;
-flex-direction:column;
-justify-content:flex-start
-align-items:flex-start;
+  @media ${devices.mobileM} {
+    width: 100%;
+  }
+  @media ${devices.mobileS} {
+    width: 100%;
+  }
 `;
 
 const AuthInputsWrapper = styled(motion.div)`
@@ -296,9 +221,7 @@ const AuthInputsWrapper = styled(motion.div)`
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    span {
-      font-family: 'intro';
-    }
+
     .tool-tip {
       width: 18px;
       height: 18px;
@@ -314,15 +237,24 @@ const AuthInputsWrapper = styled(motion.div)`
       color: ${color.hover};
     }
   }
+  @media ${devices.mobileL} {
+    width: 90%;
+  }
+  @media ${devices.mobileM} {
+    width: 90%;
+  }
+  @media ${devices.mobileS} {
+    width: 90%;
+  }
 `;
 
-const AuthInput = styled(motion.input)`
+const AuthInput = styled.input`
   width: 100%;
   height: 50px;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0 10px;
   font-size: 1rem;
-  font-weight: 700;
+  box-shadow: 0px 5px 10px 0px ${color.boxShadowBtn};
 `;
 const ConfidentialityWrapper = styled.div`
   width: 40px;
@@ -354,13 +286,40 @@ const ConfidentialityWrapper = styled.div`
   }
 `;
 
-const ActionBtn = styled(motion.button)`
-  width: 100%;
-  height: 50px;
-  background-color: ${color.btnPrimary};
+const ActionBtn = styled.button`
+  width: 350px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  background-color: ${color.btnSecondery};
   color: ${color.textPrimary};
-  border-radius: 10px;
-  font-family: 'intro';
+  cursor: pointer;
+  transition: 300ms;
+  &:hover {
+    background-color: ${color.btnPrimary};
+    color: ${color.textPrimary};
+    transform: scale(1.02);
+  }
+  &:active {
+    transform: scale(1);
+  }
+  span {
+    font-size: 1rem;
+    font-weight: 300;
+    color: ${color.textPrimary};
+  }
+  @media ${devices.mobileL} {
+    width: 90%;
+  }
+  @media ${devices.mobileM} {
+    width: 90%;
+  }
+  @media ${devices.mobileS} {
+    width: 90%;
+  }
 `;
 
 export default ConfirmResetPsw;

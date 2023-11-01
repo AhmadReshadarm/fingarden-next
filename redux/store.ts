@@ -20,13 +20,15 @@ import globalSlicer from './slicers/store/globalSlicer';
 import checkoutsReducer from './slicers/checkoutsSlicer';
 import cartSlicer from './slicers/store/cartSlicer';
 import catalogSlicer from './slicers/store/catalogSlicer';
-import analyticsReducer from './slicers/analyticsSlicer';
+// import analyticsReducer from './slicers/analyticsSlicer';
 import productInfoSlicer from './slicers/store/productInfoSlicer';
 import homePageSlicer from './slicers/store/homePageSlicer';
 import bannersReducer from './slicers/bannersSlicer';
 import storeCheckoutSlicer from './slicers/store/checkoutSlicer';
 import wishlistSlicer from './slicers/store/wishlistSlicer';
 import profileSlicer from './slicers/store/profileSlicer';
+import newsSlicer from './slicers/newsSlicer';
+import subscriberSlicer from './slicers/subscriberSlicer';
 
 const combinedReducer = combineReducers({
   categories: categoriesReducer,
@@ -40,8 +42,10 @@ const combinedReducer = combineReducers({
   sizes: sizesReducer,
   reviews: reviewsReducer,
   checkouts: checkoutsReducer,
-  analytics: analyticsReducer,
+  // analytics: analyticsReducer,
   banners: bannersReducer,
+  newsPosts: newsSlicer,
+  subscribers: subscriberSlicer,
 
   global: globalSlicer,
   cart: cartSlicer,

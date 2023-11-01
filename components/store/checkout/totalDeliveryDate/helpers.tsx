@@ -65,29 +65,17 @@ const getDiscount = (cart: Basket | null) => {
   return oldPrice - totalAmount;
 };
 
-const getTotalPrice = (
-  cart: Basket | null,
-  withDliver: boolean | any,
-  promoCode: any,
-) => {
+const getTotalPrice = (cart: Basket | null, withDliver: boolean | any) => {
   const totalAmount = cart?.orderProducts?.reduce((accum, item) => {
     return accum + Number(item.qty) * Number(item.productVariant?.price);
   }, 0)!;
 
-  if (promoCode === 'wuluxeosen2022' && !withDliver) {
-    return totalAmount - (10 * totalAmount) / 100;
-  }
-
-  if (promoCode === 'wuluxeosen2022' && withDliver) {
-    return totalAmount + 150 - (10 * totalAmount) / 100;
-  }
-
-  if (!withDliver) {
-    return totalAmount;
-  }
-  if (withDliver) {
-    return totalAmount + 150;
-  }
+  // if (!withDliver) {
+  return totalAmount;
+  // }
+  // if (withDliver) {
+  //   return totalAmount + 150;
+  // }
 };
 
 const getTotalPriceSuperUser = (

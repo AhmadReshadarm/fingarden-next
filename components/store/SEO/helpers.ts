@@ -1,15 +1,15 @@
 const settings = {
   graphql: {
-    uri: 'http://www.wuluxe.ru',
+    uri: 'http://www.fingarden.ru',
   },
   meta: {
-    rootUrl: 'http://www.wuluxe.ru',
-    title: 'Wuluxe',
-    description: 'Wuluxe, где вы найдете удовольствие',
+    rootUrl: 'http://www.fingarden.ru',
+    title: 'Fingarden',
+    description: 'Fingarden, где вы найдете удовольствие',
     social: {
       graphic:
         'https://cheatcode-assets.s3.amazonaws.com/default-social-graphic.png',
-      twitter: '@wuluxe',
+      twitter: '@fingarden',
     },
   },
   routes: {

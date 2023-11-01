@@ -27,7 +27,6 @@ const DetailsColumnWrapper = styled.div`
     gap: 10px;
     padding: 5px;
     span {
-      font-family: 'intro';
       @media ${devices.mobileL} {
         font-size: 0.6rem;
       }
@@ -56,6 +55,9 @@ const DetailsColumnWrapper = styled.div`
         font-size: 14px;
       }
     }
+  }
+  .MuiOutlinedInput-input {
+    overflow: hidden;
   }
 `;
 

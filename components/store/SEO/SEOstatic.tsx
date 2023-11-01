@@ -56,11 +56,11 @@ const socialTags = ({
 };
 
 const SEOstatic = ({ page, image }) => {
-  const url = `https://wuluxe.ru${page.url}`;
+  const url = `https://fingarden.ru${page.url}`;
 
   return (
     <Head>
-      <title>{page?.name} | Wuluxe</title>
+      <title>{page?.name} | Fingarden</title>
       <meta name="robots" content="index, follow" />
       <meta name="title" content={page?.name} />
       <meta name="description" content={page?.desc} />
