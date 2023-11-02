@@ -179,6 +179,7 @@ type TCartState = {
   cart: Basket | null;
   variant: ProductVariant | null;
   productSize: string;
+  isOneClickBuy: boolean;
   loading: boolean;
   countLoading: boolean;
 };
@@ -295,6 +296,7 @@ type TDeliveryInfo = {
   userId?: string;
   receiverName?: string;
   receiverPhone?: string;
+  receiverEmail?: string;
   address?: string;
   roomOrOffice?: string;
   door?: string;

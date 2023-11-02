@@ -9,10 +9,14 @@ import ItemCounter from 'ui-kit/ItemCounter';
 import React from 'react';
 import Link from 'next/link';
 import { devices } from 'components/store/lib/Devices';
-import { useAppSelector } from 'redux/hooks';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { TCartState } from 'redux/types';
 import { openErrorNotification } from 'common/helpers';
-import { clearVariant, clearproductSize } from 'redux/slicers/store/cartSlicer';
+import {
+  clearVariant,
+  clearproductSize,
+  setOneClickBy,
+} from 'redux/slicers/store/cartSlicer';
 type Props = {
   orderProduct?: OrderProduct;
   isInCart: boolean;
@@ -26,11 +30,13 @@ const ActionBtns: React.FC<Props> = ({
   onCartBtnClick,
   onCountChange,
 }) => {
+  const dispatch = useAppDispatch();
   const { variant, productSize } = useAppSelector<TCartState>(
     (state) => state.cart,
   );
 
   const handleAddToCartClick = () => {
+    dispatch(setOneClickBy(false));
     if (variant == null) openErrorNotification('Выберите цвет');
     if (productSize == '') openErrorNotification('Выберите размер');
     if (variant !== null && productSize !== '' && !isInCart) {
@@ -43,6 +49,7 @@ const ActionBtns: React.FC<Props> = ({
   };
 
   const handleOneClickBuy = (evt) => {
+    dispatch(setOneClickBy(true));
     if (variant == null || productSize == '') {
       evt.preventDefault();
     }

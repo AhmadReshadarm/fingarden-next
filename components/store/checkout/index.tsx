@@ -4,7 +4,7 @@ import Header from './Header';
 import UserData from './userdata';
 import TotalDeleveryDate from './totalDeliveryDate';
 import { useAppSelector } from 'redux/hooks';
-import { TAuthState } from 'redux/types';
+import { TAuthState, TCartState } from 'redux/types';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import color from '../lib/ui.colors';
@@ -15,6 +15,7 @@ import { devices } from '../lib/Devices';
 import Loading from 'ui-kit/Loading';
 const CheckoutContent = () => {
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
+  const { isOneClickBuy } = useAppSelector<TCartState>((state) => state.cart);
   const [hasAddress, setHasAddress] = useState(false);
   const [backToFinal, setBacktoFinal] = useState(false);
   const [direction, authType, paginate] = UsePagination();
@@ -25,6 +26,11 @@ const CheckoutContent = () => {
       setStep(1);
     }
   }, [user]);
+  useEffect(() => {
+    if (isOneClickBuy) {
+      setStep(1);
+    }
+  }, [isOneClickBuy]);
 
   return (
     <Content>
@@ -36,7 +42,7 @@ const CheckoutContent = () => {
         ''
       )}
       <Header step={step} setStep={setStep} />
-      {step == 0 && !user ? (
+      {step == 0 && !user && !isOneClickBuy ? (
         <Contianer>
           <Wrapper variants={variants.fadeInReveal}>
             <AuthContent>
@@ -48,7 +54,8 @@ const CheckoutContent = () => {
             </AuthContent>
           </Wrapper>
         </Contianer>
-      ) : step == 1 && user && !hasAddress ? (
+      ) : (step == 1 && isOneClickBuy && !hasAddress) ||
+        (step == 1 && user && !hasAddress) ? (
         <UserData
           setStep={setStep}
           backToFinal={backToFinal}

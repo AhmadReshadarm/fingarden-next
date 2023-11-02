@@ -71,6 +71,7 @@ const initialState: TCartState = {
   cart: null,
   variant: null,
   productSize: '',
+  isOneClickBuy: false,
   loading: false,
   countLoading: false,
 };
@@ -90,6 +91,9 @@ const cartSlicer = createSlice({
     },
     clearproductSize(state) {
       state.productSize = initialState.productSize;
+    },
+    setOneClickBy(state, action) {
+      state.isOneClickBuy = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -135,7 +139,12 @@ const cartSlicer = createSlice({
   },
 });
 
-export const { setVariant, clearVariant, setproductSize, clearproductSize } =
-  cartSlicer.actions;
+export const {
+  setVariant,
+  clearVariant,
+  setproductSize,
+  setOneClickBy,
+  clearproductSize,
+} = cartSlicer.actions;
 
 export default cartSlicer.reducer;

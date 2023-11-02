@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import isEmpty from 'validator/lib/isEmpty';
+import isEmail from 'validator/lib/isEmail';
 import color from '../../lib/ui.colors';
 import variants from '../../lib/variants';
 import MapContainer from './MapContainer';
@@ -13,7 +14,7 @@ import AddressDetails from './AddressDetails';
 import ReciverData from './ReciverData';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { setDeliveryInfo } from 'redux/slicers/store/checkoutSlicer';
-import { TStoreCheckoutState } from 'redux/types';
+import { TStoreCheckoutState, TCartState } from 'redux/types';
 import { devices } from 'components/store/lib/Devices';
 import { fetchCheckouts } from 'redux/slicers/store/checkoutSlicer';
 import { initialStateAdress } from './constant';
@@ -24,6 +25,7 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
   const { deliveryInfo } = useAppSelector<TStoreCheckoutState>(
     (state) => state.storeCheckout,
   );
+  const { isOneClickBuy } = useAppSelector<TCartState>((state) => state.cart);
 
   const [address, setAddress] = useState('');
   const mapRef: any = useRef(null);
@@ -52,6 +54,8 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
   const [rignBell, setRingBell] = useState('');
   const [receiverName, setFullname] = useState('');
   const [receiverPhone, setPhone] = useState('+7');
+  const [emailWithoutRegister, setEmailWithoutRegister] = useState('');
+  const [submitDisabled, setSubmitDisabled] = useState(true);
 
   const handleClickBack = () => {
     setStep(2);
@@ -63,6 +67,7 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
       address,
       receiverName,
       receiverPhone,
+      receiverEmail: emailWithoutRegister,
       floor,
       door,
       roomOrOffice,
@@ -82,12 +87,28 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
     setRingBell(deliveryInfo?.rignBell ?? '');
     setFullname(deliveryInfo?.receiverName ?? '');
     setPhone(deliveryInfo?.receiverPhone ?? '');
+    setEmailWithoutRegister(deliveryInfo?.receiverEmail ?? '');
     setAddress(deliveryInfo?.address ?? '');
   }, [deliveryInfo]);
 
   useEffect(() => {
     dispatch(fetchCheckouts());
   }, []);
+
+  useEffect(() => {
+    isEmpty(address) || isEmpty(receiverName) || isEmpty(receiverPhone)
+      ? setSubmitDisabled(true)
+      : setSubmitDisabled(false);
+    if (isOneClickBuy) {
+      isEmpty(address) ||
+      isEmpty(receiverName) ||
+      isEmpty(receiverPhone) ||
+      !isEmail(emailWithoutRegister) ||
+      isEmpty(emailWithoutRegister)
+        ? setSubmitDisabled(true)
+        : setSubmitDisabled(false);
+    }
+  }, [address, receiverName, receiverPhone, emailWithoutRegister]);
 
   return (
     <Container>
@@ -113,7 +134,8 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
         <FormWrapper>
           <h3>Куда доставить заказ?</h3>
           <span className="sub-addres-info">
-            Укажите адрес на карте или используйте поиск
+            Укажите адрес на карте или нажмите кнопку "Определить
+            местоположение"
           </span>
           <AutoFill
             address={address}
@@ -149,24 +171,13 @@ const UserData = ({ setStep, backToFinal, setHasAddress }) => {
             setFullname={setFullname}
             phone={receiverPhone}
             setPhone={setPhone}
+            emailWithoutRegister={emailWithoutRegister}
+            setEmailWithoutRegister={setEmailWithoutRegister}
           />
           <ActionBtns
-            bgcolor={
-              isEmpty(address) ||
-              isEmpty(zipCode) ||
-              isEmpty(receiverName) ||
-              isEmpty(receiverPhone)
-                ? color.textSecondary
-                : color.btnSecondery
-            }
-            disabled={
-              isEmpty(address) ||
-              isEmpty(zipCode) ||
-              isEmpty(receiverName) ||
-              isEmpty(receiverPhone)
-                ? true
-                : false
-            }
+            bgcolor={submitDisabled ? color.textSecondary : color.btnSecondery}
+            // emailWithoutRegister
+            disabled={submitDisabled}
             onClick={handleClickSave}
           >
             Сохранить и продолжить

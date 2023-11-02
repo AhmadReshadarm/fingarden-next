@@ -5,16 +5,20 @@ import { motion } from 'framer-motion';
 import { getTotalPrice } from './helpers';
 import color from 'components/store/lib/ui.colors';
 import variants from '../lib/variants';
-import { useAppSelector } from 'redux/hooks';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { TAuthState } from 'redux/types';
 import { devices } from '../lib/Devices';
-
+import { setOneClickBy } from 'redux/slicers/store/cartSlicer';
 type Props = {
   cart: Basket | null;
 };
 
 const CartFooter: React.FC<Props> = ({ cart }) => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
+  const handleGoToCart = () => {
+    dispatch(setOneClickBy(false));
+  };
   return (
     <Wrapper>
       <CartTotalPrice>
@@ -37,6 +41,7 @@ const CartFooter: React.FC<Props> = ({ cart }) => {
             whileHover="hover"
             whileTap="tap"
             variants={variants.boxShadow}
+            onClick={handleGoToCart}
           >
             сохранить изменения и продолжить
           </CheckoutBtn>

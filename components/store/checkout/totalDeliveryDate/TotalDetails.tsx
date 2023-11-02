@@ -5,7 +5,7 @@ import color from '../../lib/ui.colors';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { TCartState, TStoreCheckoutState } from 'redux/types';
-import { getDiscount, getTotalPrice } from './helpers';
+import { getDiscount, getTotalPrice, generateInvoiceTemplet } from './helpers';
 import { formatNumber } from 'common/helpers/number.helper';
 import { NextRouter, useRouter } from 'next/router';
 import { devices } from 'components/store/lib/Devices';
@@ -19,13 +19,58 @@ import DropDowns from './DropDowns';
 const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { cart } = useAppSelector<TCartState>((state) => state.cart);
+  const { cart, isOneClickBuy } = useAppSelector<TCartState>(
+    (state) => state.cart,
+  );
   const { deliveryInfo } = useAppSelector<TStoreCheckoutState>(
     (state) => state.storeCheckout,
   );
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
   const [withDelivery, setWithDelivery] = useState(true);
   const [totalUI, setTotalUI] = useState(getTotalPrice(cart, withDelivery));
+  const handleCheckoutWithoutRegister = (router: NextRouter) => async () => {
+    setLoading(true);
+    const payload = {
+      receiverName: deliveryInfo?.receiverName,
+      receiverPhone: deliveryInfo?.receiverPhone,
+      receiverEmail: deliveryInfo?.receiverEmail,
+      address: deliveryInfo?.address,
+      roomOrOffice: deliveryInfo?.roomOrOffice,
+      door: deliveryInfo?.door,
+      floor: deliveryInfo?.floor,
+      rignBell: deliveryInfo?.rignBell,
+      zipCode: deliveryInfo?.zipCode,
+      comment,
+      cart,
+    };
+
+    const generatedHtml = generateInvoiceTemplet(payload);
+
+    if (deliveryInfo && payload && cart) {
+      try {
+        await CheckoutService.createCheckoutWithoutRegister({
+          body: {
+            to: payload.receiverEmail,
+            subject: `Заказ ${payload.receiverName}`,
+            html: `${generatedHtml}`,
+          },
+        });
+        await dispatch(createCart());
+
+        const basketId = localStorage.getItem('basketId') ?? '';
+
+        dispatch(fetchCart(basketId));
+        openSuccessNotification('Ваш Заказ успешно');
+
+        router.push('/orders');
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+        openErrorNotification('Ваш Заказ не прошел, Попробуйте еще раз');
+      }
+    }
+  };
   const handlePayClick = (router: NextRouter) => async () => {
     setLoading(true);
     const payload = {
@@ -68,6 +113,8 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
         router.push('/orders');
         setLoading(false);
       } catch (error) {
+        console.log(error);
+
         setLoading(false);
         openErrorNotification('Ваш Заказ не прошел');
       }
@@ -87,7 +134,11 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
           <ItemColumn>
             <span>
               <button
-                onClick={handlePayClick(router)}
+                onClick={
+                  isOneClickBuy
+                    ? handleCheckoutWithoutRegister(router)
+                    : handlePayClick(router)
+                }
                 className="checkout-action-btn"
               >
                 Завершить мой заказ

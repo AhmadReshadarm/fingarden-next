@@ -16,6 +16,7 @@ import { PopupDisplay } from '../../constants';
 import { TCartState } from 'redux/types';
 import { getTotalPrice } from 'components/store/cart/helpers';
 import { TAuthState } from 'redux/types';
+import { setOneClickBy } from 'redux/slicers/store/cartSlicer';
 
 const HeaderCart = () => {
   const dispatch = useAppDispatch();
@@ -43,7 +44,9 @@ const HeaderCart = () => {
   );
   const { cart } = useAppSelector<TCartState>((state) => state.cart);
   const { user } = useAppSelector<TAuthState>((state) => state.auth);
-
+  const handleGoToCart = () => {
+    dispatch(setOneClickBy(false));
+  };
   return (
     <>
       <div style={{ position: 'relative' }}>
@@ -103,7 +106,10 @@ const HeaderCart = () => {
                   whileHover="hover"
                   whileTap="tap"
                   variants={variants.boxShadow}
-                  onClick={handleMenuState(setIsOpened, setDisplay)}
+                  onClick={() => {
+                    handleGoToCart();
+                    handleMenuState(setIsOpened, setDisplay);
+                  }}
                 >
                   Перейти к оформлению
                 </ActionBtns>

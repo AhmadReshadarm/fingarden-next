@@ -4,9 +4,19 @@ import React from 'react';
 import { DetailsRowWrapper, DetailsColumnWrapper } from './common';
 import InputMask from 'react-input-mask';
 import styled from 'styled-components';
+import { useAppSelector } from 'redux/hooks';
+import { TCartState } from 'redux/types';
 
 const ReciverData = (props: any) => {
-  const { fullName, setFullname, phone, setPhone } = props;
+  const { isOneClickBuy } = useAppSelector<TCartState>((state) => state.cart);
+  const {
+    fullName,
+    setFullname,
+    phone,
+    setPhone,
+    emailWithoutRegister,
+    setEmailWithoutRegister,
+  } = props;
   return (
     <>
       <h3>Данные получателя</h3>
@@ -84,6 +94,42 @@ const ReciverData = (props: any) => {
           </InputMask>
         </DetailsColumnWrapper>
       </DetailsRowWrapper>
+      {isOneClickBuy ? (
+        <DetailsRowWrapper justifycontent="center">
+          <DetailsColumnWrapper>
+            <label htmlFor="address-reciver-email">
+              <b>
+                <span>Адрес электронной почты</span>
+                <span className="required">*</span>
+              </b>
+              <InputsTooltip
+                enterTouchDelay={0}
+                leaveTouchDelay={5000}
+                key="address-reciver-email-tip"
+                title={
+                  <React.Fragment>
+                    <span>Это поле обязательно к заполнению</span>
+                  </React.Fragment>
+                }
+              >
+                <span className="tool-tip">?</span>
+              </InputsTooltip>
+            </label>
+            <TextField
+              id="address-reciver-email"
+              fullWidth
+              label="Адрес электронной почты"
+              multiline
+              rows={1}
+              value={emailWithoutRegister}
+              defaultValue=""
+              onChange={(e) => setEmailWithoutRegister(e.target.value)}
+            />
+          </DetailsColumnWrapper>
+        </DetailsRowWrapper>
+      ) : (
+        ''
+      )}
     </>
   );
 };

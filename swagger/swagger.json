@@ -4196,6 +4196,46 @@
         }
       }
     },
+    "/checkouts/direct": {
+      "post": {
+        "tags": ["checkout"],
+        "summary": "Create a checkout",
+        "description": "",
+        "operationId": "createCheckoutWithoutRegister",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/EmailTemplateForOneDTO"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Checkout request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/checkouts/all": {
       "get": {
         "tags": ["checkoutAll"],
