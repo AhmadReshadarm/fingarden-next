@@ -65,9 +65,6 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
     fetchDataCartProducts();
 
     const fetchDataWishlistProducts = async () => {
-      if (!wishlistId) {
-        dispatch(createWishlist());
-      }
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
