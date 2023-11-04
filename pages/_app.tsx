@@ -35,9 +35,10 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
     if (!basketId) {
       dispatch(createCart());
     }
-    // else {
-    //   dispatch(fetchCart(basketId));
-    // }
+    if (!wishlistId) {
+      dispatch(createWishlist());
+    }
+
     const fetchDataCartProducts = async () => {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -45,7 +46,7 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
       await sleep(500);
       const createdCardId = localStorage.getItem('basketId');
       if (createdCardId) {
-        const fetched = await dispatch(fetchCart(createdCardId));
+        dispatch(fetchCart(createdCardId));
       }
       if (!createdCardId) {
         fetchDataCartProducts();
@@ -53,12 +54,6 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
     };
     fetchDataCartProducts();
 
-    if (!wishlistId) {
-      dispatch(createWishlist());
-    }
-    // else {
-    //   dispatch(fetchWishlistProducts(wishlistId));
-    // }
     const fetchDataWishlistProducts = async () => {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -68,7 +63,7 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
       await sleep(500);
       const createdWishlistId = localStorage.getItem('wishlistId');
       if (createdWishlistId) {
-        await dispatch(fetchWishlistProducts(createdWishlistId));
+        dispatch(fetchWishlistProducts(createdWishlistId));
       }
       if (!createdWishlistId) {
         fetchDataWishlistProducts();
