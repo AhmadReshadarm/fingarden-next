@@ -99,11 +99,13 @@ const Selection = styled.div<{
     border-radius: 5px;
     padding: 8px;
     font-size: 1rem;
+    text-align: center;
     ${(props) => {
       if (props.selected) {
         return css`
           background: ${color.selected};
           color: ${color.btnPrimary};
+          text-align: center;
         `;
       }
     }}
