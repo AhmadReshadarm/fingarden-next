@@ -17,6 +17,7 @@ import { ContextProvider } from 'common/context/AppContext';
 import { fetchWishlistProducts } from 'redux/slicers/store/wishlistSlicer';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { fetchAdvertisement } from 'redux/slicers/bannersSlicer';
+import { axiosInstance } from 'common/axios.instance';
 
 export type ComponentWithPageLayout = AppProps & {
   Component: AppProps['Component'] & {
@@ -36,7 +37,16 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
       dispatch(createCart());
     }
     if (!wishlistId) {
-      dispatch(createWishlist());
+      // dispatch(createWishlist());
+      const createWishlistId = async () => {
+        try {
+          const wishlist = await axiosInstance.post('/wishlists');
+          localStorage.setItem('wishlistId', wishlist.data.id);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      createWishlistId();
     }
 
     const fetchDataCartProducts = async () => {
@@ -55,6 +65,9 @@ function App({ Component, pageProps }: ComponentWithPageLayout) {
     fetchDataCartProducts();
 
     const fetchDataWishlistProducts = async () => {
+      if (!wishlistId) {
+        dispatch(createWishlist());
+      }
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
