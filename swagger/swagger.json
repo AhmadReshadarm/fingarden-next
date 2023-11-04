@@ -5983,7 +5983,7 @@
         "operationId": "createWishlist",
         "produces": ["application/json"],
         "responses": {
-          "201": {
+          "200": {
             "description": "successful created",
             "schema": {
               "type": "object",
