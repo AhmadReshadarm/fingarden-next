@@ -62,7 +62,7 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
         dispatch(fetchCart(basketId));
         openSuccessNotification('Ваш Заказ успешно');
 
-        router.push('/orders');
+        router.push('/checkout/after-checkout');
         setLoading(false);
       } catch (error) {
         console.log(error);

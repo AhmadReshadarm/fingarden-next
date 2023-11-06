@@ -21,8 +21,6 @@ const Header = (props: any) => {
         animate="animate"
         exit={{ y: -20, opacity: 0, transition: { delay: 0.05 } }}
         variants={variants.fadInSlideUp}
-        style={{ gap: '20px' }}
-        flexDirectionMobile={'column!important'}
       >
         <Link href="/">
           <span>

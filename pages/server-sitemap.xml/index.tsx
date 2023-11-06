@@ -1,16 +1,18 @@
 import { getServerSideSitemap } from 'next-sitemap';
 
 export const getServerSideProps = async (ctx) => {
-  let posts: any = await fetch('http://localhost:4002/products?limit=10000');
+  let posts: any = await fetch(
+    'http://62.217.179.49:4010/products?limit=100000',
+  );
   posts = await posts.json();
-  const newsSitemaps = posts.rows.map((item) => ({
-    loc: `https://fingarden.ru/product/${item?.url}`,
+  const productSitemaps = posts.rows.map((item) => ({
+    loc: `https://ivill.ru/product/${item?.url}`,
     changefreq: 'daily',
     lastmod: item.updatedAt,
     priority: 0.7,
   }));
 
-  const fields = [...newsSitemaps];
+  const fields = [...productSitemaps];
 
   return getServerSideSitemap(ctx, fields);
 };

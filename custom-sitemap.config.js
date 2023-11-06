@@ -1,4 +1,4 @@
-const siteUrl = 'https://fingarden.ru';
+const siteUrl = 'https://ivill.ru';
 
 module.exports = {
   siteUrl,
@@ -66,6 +66,10 @@ module.exports = {
         disallow: '/rekvizity-ep-d',
       },
       {
+        userAgen: '*',
+        disallow: '/help',
+      },
+      {
         userAgent: '*',
         allow: '/',
       },
@@ -91,5 +95,6 @@ module.exports = {
     '/after-payment',
     '/after-payment/*',
     '/rekvizity-ep-d',
+    '/help',
   ],
 };
