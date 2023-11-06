@@ -1,7 +1,7 @@
 import StoreLayout from 'components/store/storeLayout/layouts';
 import styled from 'styled-components';
 import Link from 'next/link';
-// import Wishlist from 'components/store/wishlist';
+import Wishlist from 'components/store/wishlist';
 import { motion } from 'framer-motion';
 import variants from 'components/store/lib/variants';
 import { devices } from 'components/store/lib/Devices';
@@ -30,7 +30,7 @@ const WishlistPage = () => {
             <h3>Избранное</h3>
           </PageTitle>
         </BasketHeader>
-        {/* <Wishlist /> */}
+        <Wishlist />
       </Container>
     </>
   );
