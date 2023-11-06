@@ -1,8 +1,9 @@
-import { getServerSideSitemap } from 'next-sitemap';
-
-export const getServerSideProps = async (ctx) => {
+import { getServerSideSitemapLegacy } from 'next-sitemap';
+import { GetServerSideProps } from 'next';
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   let posts: any = await fetch(
-    'http://62.217.179.49:4010/products?limit=100000',
+    // 'http://62.217.179.49:4010/products?limit=100000', // development server
+    'http://62.217.179.49:4010/products?limit=100000', // production server
   );
   posts = await posts.json();
   const productSitemaps = posts.rows.map((item) => ({
@@ -14,7 +15,7 @@ export const getServerSideProps = async (ctx) => {
 
   const fields = [...productSitemaps];
 
-  return getServerSideSitemap(ctx, fields);
+  return getServerSideSitemapLegacy(ctx, fields);
 };
 
-export default function Site() {}
+export default function Sitempa() {}

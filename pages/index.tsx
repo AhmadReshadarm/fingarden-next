@@ -9,7 +9,7 @@ import Subscribers from 'ui-kit/Subscribers';
 import SEOstatic from 'components/store/SEO/SEOstatic';
 import Loading from 'ui-kit/Loading';
 import React, { Suspense, useEffect } from 'react';
-
+import { baseUrl } from './constant';
 const IndexPage = (): JSX.Element => {
   return (
     <>
@@ -22,7 +22,7 @@ const IndexPage = (): JSX.Element => {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         }}
-        image="https://fingarden.ru/fingarden.svg"
+        image={`${baseUrl}/fingarden.svg`}
       />
 
       <Suspense fallback={<Loading />}>

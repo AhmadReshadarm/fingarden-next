@@ -17,6 +17,7 @@ import { fetchReviews } from 'redux/slicers/reviewsSlicer';
 import Subscribers from 'ui-kit/Subscribers';
 import SEOstatic from 'components/store/SEO/SEOstatic';
 import { getProductVariantsImages } from 'common/helpers/getProductVariantsImages.helper';
+import { baseUrl } from 'pages/constant';
 // _________________________
 
 const Reviews = () => {
@@ -93,9 +94,7 @@ const Reviews = () => {
             createdAt: createdAt,
             updatedAt: updatedAt,
           }}
-          image={`https://fingarden.ru/api/images/${
-            image ?? 'img_not_found.png'
-          }`}
+          image={`${baseUrl}/api/images/${image}` ?? '/img_not_found.png'}
         />
       ) : (
         <Head>

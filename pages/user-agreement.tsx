@@ -10,6 +10,7 @@ import StoreLayout from 'components/store/storeLayout/layouts';
 import styled from 'styled-components';
 import Link from 'next/link';
 import SEOstatic from 'components/store/SEO/SEOstatic';
+import { baseUrl } from './constant';
 const PrivacyNotic = () => {
   return (
     <>
@@ -20,7 +21,7 @@ const PrivacyNotic = () => {
           desc: 'Интернет-магазин fingarden Пользовательское соглашение',
           keywords: 'Интернет-магазин fingarden',
         }}
-        image="https://fingarden.ru/fingarden.svg"
+        image={`${baseUrl}/fingarden.svg`}
       />
       <Container
         variants={variants.fadInOut}

@@ -8,8 +8,8 @@ import {
 } from 'components/store/storeLayout/common';
 import StoreLayout from 'components/store/storeLayout/layouts';
 import styled from 'styled-components';
-import Link from 'next/link';
 import SEOstatic from 'components/store/SEO/SEOstatic';
+import { baseUrl } from './constant';
 const ReturnPolicy = () => {
   return (
     <>
@@ -21,7 +21,7 @@ const ReturnPolicy = () => {
           keywords:
             'одноразовые, одноразовые сигареты, купить одноразовые, одноразовые электронные, одноразовые электронные сигареты, одноразовые сигареты купить',
         }}
-        image="https://fingarden.ru/fingarden.svg"
+        image={`${baseUrl}/fingarden.svg`}
       />
       <Container
         variants={variants.fadInOut}

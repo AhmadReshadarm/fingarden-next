@@ -14,7 +14,7 @@ const ConfirmPswReset = () => {
   return (
     <>
       <Head>
-        <title>Сброс пароля | Wuluxe</title>
+        <title>Сброс пароля | Fingarden</title>
       </Head>
       <Container
         variants={variants.fadInOut}

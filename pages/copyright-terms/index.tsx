@@ -10,6 +10,7 @@ import StoreLayout from 'components/store/storeLayout/layouts';
 import styled from 'styled-components';
 import Link from 'next/link';
 import SEOstatic from 'components/store/SEO/SEOstatic';
+import { baseUrl } from 'pages/constant';
 const Copyrights = () => {
   return (
     <>
@@ -17,10 +18,10 @@ const Copyrights = () => {
         page={{
           name: 'Правила использования контента сайта',
           url: '/copyright-terms',
-          desc: 'Интернет-магазин Wuluxe',
-          keywords: 'Интернет-магазин Wuluxe',
+          desc: 'Интернет-магазин Fingarden',
+          keywords: 'Интернет-магазин Fingarden',
         }}
-        image="https://fingarden.ru/fingarden.svg"
+        image={`${baseUrl}/fingarden.svg`}
       />
       <Container
         variants={variants.fadInOut}

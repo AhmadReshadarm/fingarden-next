@@ -1,32 +1,38 @@
 import StoreLayout from 'components/store/storeLayout/layouts';
 import styled from 'styled-components';
 import Link from 'next/link';
-import Wishlist from 'components/store/wishlist';
+// import Wishlist from 'components/store/wishlist';
 import { motion } from 'framer-motion';
 import variants from 'components/store/lib/variants';
 import { devices } from 'components/store/lib/Devices';
+import { Head } from 'next/document';
 const WishlistPage = () => {
   return (
-    <Container
-      variants={variants.fadInOut}
-      key="container-home-banners"
-      initial="start"
-      animate="middle"
-      exit="end"
-    >
-      <BasketHeader>
-        <div className="basket-header-back-btn">
-          <Link href="/">
-            <img src="/icons/back_arrow.png" alt="back button" />
-            <span>Обратно на главную</span>
-          </Link>
-        </div>
-        <PageTitle>
-          <h3>Избранное</h3>
-        </PageTitle>
-      </BasketHeader>
-      <Wishlist />
-    </Container>
+    <>
+      <Head>
+        <title>Избранное | fingarden</title>
+      </Head>
+      <Container
+        variants={variants.fadInOut}
+        key="container-home-banners"
+        initial="start"
+        animate="middle"
+        exit="end"
+      >
+        <BasketHeader>
+          <div className="basket-header-back-btn">
+            <Link href="/">
+              <img src="/icons/back_arrow.png" alt="back button" />
+              <span>Обратно на главную</span>
+            </Link>
+          </div>
+          <PageTitle>
+            <h3>Избранное</h3>
+          </PageTitle>
+        </BasketHeader>
+        {/* <Wishlist /> */}
+      </Container>
+    </>
   );
 };
 

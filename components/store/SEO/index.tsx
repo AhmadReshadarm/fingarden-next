@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { settings } from './helpers';
+import { baseUrl } from 'pages/constant';
 
 const socialTags = ({
   openGraphType,
@@ -56,10 +57,10 @@ const socialTags = ({
 };
 
 const SEO = ({ product, images }) => {
-  const url = `https://fingarden.ru/prodcut/${product?.url}`;
+  const url = `${baseUrl}/prodcut/${product?.url}`;
   const image: any = [];
   for (let i = 0; i < images?.length; i++) {
-    image.push(`https://fingarden.ru/api/images/${images[i]}`);
+    image.push(`${baseUrl}/api/images/${images[i]}`);
   }
 
   return (

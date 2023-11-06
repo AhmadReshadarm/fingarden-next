@@ -26,6 +26,7 @@ import ProductGrid from 'ui-kit/products/productGrid';
 import SEOstatic from 'components/store/SEO/SEOstatic';
 import color from 'components/store/lib/ui.colors';
 import FiltersSVg from '../../assets/catalog-filters.svg';
+import { baseUrl } from 'pages/constant';
 
 const CatalogPage = () => {
   const dispatch = useAppDispatch();
@@ -129,9 +130,10 @@ const CatalogPage = () => {
           updatedAt:
             selectedCategory?.updatedAt ?? products[randomProduct]?.updatedAt,
         }}
-        image={`https://fingarden.ru/api/images/${
-          products[0]?.category?.parent?.image ?? 'img_not_found.png'
-        }`}
+        image={
+          `${baseUrl}/api/images/${products[0]?.category?.parent?.image}` ??
+          '/img_not_found.png'
+        }
       />
       <Container
         variants={variants.fadInOut}

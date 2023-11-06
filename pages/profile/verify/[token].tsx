@@ -13,7 +13,7 @@ const VerifyAcount = () => {
   return (
     <>
       <Head>
-        <title>Личные кабинет | Wuluxe</title>
+        <title>Личные кабинет | Fingarden</title>
       </Head>
       <Container
         variants={variants.fadInOut}

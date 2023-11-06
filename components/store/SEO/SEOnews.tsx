@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { settings } from './helpers';
 import { News } from 'swagger/services';
+import { baseUrl } from 'pages/constant';
 const socialTags = ({
   openGraphType,
   url,
@@ -58,8 +59,8 @@ type Props = {
   newsPost: News;
 };
 const SEOnews: React.FC<Props> = ({ newsPost }) => {
-  const url = `https://fingarden.ru/prodcut/${newsPost?.url}`;
-  const image = `https://fingarden.ru/api/images/${newsPost.image}`;
+  const url = `${baseUrl}/prodcut/${newsPost?.url}`;
+  const image = `${baseUrl}/api/images/${newsPost.image}`;
 
   return (
     <Head>

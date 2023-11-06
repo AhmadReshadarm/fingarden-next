@@ -1,9 +1,11 @@
+import { baseUrl } from 'pages/constant';
+
 const settings = {
   graphql: {
-    uri: 'http://www.fingarden.ru',
+    uri: baseUrl,
   },
   meta: {
-    rootUrl: 'http://www.fingarden.ru',
+    rootUrl: baseUrl,
     title: 'Fingarden',
     description: 'Fingarden, где вы найдете удовольствие',
     social: {

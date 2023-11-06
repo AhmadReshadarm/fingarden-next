@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { devices } from 'components/store/lib/Devices';
 import Link from 'next/link';
 import Subscribers from 'ui-kit/Subscribers';
-
+import { baseUrl } from 'pages/constant';
 const Contacts = () => {
   return (
     <>
@@ -22,7 +22,7 @@ const Contacts = () => {
           url: '/contacts',
           desc: 'Интернет-магазин fingarden товаров для загородной жизни',
         }}
-        image="https://fingarden.ru/fingarden.svg"
+        image={`${baseUrl}/fingarden.svg`}
       />
       <Container
         variants={variants.fadInOut}

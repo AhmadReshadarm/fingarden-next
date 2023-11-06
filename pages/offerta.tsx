@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import StoreLayout from 'components/store/storeLayout/layouts';
 import color from 'components/store/lib/ui.colors';
-import { styleProps } from 'components/store/lib/types';
-import DeleveryBox from '../assets/deleveryBox.svg';
 import {
   Container,
   Wrapper,
