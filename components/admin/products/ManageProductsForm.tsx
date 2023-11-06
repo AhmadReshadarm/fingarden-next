@@ -202,7 +202,7 @@ const ManageProductForm = ({
                 localization={{ locale: 'ru' }}
                 toolbar={{
                   fontFamily: {
-                    options: ['Jost', 'Anticva'],
+                    options: ['Jost', 'Anticva, Baskerville, sans-serif'],
                     className: undefined,
                     component: undefined,
                     dropdownClassName: undefined,
@@ -221,8 +221,8 @@ const ManageProductForm = ({
                       'image/gif,image/jpeg,image/jpg,image/png,image/svg',
                     alt: { present: true, mandatory: false },
                     defaultSize: {
-                      height: 'auto',
-                      width: 'auto',
+                      height: '100%',
+                      width: '100%',
                     },
                   },
                 }}
@@ -236,7 +236,7 @@ const ManageProductForm = ({
               <TextArea
                 required={true}
                 rows={4}
-                placeholder="Краткое описание"
+                placeholder="Краткое описание, Не более 350 символов"
               />
             }
           />
@@ -244,7 +244,11 @@ const ManageProductForm = ({
           <FormItem
             option={ManageProductFields.Keywords}
             children={
-              <TextArea required={true} rows={4} placeholder="keywords" />
+              <TextArea
+                required={true}
+                rows={4}
+                placeholder="Введите keywords | Пользователь ',' между каждым ключевым словом, Например: ключевое слово-1, ключевое слово-2."
+              />
             }
           />
           {/* ----------------------CATEGORIES---------------------- */}
@@ -279,12 +283,12 @@ const ManageProductForm = ({
             </Select>
           </Form.Item>
           {/* ----------------------TAGS---------------------- */}
-          <Form.Item label="Теги" name="tags">
+          <Form.Item label="коллекция" name="tags">
             <Select
               mode="multiple"
               allowClear
               style={{ width: '100%' }}
-              placeholder={`Пожалуйста, выберите теги`}
+              placeholder={`Выберите несколько или одну коллекцию`}
             >
               {tags?.map((item) => (
                 <Option key={item.id} value={item.id}>{`${item.name}`}</Option>
@@ -297,7 +301,7 @@ const ManageProductForm = ({
               mode="multiple"
               allowClear
               style={{ width: '100%' }}
-              placeholder={`Пожалуйста, выберите Размер`}
+              placeholder={`Выберите несколько или один размер`}
             >
               {sizes?.map((item) => (
                 <Option key={item.id} value={item.id}>{`${item.name}`}</Option>
@@ -325,6 +329,10 @@ const ManageProductForm = ({
           {!!curCategory?.parameters?.length && (
             <>
               <h2 style={{ marginBottom: '10px' }}>Список характеристик</h2>
+              <span>
+                Оставьте пустым или добавьте тире - или подчеркните _, чтобы
+                скрыть эту опцию на стороне клиента.
+              </span>
               <List
                 bordered={true}
                 itemLayout="horizontal"

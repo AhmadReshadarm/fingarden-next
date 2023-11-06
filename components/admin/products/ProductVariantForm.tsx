@@ -34,7 +34,9 @@ const ProductVariant: React.FC<Props> = ({
   const [isOpen, setOpen] = useState(false);
   return (
     <div className={styles['product-variant']}>
-      <h2 className={styles['product-variant__title']}>Вариант №{index + 1}</h2>
+      <h2 className={styles['product-variant__title']}>
+        Вариант № {index + 1}
+      </h2>
       <button
         type={'button'}
         className={styles['product-variant__remove']}
@@ -54,22 +56,26 @@ const ProductVariant: React.FC<Props> = ({
         />
       </Form.Item>
       {/* ----------------------OLD PRICE---------------------- */}
-      <Form.Item name={`${ManageProductFields.OldPrice}[${index}]`} required>
+      <Form.Item name={`${ManageProductFields.OldPrice}[${index}]`}>
+        <span>
+          опцию Оставьте пустым, если хотите скрыть эту опцию на стороне
+          клиента.
+        </span>
         <Input
           type={'number'}
           placeholder="Введите устаревшую стоимость продукта"
         />
       </Form.Item>
       {/* ----------------------wholeSalePrice---------------------- */}
-      <Form.Item
+      {/* <Form.Item
         name={`${ManageProductFields.wholeSalePrice}[${index}]`}
         required
       >
         <Input type={'number'} placeholder="введите оптовую цену" />
-      </Form.Item>
+      </Form.Item> */}
       {/* ----------------------AVAILABLE---------------------- */}
       <Form.Item
-        label="Доступность"
+        label="В наличии"
         name={`${ManageProductFields.Available}[${index}]`}
         valuePropName="checked"
         required
@@ -85,7 +91,7 @@ const ProductVariant: React.FC<Props> = ({
         <Select
           allowClear
           style={{ width: '100%' }}
-          placeholder={`Пожалуйста, выберите цвета`}
+          placeholder={`Выберите цвета`}
         >
           {colors?.map((item) => (
             <Option key={item.id} value={item.id}>{`${item.name}`}</Option>
