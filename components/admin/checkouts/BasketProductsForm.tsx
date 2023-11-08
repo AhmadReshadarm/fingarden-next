@@ -69,7 +69,7 @@ const BasketProductForm: React.FC<Props> = ({
           {product.sizes?.map((size) => (
             <Option
               key={size.id}
-              value={size.id}
+              value={size.name}
             >{`Размер: ${size.name}`}</Option>
           ))}
         </Select>

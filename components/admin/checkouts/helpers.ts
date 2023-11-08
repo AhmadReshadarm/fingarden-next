@@ -132,7 +132,7 @@ const handleFormSubmitCheckout =
         };
 
         const generatedHtml = generateInvoiceTemplet(payload);
-
+        openErrorNotification('В процессе: Отправка счета-фактуры на заказ...');
         const saved = await CheckoutService.createCheckoutWithoutRegister({
           body: {
             to: payload.receiverEmail,
@@ -140,8 +140,8 @@ const handleFormSubmitCheckout =
             html: `${generatedHtml}`,
           },
         });
-        openErrorNotification('Отправка счета-фактуры на заказ...');
-        await sleep(5000);
+
+        await sleep(3000);
 
         if (saved) {
           openSuccessNotification('Счет заказа отправлен');
@@ -150,35 +150,56 @@ const handleFormSubmitCheckout =
         }
       }
       if (form.checkoutType) {
-        openErrorNotification('Поиск пользователя...');
+        openErrorNotification('В процессе: Поиск пользователя...');
         const user = await UserService.findUserByEmail({
           email: form.userEmail,
         });
         if (!user) {
           openErrorNotification('Пользователь не найден');
         }
-        await sleep(5000);
+        await sleep(3000);
         openSuccessNotification('Успешный, пользователь найден');
         await sleep(1000);
-        openErrorNotification('Создание корзины...');
+        openErrorNotification('В процессе: Создание корзины...');
         const basketId = await BasketService.createBasket();
         const payload: BasketDTO = {
           orderProducts: convertBasketData(basketList, form),
         };
 
-        await sleep(5000);
+        await sleep(3000);
         openSuccessNotification('Корзина создана');
         await sleep(1000);
-        openErrorNotification('Обновление корзины...');
-        const basket = await BasketService.updateBasket({
-          basketId: basketId.id,
-          body: payload,
-        });
+        openErrorNotification('В процессе: Обновление корзины...');
+        let counter = 0;
+        let basket;
+        let simulatedPayload: any = {
+          orderProducts: [],
+        };
+        const addToBasket = async (payload: BasketDTO) => {
+          if (counter < payload.orderProducts?.length!) {
+            simulatedPayload.orderProducts!.push(
+              payload.orderProducts![counter],
+            );
 
-        await sleep(5000);
+            basket = await BasketService.updateBasket({
+              basketId: basketId.id,
+              body: simulatedPayload,
+            });
+            counter = counter + 1;
+            addToBasket(payload);
+          }
+        };
+        await addToBasket(payload);
+
+        // const basket = await BasketService.updateBasket({
+        //   basketId: basketId.id,
+        //   body: payload,
+        // });
+
+        await sleep(3000);
         openSuccessNotification('Корзина обновлена');
         await sleep(1000);
-        openErrorNotification('Сохранение адреса...');
+        openErrorNotification('В процессе: Сохранение адреса...');
         const responseAdress = await AddressService.createAddressDirect({
           body: {
             receiverName: form.receiverName,
@@ -193,10 +214,10 @@ const handleFormSubmitCheckout =
             userId: user.id,
           },
         });
-        await sleep(5000);
+        await sleep(3000);
         openSuccessNotification('Адрес сохранен');
         await sleep(1000);
-        openErrorNotification('Завершение заказа...');
+        openErrorNotification('В процессе: Завершение заказа...');
         const saved = await CheckoutService.createCheckout({
           body: {
             address: responseAdress,

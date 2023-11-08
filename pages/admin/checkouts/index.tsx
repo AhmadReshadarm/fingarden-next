@@ -1,4 +1,4 @@
-import { Spin, Table } from 'antd';
+import { Spin, Table, Button } from 'antd';
 import { ColumnGroupType, ColumnType } from 'antd/lib/table/interface';
 import { AppContext } from 'common/context/AppContext';
 import { DataType } from 'common/interfaces/data-type.interface';
@@ -12,8 +12,11 @@ import {
   fetchCheckoutsAll,
 } from '../../../redux/slicers/checkoutsSlicer';
 import styles from './index.module.scss';
-
+import { navigateTo } from 'common/helpers';
+import { useRouter } from 'next/router';
+import { Page } from 'routes/constants';
 const CheckoutsPage = () => {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { offset, setOffset } = useContext(AppContext);
 
@@ -49,6 +52,13 @@ const CheckoutsPage = () => {
     <>
       <div className={styles.checkoutsHeader}>
         <h1 className={styles.checkoutsHeader__title}>Заказы</h1>
+        <Button
+          className={styles.productsHeader__createCheckoutButton}
+          type="primary"
+          onClick={navigateTo(router, Page.ADMIN_CREATE_CHECKOUTS)}
+        >
+          Создать новый заказ
+        </Button>
       </div>
       {isLoading ? (
         <Spin className={styles.spinner} size="large" />

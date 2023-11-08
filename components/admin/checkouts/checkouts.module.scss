@@ -19,6 +19,14 @@
   }
 }
 
+.createProductForm {
+  &__buttonsStack {
+    &__submitButton {
+      margin-right: 10px;
+    }
+  }
+}
+
 .product-variant {
   padding-left: 20px;
   position: relative;

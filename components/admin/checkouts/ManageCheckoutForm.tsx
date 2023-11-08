@@ -112,7 +112,7 @@ const ManageCheckoutFrom = ({ title }: Props) => {
             {/* ----------------------INPUT FOR USER---------------------- */}
             {forUsersInDB ? (
               <Form.Item
-                label="Email пользователей для зарегистрированных пользователей"
+                label="Email пользователей, Только для зарегистрированных пользователей"
                 name={ManageCheckoutFields.UserEmail}
                 required
               >
@@ -263,13 +263,13 @@ const ManageCheckoutFrom = ({ title }: Props) => {
                 type="primary"
                 htmlType="submit"
                 className={styles.createProductForm__buttonsStack__submitButton}
-                //   loading={isSaveLoading}
+                loading={isSaveLoading}
               >
                 {`Сохранить`}
               </Button>
               <Button
                 type="primary"
-                onClick={navigateTo(router, Page.ADMIN_PRODUCTS)}
+                onClick={navigateTo(router, Page.ADMIN_CHECKOUTS)}
               >
                 Вернуться назад
               </Button>
