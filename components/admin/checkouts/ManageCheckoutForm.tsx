@@ -1,4 +1,4 @@
-import { Button, Form, Input, List, Select, Spin, Switch } from 'antd';
+import { Button, Form, Input, Select, Spin } from 'antd';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { TGlobalState } from 'redux/types';
 import styles from './checkouts.module.scss';
@@ -9,11 +9,7 @@ import { CategoryInTree, Product } from 'swagger/services';
 import { PopupDisplay } from 'components/store/storeLayout/constants';
 import { outsideClickListner } from 'components/store/storeLayout/helpers';
 import { useRouter } from 'next/router';
-import {
-  changeSearchQuery,
-  clearSearchQuery,
-  clearSearchProducts,
-} from 'redux/slicers/store/globalSlicer';
+import { changeSearchQuery } from 'redux/slicers/store/globalSlicer';
 import { handleSearchQueryChange } from 'components/store/storeLayout/utils/SearchBar/helpers';
 import { FilterBtn } from 'components/store/storeLayout/utils/SearchBar/FilterBtn';
 import FilterModal from 'components/store/storeLayout/utils/SearchBar/FilterModal';
