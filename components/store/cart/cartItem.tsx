@@ -108,7 +108,7 @@ const CartItem: React.FC<Props> = ({ item, cart, onRemove, wishlist }) => {
                 onClick={
                   () =>
                     handleItemCountChange(
-                      item.qty! - 1,
+                      item.qty! > 1 ? item.qty! - 1 : item.qty!,
                       item.product!,
                       dispatch,
                       cart,

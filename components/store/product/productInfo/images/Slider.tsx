@@ -87,7 +87,7 @@ const Slider: React.FC<Props> = ({
             currentTarget.onerror = null;
             currentTarget.src = '/img_not_found.png';
           }}
-          // style={{ objectFit: isOpened ? 'contain' : 'cover' }}
+          style={{ objectFit: isOpened ? 'contain' : 'cover' }}
         />
       </AnimatePresence>
       <div

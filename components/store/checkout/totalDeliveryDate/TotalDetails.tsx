@@ -96,7 +96,7 @@ const TotalDetails = ({ comment, leaveNearDoor, setLoading }) => {
         await CheckoutService.createCheckout({
           body: {
             address: responseAdress,
-            basket: cart,
+            basket: cart.id,
             totalAmount: getTotalPrice(cart, withDelivery),
             comment: payload.comment,
             leaveNearDoor: payload.leaveNearDoor,

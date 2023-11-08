@@ -165,22 +165,24 @@ const generateInvoiceTemplet = (payload: templetDTO) => {
         <h1>Заказ покупателя</h1>
       </div>
       ${payload.cart?.orderProducts?.map(
-        (product) =>
+        (orderproduct) =>
           ` <div>
-            <span>${product.product?.name}</span>
-            <span>${product!.qty} шт</span>
+            <span>${orderproduct.product?.name}</span>
+            <span>${orderproduct!.qty} шт</span>
             <span>*</span>
-            <span>${product.productVariant?.price}₽</span>
+            <span>${orderproduct.productVariant?.price}₽</span>
             <span>=</span>
-            <span>${product.productVariant?.price! * product.qty!}₽</span>
+            <span>${
+              orderproduct.productVariant?.price! * orderproduct.qty!
+            }₽</span>
           </div>
           <div>
             <span>Цвет:</span>
-            <span>${product.productVariant?.color?.name}</span>
+            <span>${orderproduct.productVariant?.color?.name}</span>
           </div>
           <div>
             <span>Размер:</span>
-            <span>${product.productSize}</span>
+            <span>${orderproduct.productSize}</span>
           </div>
        `,
       )}

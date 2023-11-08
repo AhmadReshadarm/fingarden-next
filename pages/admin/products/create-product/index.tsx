@@ -9,10 +9,9 @@ import {
   fetchCategories,
 } from 'redux/slicers/categoriesSlicer';
 import { clearColors, fetchColors } from 'redux/slicers/colorsSlicer';
-import { clearImageList, fetchImages } from 'redux/slicers/imagesSlicer';
+import { clearImageList } from 'redux/slicers/imagesSlicer';
 import { clearTags, fetchTags } from 'redux/slicers/tagsSlicer';
 import { clearSizes, fetchSizes } from 'redux/slicers/sizesSlicer';
-import { fetchProducts } from '../../../../redux/slicers/productsSlicer';
 
 const CreateProduct = () => {
   const title = 'Создание продукта';

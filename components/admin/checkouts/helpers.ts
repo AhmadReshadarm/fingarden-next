@@ -2,21 +2,35 @@ import { deleteCheckout, fetchCheckouts } from 'redux/slicers/checkoutsSlicer';
 import { AppDispatch } from 'redux/store';
 import { Page, paths } from 'routes/constants';
 import { NextRouter } from 'next/router';
-
+import {
+  Product,
+  UserService,
+  AddressService,
+  CheckoutService,
+  BasketService,
+  BasketDTO,
+  OrderProductDTO,
+} from 'swagger/services';
+import { ManageCheckoutFields } from './ManageCheckoutFields.enum';
+import { getTotalPrice } from 'components/store/checkout/totalDeliveryDate/helpers';
+import { CheckoutDTO } from 'swagger/services';
+import { openErrorNotification } from 'common/helpers';
+import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
+import { generateInvoiceTemplet } from 'components/store/checkout/totalDeliveryDate/helpers';
 const handleDeleteCheckout =
   (id: string, dispatch: AppDispatch, setVisible: any, offset: number) =>
-    async () => {
-      const isSaved: any = await dispatch(deleteCheckout(id));
-      if (!isSaved.error) {
-        dispatch(
-          fetchCheckouts({
-            offset: String(offset),
-            limit: '20',
-          }),
-        );
-        setVisible((prev) => !prev);
-      }
-    };
+  async () => {
+    const isSaved: any = await dispatch(deleteCheckout(id));
+    if (!isSaved.error) {
+      dispatch(
+        fetchCheckouts({
+          offset: String(offset),
+          limit: '20',
+        }),
+      );
+      setVisible((prev) => !prev);
+    }
+  };
 
 const handleRedirectCheckout = (id: string, router: NextRouter) => () => {
   router.push(`${paths[Page.ADMIN_CHECKOUTS]}/${id}`);
@@ -41,8 +55,174 @@ const getFormatedDate = (date: any) => {
   let deliveryDueIntial = new Date(date);
   deliveryDueIntial.setDate(deliveryDueIntial.getDate() + 5);
 
-  return `${deliveryDueIntial.getDate()} ${months[deliveryDueIntial.getMonth() + 1]
-    }`;
+  return `${deliveryDueIntial.getDate()} ${
+    months[deliveryDueIntial.getMonth() + 1]
+  }`;
 };
 
-export { handleRedirectCheckout, handleDeleteCheckout, getFormatedDate };
+const handleSearchItemClick = (
+  basketList: Product[],
+  setBasketList,
+  product: Product,
+) => {
+  if (!!basketList.length) {
+    const isInBasket = basketList.find(
+      (productInbasket) => productInbasket.id === product.id,
+    );
+    if (!isInBasket) {
+      setBasketList([...basketList, product]);
+    }
+  } else {
+    setBasketList([product]);
+  }
+};
+const convertBasketData = (basketList: Product[], form) => {
+  const payloadBasket: OrderProductDTO[] = [];
+
+  for (let index = 0; index < basketList.length; index++) {
+    const productId: string = basketList[index].id!;
+    const qty: number = form[`${ManageCheckoutFields.Qty}[${index}]`];
+    const productSize: string =
+      form[`${ManageCheckoutFields.ProductSize}[${index}]`];
+    const productVariantId: string =
+      form[`${ManageCheckoutFields.Variant}[${index}]`];
+    const product: Product = basketList[index];
+    const productVariant = basketList[index].productVariants?.find(
+      (variant) => variant.id === productVariantId,
+    );
+    const payload = {
+      productId,
+      qty,
+      productSize,
+      productVariantId,
+      product,
+      productVariant,
+    };
+
+    payloadBasket.push(payload);
+  }
+  return payloadBasket;
+};
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const handleFormSubmitCheckout =
+  (router: NextRouter, basketList: Product[], setSaveLoading) =>
+  async (form) => {
+    setSaveLoading(true);
+    try {
+      if (!form.checkoutType) {
+        const basket = {
+          orderProducts: convertBasketData(basketList, form),
+        };
+        const payload = {
+          receiverName: form.receiverName,
+          receiverPhone: form.receiverPhone,
+          receiverEmail: form.receiverEmail,
+          address: form.address,
+          roomOrOffice: form.roomOrOffice,
+          door: form.door,
+          floor: form.floor,
+          rignBell: form.rignBell,
+          zipCode: form.zipCode,
+          comment: '',
+          cart: basket,
+        };
+
+        const generatedHtml = generateInvoiceTemplet(payload);
+
+        const saved = await CheckoutService.createCheckoutWithoutRegister({
+          body: {
+            to: payload.receiverEmail,
+            subject: `Заказ ${payload.receiverName}`,
+            html: `${generatedHtml}`,
+          },
+        });
+        openErrorNotification('Отправка счета-фактуры на заказ...');
+        await sleep(5000);
+
+        if (saved) {
+          openSuccessNotification('Счет заказа отправлен');
+          router.push('/admin/checkouts');
+          setSaveLoading(false);
+        }
+      }
+      if (form.checkoutType) {
+        openErrorNotification('Поиск пользователя...');
+        const user = await UserService.findUserByEmail({
+          email: form.userEmail,
+        });
+        if (!user) {
+          openErrorNotification('Пользователь не найден');
+        }
+        await sleep(5000);
+        openSuccessNotification('Успешный, пользователь найден');
+        await sleep(1000);
+        openErrorNotification('Создание корзины...');
+        const basketId = await BasketService.createBasket();
+        const payload: BasketDTO = {
+          orderProducts: convertBasketData(basketList, form),
+        };
+
+        await sleep(5000);
+        openSuccessNotification('Корзина создана');
+        await sleep(1000);
+        openErrorNotification('Обновление корзины...');
+        const basket = await BasketService.updateBasket({
+          basketId: basketId.id,
+          body: payload,
+        });
+
+        await sleep(5000);
+        openSuccessNotification('Корзина обновлена');
+        await sleep(1000);
+        openErrorNotification('Сохранение адреса...');
+        const responseAdress = await AddressService.createAddressDirect({
+          body: {
+            receiverName: form.receiverName,
+            receiverPhone: form.receiverPhone,
+            receiverEmail: form.receiverEmail,
+            address: form.address,
+            roomOrOffice: form.roomOrOffice,
+            door: form.door,
+            floor: form.floor,
+            rignBell: form.rignBell,
+            zipCode: form.zipCode,
+            userId: user.id,
+          },
+        });
+        await sleep(5000);
+        openSuccessNotification('Адрес сохранен');
+        await sleep(1000);
+        openErrorNotification('Завершение заказа...');
+        const saved = await CheckoutService.createCheckout({
+          body: {
+            address: responseAdress,
+            basket: basket.id,
+            totalAmount: getTotalPrice(basket, ''),
+            comment: '',
+            leaveNearDoor: false,
+            userId: user.id,
+          },
+        });
+        if (saved) {
+          openSuccessNotification('Заказ завершен');
+          router.push('/admin/checkouts');
+          setSaveLoading(false);
+        }
+      }
+    } catch (error) {
+      openErrorNotification(`${error}`);
+      setSaveLoading(false);
+    }
+  };
+
+export {
+  handleRedirectCheckout,
+  handleDeleteCheckout,
+  getFormatedDate,
+  handleSearchItemClick,
+  handleFormSubmitCheckout,
+};

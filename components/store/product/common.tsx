@@ -23,7 +23,7 @@ const SliderImage = styled(motion.img)`
   position: absolute;
   left: auto;
   top: auto;
-  object-fit: cover;
+  // object-fit: cover;
 `;
 
 const LoadMoreBtnWrapper = styled.div`

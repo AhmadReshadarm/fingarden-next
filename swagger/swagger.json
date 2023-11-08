@@ -454,7 +454,55 @@
         }
       }
     },
-
+    "/users/get-by-email/{email}": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Find user by email",
+        "operationId": "findUserByEmail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "authorization",
+            "required": true,
+            "in": "header",
+            "description": "admin token"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "description": "Email of user to return",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal"
+          }
+        }
+      }
+    },
     "/users/help": {
       "post": {
         "tags": ["userHelpDisk"],
@@ -3722,6 +3770,53 @@
             "schema": {
               "type": "object",
               "$ref": "#/definitions/AddressDTO"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Address request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/addresses/direct": {
+      "post": {
+        "tags": ["address"],
+        "summary": "Create a address via admins",
+        "description": "",
+        "operationId": "createAddressDirect",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "authorization",
+            "required": true,
+            "in": "header",
+            "description": "admin-token"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/AddressDirectDTO"
             }
           }
         ],
@@ -7330,6 +7425,46 @@
         }
       }
     },
+    "AddressDirectDTO": {
+      "required": ["receiverName", "receiverPhone", "address", "zipCode"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "userId": {
+          "type": "string",
+          "readOnly": true
+        },
+        "receiverName": {
+          "type": "string"
+        },
+        "receiverPhone": {
+          "type": "string"
+        },
+        "receiverEmail": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "roomOrOffice": {
+          "type": "string"
+        },
+        "door": {
+          "type": "string"
+        },
+        "floor": {
+          "type": "string"
+        },
+        "rignBell": {
+          "type": "string"
+        },
+        "zipCode": {
+          "type": "string"
+        }
+      }
+    },
     "AddressDTO": {
       "required": ["receiverName", "receiverPhone", "address", "zipCode"],
       "properties": {
@@ -7553,6 +7688,10 @@
         "totalAmount": {
           "type": "number",
           "description": "Total payment"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User ID"
         }
       }
     },

@@ -38,7 +38,12 @@ const ItemCounter: React.FC<Props> = ({
         variants={variants.boxShadow}
         // onClick={decreaseCounter(product, setItemCounter, onCountChange, user!)}
         onClick={() =>
-          handleItemCountChange(qty! - 1, product, dispatch, cart!)
+          handleItemCountChange(
+            qty > 1 ? qty - 1 : qty,
+            product,
+            dispatch,
+            cart!,
+          )
         }
       >
         -

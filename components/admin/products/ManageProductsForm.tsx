@@ -308,6 +308,7 @@ const ManageProductForm = ({
               ))}
             </Select>
           </Form.Item>
+          {/* ----------------------PRODUCT VARIANTS---------------------- */}
           <h2 style={{ fontSize: '26px', marginBottom: '20px' }}>
             Варианты продукта
           </h2>

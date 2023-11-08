@@ -89,6 +89,8 @@ const PopupContainer = styled.div`
   top: 0;
   left: 0;
   background-color: ${color.glassmorphismBg};
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   position: absolute;
   display: flex;
   flex-direction: row;
