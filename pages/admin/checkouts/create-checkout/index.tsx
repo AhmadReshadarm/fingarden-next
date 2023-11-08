@@ -1,6 +1,5 @@
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import AdminLayout from 'components/admin/adminLayout/layout';
-import ManageCheckoutFrom from 'components/admin/checkouts/manageCheckoutForm';
+import ManageCheckoutFrom from 'components/admin/checkouts/ManageCheckoutForm';
 
 const createCheckout = () => {
   const title = 'Создание Заказ';
