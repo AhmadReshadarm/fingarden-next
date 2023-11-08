@@ -26,7 +26,7 @@ import ProductGrid from 'ui-kit/products/productGrid';
 import SEOstatic from 'components/store/SEO/SEOstatic';
 import color from 'components/store/lib/ui.colors';
 import FiltersSVg from '../../assets/catalog-filters.svg';
-import { baseUrl } from 'pages/constant';
+import { baseUrl } from 'common/constant';
 
 const CatalogPage = () => {
   const dispatch = useAppDispatch();

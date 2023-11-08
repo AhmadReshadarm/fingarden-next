@@ -17,7 +17,7 @@ import { fetchReviews } from 'redux/slicers/reviewsSlicer';
 import Subscribers from 'ui-kit/Subscribers';
 import SEOstatic from 'components/store/SEO/SEOstatic';
 import { getProductVariantsImages } from 'common/helpers/getProductVariantsImages.helper';
-import { baseUrl } from 'pages/constant';
+import { baseUrl } from 'common/constant';
 // _________________________
 
 const Reviews = () => {

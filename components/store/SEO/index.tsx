@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { settings } from './helpers';
-import { baseUrl } from 'pages/constant';
+import { baseUrl } from 'common/constant';
 
 const socialTags = ({
   openGraphType,

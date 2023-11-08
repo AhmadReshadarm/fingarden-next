@@ -9,7 +9,7 @@ import Subscribers from 'ui-kit/Subscribers';
 import SEOstatic from 'components/store/SEO/SEOstatic';
 import Loading from 'ui-kit/Loading';
 import React, { Suspense, useEffect } from 'react';
-import { baseUrl } from './constant';
+import { baseUrl } from '../common/constant';
 const IndexPage = (): JSX.Element => {
   return (
     <>

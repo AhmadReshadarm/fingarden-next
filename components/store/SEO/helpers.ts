@@ -1,4 +1,4 @@
-import { baseUrl } from 'pages/constant';
+import { baseUrl } from 'common/constant';
 
 const settings = {
   graphql: {

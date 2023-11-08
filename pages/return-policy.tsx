@@ -9,7 +9,7 @@ import {
 import StoreLayout from 'components/store/storeLayout/layouts';
 import styled from 'styled-components';
 import SEOstatic from 'components/store/SEO/SEOstatic';
-import { baseUrl } from './constant';
+import { baseUrl } from '../common/constant';
 const ReturnPolicy = () => {
   return (
     <>

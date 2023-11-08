@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { devices } from 'components/store/lib/Devices';
 import Link from 'next/link';
 import Subscribers from 'ui-kit/Subscribers';
-import { baseUrl } from 'pages/constant';
+import { baseUrl } from 'common/constant';
 const Contacts = () => {
   return (
     <>
