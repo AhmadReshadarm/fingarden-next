@@ -3,7 +3,6 @@ import { navigateTo } from 'common/helpers';
 import AdminLayout from 'components/admin/adminLayout/layout';
 import BannersLayout from 'components/admin/banners/BannersLayout';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
 import { Page } from 'routes/constants';
 
 import styles from './index.module.scss';

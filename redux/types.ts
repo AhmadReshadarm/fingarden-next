@@ -244,6 +244,7 @@ type TBannerState = {
   advertisement: Advertisement[];
   slides: Slide[];
   loading: boolean;
+  advertisementLoading: boolean;
   saveLoading: boolean;
 };
 

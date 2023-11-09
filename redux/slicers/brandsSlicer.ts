@@ -109,6 +109,7 @@ const initialState: TBrandState = {
   brands: [],
   chosenBrand: null,
   loading: false,
+
   saveLoading: false,
 };
 

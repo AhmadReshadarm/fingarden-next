@@ -105,6 +105,7 @@ const initialState: TBannerState = {
   advertisement: [],
   slides: [],
   loading: false,
+  advertisementLoading: false,
   saveLoading: false,
 };
 
@@ -127,10 +128,12 @@ const bannersSlicer = createSlice({
   extraReducers: (builder) => {
     builder
       //fetchAdvertisement
-      .addCase(fetchAdvertisement.pending, handlePending)
+      .addCase(fetchAdvertisement.pending, (state, action) => {
+        state.advertisementLoading = true;
+      })
       .addCase(fetchAdvertisement.fulfilled, (state, action) => {
         state.advertisement = action.payload as unknown as Advertisement[];
-        state.loading = false;
+        state.advertisementLoading = false;
         console.log('fulfilled');
       })
       .addCase(fetchAdvertisement.rejected, handleError)

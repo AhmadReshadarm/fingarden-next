@@ -1,29 +1,39 @@
 import { Spin } from 'antd';
-import { useAppSelector } from 'redux/hooks';
-import { Advertisement } from 'swagger/services';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import styles from './index.module.scss';
 import styled from 'styled-components';
-interface Props {
-  isLoading: boolean;
-}
+import { useEffect } from 'react';
+import { fetchAdvertisement, clearBanners } from 'redux/slicers/bannersSlicer';
 
-const AdvertisementTab = ({ isLoading }: Props) => {
-  const data = useAppSelector<Advertisement[]>(
-    (state) => state.banners.advertisement,
-  );
+const AdvertisementTab = () => {
+  const dispatch = useAppDispatch();
+  const data = useAppSelector((state) => state.banners.advertisement);
+  const loading = useAppSelector((state) => state.banners.advertisementLoading);
 
+  useEffect(() => {
+    dispatch(fetchAdvertisement());
+    return () => {
+      dispatch(clearBanners());
+    };
+  }, []);
   return (
     <>
-      {isLoading ? (
+      {loading ? (
         <Spin className={styles.spinner} size="large" />
       ) : (
         <Wrapper>
-          <div className="title-wrapper">
-            <h1>{data[0].title}</h1>
-          </div>
-          <div className="description-wrapper">
-            <p>{data[0].description}</p>
-          </div>
+          {data.map((banner, index) => {
+            return (
+              <div key={index}>
+                <div className="title-wrapper">
+                  <h1>{banner.title}</h1>
+                </div>
+                <div className="description-wrapper">
+                  <p>{banner.description}</p>
+                </div>
+              </div>
+            );
+          })}
         </Wrapper>
       )}
     </>
@@ -37,28 +47,36 @@ const Wrapper = styled.div`
   justify-content: flex-start;
   align-items: flex-end;
   gap: 50px;
-  .title-wrapper {
-    width: 65%;
+  div {
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    h1 {
-      width: 100%;
-      text-align: left;
-      font-family: Anticva;
-    }
-  }
-  .description-wrapper {
-    width: 50%;
-    display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-end;
+    gap: 50px;
+    .title-wrapper {
+      width: 65%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      h1 {
+        width: 100%;
+        text-align: left;
+        font-family: Anticva;
+      }
+    }
+    .description-wrapper {
+      width: 50%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
 
-    p {
-      width: 100%;
-      text-align: left;
+      p {
+        width: 100%;
+        text-align: left;
+      }
     }
   }
 `;

@@ -11,6 +11,9 @@ const CustomBanner = () => {
     (state) => state.banners.advertisement,
   );
   const isLoading = useAppSelector((state) => state.banners.loading);
+  const advertisementLoading = useAppSelector(
+    (state) => state.banners.advertisementLoading,
+  );
 
   return (
     <Container
@@ -21,7 +24,7 @@ const CustomBanner = () => {
     >
       <Wrapper>
         <TextBanner>
-          {isLoading ? (
+          {isLoading || advertisementLoading ? (
             <Loading />
           ) : advertisement.length > 0 ? (
             <>
