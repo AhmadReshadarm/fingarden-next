@@ -1,17 +1,13 @@
 import Loading from 'ui-kit/Loading';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { TCartState } from 'redux/types';
 import { TWishlistState } from 'redux/types';
 import color from '../lib/ui.colors';
 import { useEffect } from 'react';
 import { fetchWishlistProducts } from 'redux/slicers/store/wishlistSlicer';
 import ItemWishlist from './ItemWishlist';
-type Props = {};
-const WishlistItems: React.FC<Props> = ({}) => {
-  // const { cart, loading } = useAppSelector<TCartState>((state) => state.cart);
-  // const dispatch = useAppDispatch();
 
+const WishlistItems = () => {
   const dispatch = useAppDispatch();
 
   const { wishlist, loading }: TWishlistState = useAppSelector(

@@ -5,7 +5,7 @@ import Wishlist from 'components/store/wishlist';
 import { motion } from 'framer-motion';
 import variants from 'components/store/lib/variants';
 import { devices } from 'components/store/lib/Devices';
-import { Head } from 'next/document';
+import Head from 'next/head';
 const WishlistPage = () => {
   return (
     <>

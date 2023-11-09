@@ -1,11 +1,7 @@
 import styled from 'styled-components';
 import WishlistItems from './wishlistItems';
-// import { useAppSelector } from 'redux/hooks';
-// import { TCartState } from 'redux/types';
-type Props = {};
 
-const Wishlist: React.FC<Props> = ({}) => {
-  //   const { cart } = useAppSelector<TCartState>((state) => state.cart);
+const Wishlist = () => {
   return (
     <Wrapper>
       <div className="header-spliter">
