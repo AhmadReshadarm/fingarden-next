@@ -49,14 +49,14 @@ const Orders = () => {
             <div className="header-divder-wrapper"></div>
           </HeaderWrapper>
         </BasketHeader>
-        {checkouts.length && !loading ? (
+        {checkouts.length > 0 && !loading ? (
           <Order checkouts={checkouts} />
-        ) : loading ? (
-          <Loading />
-        ) : (
+        ) : !loading && checkouts.length == 0 ? (
           <div className="no-orders">
             <h2 className="empty-orders">У вас пока нет заказов</h2>
           </div>
+        ) : (
+          <Loading />
         )}
       </Container>
     </>
