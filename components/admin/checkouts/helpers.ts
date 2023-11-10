@@ -13,7 +13,6 @@ import {
 } from 'swagger/services';
 import { ManageCheckoutFields } from './ManageCheckoutFields.enum';
 import { getTotalPrice } from 'components/store/checkout/totalDeliveryDate/helpers';
-import { CheckoutDTO } from 'swagger/services';
 import { openErrorNotification } from 'common/helpers';
 import { openSuccessNotification } from 'common/helpers/openSuccessNotidication.helper';
 import { generateInvoiceTemplet } from 'components/store/checkout/totalDeliveryDate/helpers';
@@ -190,11 +189,6 @@ const handleFormSubmitCheckout =
           }
         };
         await addToBasket(payload);
-
-        // const basket = await BasketService.updateBasket({
-        //   basketId: basketId.id,
-        //   body: payload,
-        // });
 
         await sleep(3000);
         openSuccessNotification('Корзина обновлена');
