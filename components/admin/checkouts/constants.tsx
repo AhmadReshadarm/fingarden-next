@@ -1,7 +1,6 @@
 import { ColumnsType } from 'antd/lib/table';
 import { OrderProduct } from 'swagger/services';
 import ActionButtons from '../generalComponents/ActionButtons';
-import { CheckoutsData } from './CheckoutsData.interface';
 import { handleDeleteCheckout, handleRedirectCheckout } from './helpers';
 
 interface CheckoutsTableData {

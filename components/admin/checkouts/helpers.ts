@@ -1,4 +1,7 @@
-import { deleteCheckout, fetchCheckouts } from 'redux/slicers/checkoutsSlicer';
+import {
+  deleteCheckout,
+  fetchCheckoutsAll,
+} from 'redux/slicers/checkoutsSlicer';
 import { AppDispatch } from 'redux/store';
 import { Page, paths } from 'routes/constants';
 import { NextRouter } from 'next/router';
@@ -22,7 +25,7 @@ const handleDeleteCheckout =
     const isSaved: any = await dispatch(deleteCheckout(id));
     if (!isSaved.error) {
       dispatch(
-        fetchCheckouts({
+        fetchCheckoutsAll({
           offset: String(offset),
           limit: '20',
         }),
