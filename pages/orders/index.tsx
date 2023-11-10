@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { TStoreCheckoutState } from 'redux/types';
 import Loading from 'ui-kit/Loading';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchCheckouts } from 'redux/slicers/store/checkoutSlicer';
 import { devices } from 'components/store/lib/Devices';
 import { motion } from 'framer-motion';
@@ -18,10 +18,18 @@ const Orders = () => {
   const { checkouts, loading } = useAppSelector<TStoreCheckoutState>(
     (state) => state.storeCheckout,
   );
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     dispatch(fetchCheckouts());
   }, []);
+  useEffect(() => {
+    if (loading) {
+      setIsLoading(true);
+    }
+    if (!loading) {
+      setIsLoading(false);
+    }
+  }, [checkouts, loading]);
 
   return (
     <>
@@ -49,10 +57,10 @@ const Orders = () => {
             <div className="header-divder-wrapper"></div>
           </HeaderWrapper>
         </BasketHeader>
-        {checkouts!.length && !loading ? (
-          <Order checkouts={checkouts!} />
-        ) : loading ? (
+        {isLoading ? (
           <Loading />
+        ) : checkouts.length > 0 && !isLoading ? (
+          <Order checkouts={checkouts} />
         ) : (
           <div className="no-orders">
             <h2 className="empty-orders">У вас пока нет заказов</h2>

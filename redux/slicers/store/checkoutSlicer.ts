@@ -51,7 +51,7 @@ export const cancelCheckout = createAsyncThunk<
 );
 
 const initialState: TStoreCheckoutState = {
-  checkouts: null,
+  checkouts: [],
   deliveryInfo: null,
   orderInfo: null,
   loading: false,
