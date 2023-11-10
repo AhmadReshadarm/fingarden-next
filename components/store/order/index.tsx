@@ -9,13 +9,21 @@ type Props = {
 };
 const MyOrders: React.FC<Props> = ({ checkouts }) => {
   return (
-    <Wrapper>
-      <Content>
-        {checkouts.map((checkout, index) => (
-          <Order key={`order-${index}`} checkout={checkout} index={index} />
-        ))}
-      </Content>
-    </Wrapper>
+    <>
+      {Number(checkouts.length) > 0 ? (
+        <Wrapper>
+          <Content>
+            {checkouts.map((checkout, index) => (
+              <Order key={`order-${index}`} checkout={checkout} index={index} />
+            ))}
+          </Content>
+        </Wrapper>
+      ) : (
+        <div className="no-orders">
+          <h2 className="empty-orders">У вас пока нет заказов</h2>
+        </div>
+      )}
+    </>
   );
 };
 
