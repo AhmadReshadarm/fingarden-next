@@ -132,7 +132,7 @@ const handleFormSubmitCheckout =
 
         const generatedHtml = generateInvoiceTemplet(payload);
         openErrorNotification('В процессе: Отправка счета-фактуры на заказ...');
-        const saved = await CheckoutService.createCheckoutWithoutRegister({
+        await CheckoutService.createCheckoutWithoutRegister({
           body: {
             to: payload.receiverEmail,
             subject: `Заказ ${payload.receiverName}`,
@@ -142,11 +142,9 @@ const handleFormSubmitCheckout =
 
         await sleep(3000);
 
-        if (saved) {
-          openSuccessNotification('Счет заказа отправлен');
-          router.push('/admin/checkouts');
-          setSaveLoading(false);
-        }
+        openSuccessNotification('Счет заказа отправлен');
+        router.push('/admin/checkouts');
+        setSaveLoading(false);
       }
       if (form.checkoutType) {
         openErrorNotification('В процессе: Поиск пользователя...');
