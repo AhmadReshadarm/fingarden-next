@@ -49,8 +49,8 @@ const Orders = () => {
             <div className="header-divder-wrapper"></div>
           </HeaderWrapper>
         </BasketHeader>
-        {checkouts.length > 0 && !loading ? (
-          <Order checkouts={checkouts} />
+        {checkouts!.length && !loading ? (
+          <Order checkouts={checkouts!} />
         ) : loading ? (
           <Loading />
         ) : (

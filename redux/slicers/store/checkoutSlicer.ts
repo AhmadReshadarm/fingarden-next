@@ -51,7 +51,7 @@ export const cancelCheckout = createAsyncThunk<
 );
 
 const initialState: TStoreCheckoutState = {
-  checkouts: [],
+  checkouts: null,
   deliveryInfo: null,
   orderInfo: null,
   loading: false,
@@ -92,7 +92,7 @@ const storeCheckoutSlicer = createSlice({
       // cancelCheckout
       .addCase(cancelCheckout.pending, handleChangePending)
       .addCase(cancelCheckout.fulfilled, (state, action) => {
-        state.checkouts = state.checkouts.filter(
+        state.checkouts = state.checkouts!.filter(
           (checkout) => checkout.paymentId !== action.payload.payment_id,
         );
         state.saveLoading = false;

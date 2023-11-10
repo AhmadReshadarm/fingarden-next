@@ -312,7 +312,7 @@ type TOrderInfo = {
 };
 
 type TStoreCheckoutState = {
-  checkouts: Checkout[];
+  checkouts: Checkout[] | null;
   loading: boolean;
   saveLoading: boolean;
   deliveryInfo?: TDeliveryInfo | null;
