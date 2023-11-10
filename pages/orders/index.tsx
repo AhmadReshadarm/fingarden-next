@@ -49,7 +49,8 @@ const Orders = () => {
             <div className="header-divder-wrapper"></div>
           </HeaderWrapper>
         </BasketHeader>
-        {loading ? <Loading /> : <Order checkouts={checkouts} />}
+        <Order checkouts={checkouts} />
+        {/* {loading ? <Loading /> : } */}
       </Container>
     </>
   );
