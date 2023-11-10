@@ -15,9 +15,11 @@ import { Dispatch, SetStateAction } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import { ManageProductFields } from './ManageProductsFields.enum';
 import { createImage } from 'redux/slicers/imagesSlicer';
+import { onLocationChange } from 'components/store/catalog/helpers';
 const handleDeleteProduct =
   (id: string, dispatch: AppDispatch, setVisible: any, offset: number) =>
   async () => {
+    const handleLocationChange = onLocationChange(dispatch);
     const isSaved: any = await dispatch(deleteProduct(id));
     if (!isSaved.error) {
       dispatch(
@@ -28,6 +30,7 @@ const handleDeleteProduct =
       );
       setVisible((prev) => !prev);
     }
+    handleLocationChange();
   };
 
 const handleDataConvertation = (
