@@ -18,18 +18,10 @@ const Orders = () => {
   const { checkouts, loading } = useAppSelector<TStoreCheckoutState>(
     (state) => state.storeCheckout,
   );
-  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     dispatch(fetchCheckouts());
   }, []);
-  useEffect(() => {
-    if (loading) {
-      setIsLoading(true);
-    }
-    if (!loading) {
-      setIsLoading(false);
-    }
-  }, [checkouts, loading]);
 
   return (
     <>
@@ -57,9 +49,9 @@ const Orders = () => {
             <div className="header-divder-wrapper"></div>
           </HeaderWrapper>
         </BasketHeader>
-        {isLoading ? (
+        {loading ? (
           <Loading />
-        ) : checkouts.length > 0 && !isLoading ? (
+        ) : Number(checkouts.length) > 0 && !loading ? (
           <Order checkouts={checkouts} />
         ) : (
           <div className="no-orders">
