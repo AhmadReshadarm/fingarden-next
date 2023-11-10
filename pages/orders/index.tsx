@@ -51,7 +51,7 @@ const Orders = () => {
         </BasketHeader>
         {checkouts.length > 0 && !loading ? (
           <Order checkouts={checkouts} />
-        ) : !loading && checkouts.length == 0 ? (
+        ) : !loading ? (
           <div className="no-orders">
             <h2 className="empty-orders">У вас пока нет заказов</h2>
           </div>

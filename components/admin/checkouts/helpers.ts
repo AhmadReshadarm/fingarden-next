@@ -216,7 +216,7 @@ const handleFormSubmitCheckout =
         const saved = await CheckoutService.createCheckout({
           body: {
             address: responseAdress,
-            basket: basket.id,
+            basket: basket,
             totalAmount: getTotalPrice(basket, ''),
             comment: '',
             leaveNearDoor: false,
