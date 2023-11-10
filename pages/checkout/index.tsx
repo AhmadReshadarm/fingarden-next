@@ -12,11 +12,16 @@ import { useEffect } from 'react';
 import { session } from 'redux/slicers/authSlicer';
 import { useAppDispatch } from 'redux/hooks';
 import { YMaps } from 'react-yandex-maps';
+import { fetchCart } from 'redux/slicers/store/cartSlicer';
 const Checkout = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(session());
   }, []);
+  const createdCardId = localStorage.getItem('basketId');
+  if (createdCardId) {
+    dispatch(fetchCart(createdCardId));
+  }
   return (
     <>
       <YMaps
