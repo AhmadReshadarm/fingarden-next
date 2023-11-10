@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import * as React from 'react';
 import { Rating } from '@mui/material'; // docs: https://mui.com/material-ui/api/rating/ *** https://mui.com/material-ui/react-rating/
 import variants from 'components/store/lib/variants';
 import color from 'components/store/lib/ui.colors';
@@ -8,7 +7,7 @@ import ActionBtns from './ActionBtns';
 import ColorPicker from './ColorPicker';
 import { UserSelectWrapper } from './common';
 import Quastions from '../../../../../assets/quastions.svg';
-import { Basket, Product } from 'swagger/services';
+import { Basket, Product, ProductVariant } from 'swagger/services';
 import { Dispatch, MutableRefObject, SetStateAction, useEffect } from 'react';
 import { checkIfItemInCart, handleCartBtnClick } from 'ui-kit/products/helpers';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
@@ -17,6 +16,7 @@ import { devices } from 'components/store/lib/Devices';
 import { TCartState } from 'redux/types';
 import SizePicker from './SizePicker';
 import { setproductSize } from 'redux/slicers/store/cartSlicer';
+import { useState } from 'react';
 
 type Props = {
   product?: Product;
@@ -45,6 +45,10 @@ const Details: React.FC<Props> = ({
     (orderProduct) => orderProduct.product?.id === product?.id,
   );
 
+  const checkHasOldPrice = (productVariant: ProductVariant) => {
+    if (productVariant.oldPrice) return true;
+    return false;
+  };
   const onCountChange = (counter: number, product: Product) => {
     dispatch(
       updateCart({
@@ -170,9 +174,11 @@ const Details: React.FC<Props> = ({
             {variant?.price ?? product?.productVariants![0].price}₽
           </PriceItem>
 
-          <PriceItem>{`${
-            variant?.oldPrice ?? product?.productVariants![0].oldPrice
-          }₽`}</PriceItem>
+          <PriceItem>
+            {checkHasOldPrice(variant! ?? product?.productVariants![0])
+              ? `${variant?.oldPrice ?? product?.productVariants![0].oldPrice}₽`
+              : ''}
+          </PriceItem>
         </PriceWrapper>
         <SizePickerWrapper>
           <div className="info-size-wrapper">
