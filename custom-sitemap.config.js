@@ -2,7 +2,7 @@ const siteUrl = 'https://ivill.ru';
 
 module.exports = {
   siteUrl,
-  generateRobotsTxt: true,
+  generateRobotsTxt: false,
   robotsTxtOptions: {
     policies: [
       {
