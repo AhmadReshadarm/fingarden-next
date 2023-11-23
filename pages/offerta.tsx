@@ -39,7 +39,7 @@ const Offerta = () => {
               Настоящий документ – это публичная оферта (предложение)
               интернет-магазина{' '}
               <Link href="/">
-                <Links>fingarden.ru</Links>
+                <Links>ivill.ru</Links>
               </Link>{' '}
               о продаже товаров
             </Contents>

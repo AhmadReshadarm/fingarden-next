@@ -20,19 +20,21 @@ const TagsModal: React.FC<Props> = ({
     <TagsWrapper>
       {tags.map((tag, index) => {
         return (
-          <Link
-            key={index}
-            onClick={() => setOnWhichNav('')}
-            href={`/catalog?categories=${category}&subCategories=${subCategory}&tags=${tag.url}`}
-          >
-            <span>
-              {tag.products?.find((product: Product) => {
-                return product.category?.url === subCategory;
-              })
-                ? tag.name
-                : ''}
-            </span>
-          </Link>
+          <>
+            {tag.products?.find((product: Product) => {
+              return product.category?.url === subCategory;
+            }) ? (
+              <Link
+                key={index}
+                onClick={() => setOnWhichNav('')}
+                href={`/catalog?categories=${category}&subCategories=${subCategory}&tags=${tag.url}`}
+              >
+                <span>{tag.name}</span>
+              </Link>
+            ) : (
+              ''
+            )}
+          </>
         );
       })}
     </TagsWrapper>

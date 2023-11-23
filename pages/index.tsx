@@ -17,8 +17,8 @@ const IndexPage = (): JSX.Element => {
         page={{
           name: 'Главный',
           url: '/',
-          desc: 'Интернет-магазин Fingarden',
-          keywords: 'fingarden, fingarden.ru',
+          desc: 'Интернет-магазин Ivill',
+          keywords: 'ivill , ivill.ru',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         }}
